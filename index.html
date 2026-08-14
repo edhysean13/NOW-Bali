@@ -1,17 +1,161 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NOW BALI</title>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b12">
+<title>NOW BALI</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#080a10;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}#app{max-width:430px;min-height:100vh;margin:auto;padding-bottom:80px}header{height:65px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292e3a;position:sticky;top:0;background:#090b12;z-index:2}.logo{font-size:27px;font-weight:900}.logo span{color:#ff7438}.live{color:#55e39a;border:1px solid #28704e;border-radius:20px;padding:6px 9px;font-size:10px}.page{padding:15px}.muted{color:#8991a4;font-size:11px}.card{background:#12151e;border:1px solid #292e3a;border-radius:18px;margin:12px 0;overflow:hidden}.hero{height:190px;background:linear-gradient(#0000,#000d),url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80") center/cover;position:relative}.hero div{position:absolute;bottom:14px;left:14px}.badge{background:linear-gradient(90deg,#ff3fa4,#ff7438);padding:6px 10px;border-radius:20px;font-size:10px;font-weight:bold}.row{padding:14px;border-bottom:1px solid #252936}.row:last-child{border:0}.score{color:#ff7438;font-size:21px;font-weight:bold;margin-right:12px}button{color:white}.btn{width:100%;border:0;border-radius:14px;padding:14px;background:linear-gradient(90deg,#ff3fa4,#ff7438);font-weight:bold}nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:72px;background:#0d1018;border-top:1px solid #292e3a;display:flex;justify-content:space-around;align-items:center;z-index:5}nav button{border:0;background:none;color:#778094;font-size:18px}nav small{display:block;font-size:9px;margin-top:3px}#plus{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff3fa4,#ff7438);font-size:26px}.modal{position:fixed;inset:0;background:#000c;display:flex;align-items:flex-end;z-index:10}.hidden{display:none}.sheet{width:min(430px,100%);background:#12151e;border-radius:24px 24px 0 0;padding:20px}textarea{width:100%;height:110px;background:#080a10;color:#fff;border:1px solid #303644;border-radius:14px;padding:12px;margin:12px 0}.close{float:right;background:none;border:0;color:#aaa;font-size:25px}.back{background:none;border:0;padding:0;font-size:14px;color:#ff7846}
-</style></head><body><div id="app"><header><div class="logo">NOW <span>BALI</span></div><div class="live">● LIVE</div></header><main id="main"></main>
-<nav><button onclick="show('now')">🔥<small>NOW</small></button><button onclick="show('near')">📍<small>NEAR</small></button><button id="plus">+</button><button onclick="show('people')">👥<small>PEOPLE</small></button><button onclick="show('me')">◉<small>ME</small></button></nav>
-<div id="modal" class="modal hidden"><div class="sheet"><button class="close" onclick="modal.classList.add('hidden')">×</button><h2>Post NOW</h2><div class="muted">📍 Canggu Beach</div><textarea id="txt" placeholder="Apa yang sedang terjadi sekarang?"></textarea><button class="btn" onclick="post()">POST NOW</button></div></div></div>
+*{box-sizing:border-box}body{margin:0;background:#05060a;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}button{cursor:pointer}
+#app{max-width:430px;min-height:100vh;margin:auto;background:#090b12;padding-bottom:82px}
+header{height:64px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #282d39;position:sticky;top:0;background:#090b12ee;backdrop-filter:blur(15px);z-index:5}
+.logo{font-size:27px;font-weight:900}.logo span{color:#ff7438}.live{font-size:10px;color:#55e39a;border:1px solid #28704e;border-radius:20px;padding:6px 9px}
+.page{padding:15px}.title{display:flex;justify-content:space-between;align-items:center}.title h2{font-size:14px;text-transform:uppercase;margin:10px 0}.muted{color:#8d95a8;font-size:11px}
+.card{background:#12151e;border:1px solid #282d39;border-radius:18px;margin:12px 0;overflow:hidden}
+.hero{height:190px;background:linear-gradient(#0000,#000d),url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80") center/cover;position:relative}
+.heroText{position:absolute;left:14px;bottom:14px}.badge{background:linear-gradient(90deg,#ff3fa4,#ff7438);padding:6px 10px;border-radius:99px;font-size:10px;font-weight:800}.hero h1{margin:8px 0 3px}
+.row{display:flex;gap:12px;padding:14px;border-bottom:1px solid #242935;align-items:center}.row:last-child{border:0}.row h3{margin:0 0 4px;font-size:14px}.row p{margin:0}.score{font-size:21px;font-weight:900;color:#ff7846;min-width:42px;text-align:center}
+.thumb{width:54px;height:54px;border-radius:12px;object-fit:cover;background:#202531}
+.btn{width:100%;border:0;border-radius:14px;padding:14px;background:linear-gradient(90deg,#ff3fa4,#ff7438);color:#fff;font-weight:800}.btn.secondary{background:#222733}.btn.danger{background:#5a2028}
+.chips{display:flex;gap:8px;overflow:auto;margin:10px 0}.chip{white-space:nowrap;border:1px solid #303543;border-radius:99px;padding:8px 12px;font-size:11px}
+.profileHead{text-align:center;padding:22px}.avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;margin:auto;border:3px solid #ff5b8f;background:linear-gradient(135deg,#ff3fa4,#ff7438);display:grid;place-items:center;font-size:30px;font-weight:900}
+.stats{display:flex;justify-content:space-around;text-align:center;margin:18px 0}.stats b{display:block;font-size:18px}.stats span{font-size:10px;color:#8991a4}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:74px;background:#0d1018f7;border-top:1px solid #282d39;display:flex;justify-content:space-around;align-items:center;z-index:8}
+nav button{border:0;background:none;color:#747d91;font-size:18px;display:flex;flex-direction:column;align-items:center;gap:3px}nav button.active{color:#ff4da7}nav small{font-size:9px}
+#plus{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#ff3fa4,#ff7438);color:#fff;font-size:27px;border:3px solid #090b12;margin-top:-18px}
+.overlay{position:fixed;inset:0;background:#000c;z-index:20;display:flex;align-items:flex-end}.hidden{display:none!important}.sheet{width:min(430px,100%);background:#12151e;border-radius:25px 25px 0 0;padding:20px;max-height:92vh;overflow:auto}.close{float:right;border:0;background:none;color:#aaa;font-size:27px}
+textarea,input{width:100%;background:#090c13;color:#fff;border:1px solid #303543;border-radius:13px;padding:12px;margin:7px 0;outline:none}textarea{height:110px;resize:none}
+.photoPreview{width:100%;max-height:220px;object-fit:cover;border-radius:14px;margin:8px 0}.back{background:none;border:0;color:#ff7846;padding:0;font-size:13px}
+.map{height:330px;border-radius:18px;border:1px solid #303543;background:radial-gradient(circle at 30% 30%,#203746,#101821 45%,#0b1016);position:relative;overflow:hidden}
+.pin{position:absolute;background:#141a24;border:1px solid #454d5d;border-radius:12px;padding:8px;font-size:10px;box-shadow:0 5px 20px #0008}.pin b{display:block;color:#ff7947}
+.tag{display:inline-block;padding:4px 8px;border-radius:99px;background:#202632;color:#cdd2dd;font-size:10px;margin:2px}
+.notice{padding:11px;border-radius:12px;background:#171c27;color:#aeb5c4;font-size:11px;margin:10px 0}
+</style>
+</head>
+<body>
+<div id="app">
+<header><div class="logo">NOW <span>BALI</span></div><div class="live">● LIVE</div></header>
+<main id="main"></main>
+<nav>
+<button data-tab="now">🔥<small>NOW</small></button>
+<button data-tab="near">📍<small>NEAR</small></button>
+<button id="plus">+</button>
+<button data-tab="people">👥<small>PEOPLE</small></button>
+<button data-tab="me">◉<small>ME</small></button>
+</nav>
+<div id="postModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closePost()">×</button><h2>Post NOW</h2><div class="muted">📍 Canggu Beach</div>
+<textarea id="postText" placeholder="Apa yang sedang terjadi sekarang?"></textarea>
+<input id="postPlace" placeholder="Lokasi / tempat" value="Canggu Beach">
+<label class="btn secondary" style="display:block;text-align:center;margin:7px 0">📷 Tambah foto <input id="postPhoto" type="file" accept="image/*" style="display:none"></label>
+<img id="photoPreview" class="photoPreview hidden">
+<button class="btn" onclick="publishPost()">POST NOW</button></div></div>
+
+<div id="authModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closeAuth()">×</button><div id="authBox"></div></div></div>
+<div id="profileModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="profileModal.classList.add('hidden')">×</button><div id="profileBox"></div></div></div>
+</div>
+
 <script>
-const main=document.getElementById('main'),modal=document.getElementById('modal');let posts=JSON.parse(localStorage.getItem('now_posts')||'[]');
-function show(t){if(t==='now')main.innerHTML='<div class="page"><h2>🔥 HAPPENING NOW</h2><div class="card"><div class="hero"><div><span class="badge">NOW SCORE 94</span><h1>🔥 Canggu Beach</h1><span class="muted">126 people • 38 posts • sangat ramai sekarang</span></div></div></div><h2>⚡ LIVE FEED</h2><div class="card"><div class="row"><b>Sunset gila hari ini! 🌅</b><p class="muted">Made Dharma • 2 menit lalu</p></div><div class="row"><b>Ramai banget malam ini 🔥</b><p class="muted">Sara Kim • 5 menit lalu</p></div>'+posts.map(x=>'<div class="row"><b>'+x+'</b><p class="muted">You • baru saja</p></div>').join('')+'</div><h2>🔥 TOP PLACES</h2><div class="card"><div class="row"><span class="score">94</span><b>Canggu Beach</b></div><div class="row"><span class="score">88</span><b>Seminyak</b></div><div class="row"><span class="score">81</span><b>Kuta Beach</b></div></div></div>';
-if(t==='near')main.innerHTML='<div class="page"><h2>📍 NEAR YOU</h2><div class="card"><div class="row" onclick="place()"><span class="score">94</span><b>🔥 Canggu Beach<br><span class="muted">2.4 km • 126 people</span></b></div><div class="row" onclick="alert("Seminyak detail segera")"><span class="score">88</span><b>🎵 Seminyak<br><span class="muted">4.1 km • 74 people</span></b></div><div class="row" onclick="alert("Kuta detail segera")"><span class="score">81</span><b>🌅 Kuta Beach<br><span class="muted">7.2 km • 61 people</span></b></div></div></div>';
-if(t==='people')main.innerHTML='<div class="page"><h2>👥 PEOPLE ACTIVE NOW</h2><div class="card"><div class="row"><b>🔥 Made Dharma</b><p class="muted">Canggu Beach</p></div><div class="row"><b>🔥 Sara Kim</b><p class="muted">Canggu Beach</p></div><div class="row"><b>🔥 Gus Arya</b><p class="muted">Seminyak</p></div></div></div>';
-if(t==='me')main.innerHTML='<div class="page"><h2>👤 ME</h2><div class="card" style="padding:24px;text-align:center"><h2>My NOW</h2><p class="muted">'+posts.length+' posts</p><button class="btn">LOGIN / REGISTER</button></div></div>'}
-function place(){main.innerHTML='<div class="page"><button class="back" onclick="show(\'near\')">← Kembali</button><h2>🔥 CANGGU BEACH</h2><div class="card"><div class="hero"><div><span class="badge">NOW SCORE 94</span><h1>126 people active</h1><span class="muted">38 posts • 2.4 km</span></div></div><div class="row"><b>⚡ Live sekarang</b><p class="muted">Sunset, musik, dan aktivitas ramai.</p></div><div class="row"><b>🌅 Sunset gila hari ini!</b><p class="muted">Made Dharma • 2 menit lalu</p></div><div class="row"><b>🔥 Ramai banget malam ini</b><p class="muted">Sara Kim • 5 menit lalu</p></div></div></div>'}
-function post(){let x=txt.value.trim();if(!x)return alert('Tulis dulu kejadian');posts.unshift(x);localStorage.setItem('now_posts',JSON.stringify(posts));txt.value='';modal.classList.add('hidden');show('now');alert('🔥 NOW kamu berhasil diposting!')}
-plus.onclick=()=>modal.classList.remove('hidden');show('now');
-</script></body></html>
+const main=document.getElementById('main'), postModal=document.getElementById('postModal'), authModal=document.getElementById('authModal'), profileModal=document.getElementById('profileModal');
+let posts=JSON.parse(localStorage.getItem('now_posts_v2')||'[]');
+let user=JSON.parse(localStorage.getItem('now_user')||'null');
+
+const places=[
+{name:'Canggu Beach',score:94,people:126,posts:38,distance:'2.4 km',emoji:'🔥'},
+{name:'Seminyak',score:88,people:74,posts:22,distance:'4.1 km',emoji:'🎵'},
+{name:'Kuta Beach',score:81,people:61,posts:17,distance:'7.2 km',emoji:'🌅'}
+];
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function avatar(u){return u?.photo?`<img class="avatar" src="${u.photo}">`:`<div class="avatar">${(u?.name||'U').slice(0,1).toUpperCase()}</div>`}
+function ago(t){let m=Math.floor((Date.now()-t)/60000);return m<1?'baru saja':m+' min lalu'}
+
+function setActive(tab){document.querySelectorAll('nav [data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab))}
+function show(tab){setActive(tab);if(tab==='now')renderNow();if(tab==='near')renderNear();if(tab==='people')renderPeople();if(tab==='me')renderMe()}
+
+function renderNow(){
+let p=places[0];
+main.innerHTML=`<div class="page">
+<div class="title"><h2>🔥 Happening Now</h2><span class="muted">real-time demo</span></div>
+<div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.emoji} ${p.name}</h1><span class="muted">${p.people} people • ${p.posts} posts • sangat ramai sekarang</span></div></div></div>
+<div class="title"><h2>⚡ Live Feed</h2><span class="muted">terbaru</span></div>
+<div class="card">${[
+{t:'Sunset gila hari ini! 🌅',u:'Made Dharma',time:Date.now()-120000},
+{t:'Ramai banget malam ini 🔥',u:'Sara Kim',time:Date.now()-300000},
+...posts
+].slice(0,12).map(x=>`<div class="row">${x.photo?`<img class="thumb" src="${x.photo}">`:''}<div><h3>${esc(x.t)}</h3><p class="muted">${esc(x.u)} • ${ago(x.time)} • ${esc(x.place||'Canggu Beach')}</p>${x.photo?'<span class="tag">📷 foto</span>':''}</div></div>`).join('')}</div>
+<div class="title"><h2>🔥 Top Places</h2></div>
+<div class="card">${places.map(p=>`<div class="row" onclick="placeDetail('${p.name}')"><span class="score">${p.score}</span><div><h3>${p.emoji} ${p.name}</h3><p class="muted">${p.people} people active • ${p.posts} posts</p></div></div>`).join('')}</div>
+<div class="notice">💡 <b>NOW Score</b> menggabungkan aktivitas, jumlah orang, posting baru, dan momentum.</div>
+</div>`;
+}
+
+function renderNear(){
+main.innerHTML=`<div class="page"><div class="title"><h2>📍 Near You</h2><span class="muted">lokasi demo</span></div>
+<div class="notice">Nanti GPS akan menentukan tempat terdekat secara otomatis. Untuk sekarang lokasi demo: Bali.</div>
+<div class="map">${places.map((p,i)=>`<div class="pin" style="left:${10+i*30}%;top:${18+i*23}%"><b>${p.emoji} ${p.name}</b>${p.people} active</div>`).join('')}</div>
+<h2>🔥 Sekitar kamu sekarang</h2><div class="card">${places.map(p=>`<div class="row" onclick="placeDetail('${p.name}')"><span class="score">${p.score}</span><div><h3>${p.emoji} ${p.name}</h3><p class="muted">${p.distance} • ${p.people} people active • ${p.posts} posts</p></div></div>`).join('')}</div></div>`;
+}
+
+function placeDetail(name){
+let p=places.find(x=>x.name===name)||places[0];
+main.innerHTML=`<div class="page"><button class="back" onclick="show('near')">← Kembali</button>
+<h2>${p.emoji} ${p.name}</h2><div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.people} people active</h1><span class="muted">${p.posts} posts • ${p.distance}</span></div></div>
+<div class="row"><div><h3>⚡ Yang sedang terjadi</h3><p class="muted">Aktivitas sedang tinggi di lokasi ini.</p></div></div>
+${posts.filter(x=>(x.place||'Canggu Beach')===p.name).slice(0,5).map(x=>`<div class="row"><div><h3>${esc(x.t)}</h3><p class="muted">${esc(x.u)} • ${ago(x.time)}</p></div></div>`).join('')}
+<div class="row"><button class="btn" onclick="openPostFor('${p.name}')">➕ Post di sini</button></div>
+</div></div>`;
+}
+
+function renderPeople(){
+main.innerHTML=`<div class="page"><div class="title"><h2>👥 People</h2><span class="muted">aktif sekarang</span></div>
+<div class="card">${[
+['Made Dharma','Canggu Beach'],['Sara Kim','Canggu Beach'],['Gus Arya','Seminyak']
+].map(x=>`<div class="row"><div class="avatar" style="width:52px;height:52px;font-size:18px">${x[0][0]}</div><div><h3>${x[0]}</h3><p class="muted">🔥 Active • ${x[1]}</p></div><button class="btn secondary" style="width:auto;padding:9px 12px;margin-left:auto" onclick="follow('${x[0]}')">FOLLOW</button></div>`).join('')}</div></div>`;
+}
+
+function renderMe(){
+if(!user){main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead">${avatar(null)}<h2>Masuk ke NOW</h2><p class="muted">Buat profil, upload foto, follow orang, dan simpan aktivitas.</p><button class="btn" onclick="openAuth()">LOGIN / REGISTER</button></div></div>`;return}
+main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead">${avatar(user)}<h2>${esc(user.name)}</h2><p class="muted">@${esc(user.username||user.name.toLowerCase().replace(/\\s+/g,''))}</p><div class="stats"><div><b>${posts.filter(x=>x.u===user.name).length}</b><span>POSTS</span></div><div><b>0</b><span>FOLLOWERS</span></div><div><b>0</b><span>FOLLOWING</span></div></div><button class="btn" onclick="editProfile()">EDIT PROFILE</button></div><button class="btn danger" onclick="logout()">LOG OUT</button></div>`;
+}
+
+function openAuth(){authModal.classList.remove('hidden');renderAuth('login')}
+function closeAuth(){authModal.classList.add('hidden')}
+function renderAuth(mode){
+authBox.innerHTML=`<h2>${mode==='login'?'Login ke NOW':'Buat akun NOW'}</h2>
+<div class="notice">Demo lokal: akun ini tersimpan di perangkat ini. Login Google/Apple/OTP akan dipasang saat backend sudah aktif.</div>
+<input id="authName" placeholder="Nama" ${mode==='login'?'style="display:none"':''}>
+<input id="authUser" placeholder="Username">
+<input id="authEmail" placeholder="Email">
+<input id="authPass" type="password" placeholder="Password">
+<label class="btn secondary" style="display:block;text-align:center;margin:8px 0">📷 Foto profil <input id="authPhoto" type="file" accept="image/*" style="display:none"></label>
+<button class="btn" onclick="doAuth('${mode}')">${mode==='login'?'LOGIN':'REGISTER'}</button>
+<p style="text-align:center;color:#8991a4;font-size:12px;margin-top:16px">${mode==='login'?`Belum punya akun? <button style="border:0;background:none;color:#ff6a9e" onclick="renderAuth('register')">Register</button>`:`Sudah punya akun? <button style="border:0;background:none;color:#ff6a9e" onclick="renderAuth('login')">Login</button>`}</p>`;
+}
+function readImage(file){return new Promise((resolve,reject)=>{if(!file)return resolve('');let r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
+async function doAuth(mode){
+let name=document.getElementById('authName')?.value.trim(),un=document.getElementById('authUser').value.trim(),email=document.getElementById('authEmail').value.trim(),pass=document.getElementById('authPass').value;
+if(!un||!email||!pass||(mode==='register'&&!name))return alert('Lengkapi data dulu.');
+let photo=await readImage(document.getElementById('authPhoto')?.files[0]);
+if(mode==='register')user={name,username:un,email,photo};else user={name:name||un,username:un,email,photo};
+localStorage.setItem('now_user',JSON.stringify(user));closeAuth();show('me');
+}
+function editProfile(){profileModal.classList.remove('hidden');profileBox.innerHTML=`<h2>Edit Profile</h2><input id="editName" value="${esc(user.name)}"><input id="editUser" value="${esc(user.username)}"><label class="btn secondary" style="display:block;text-align:center">📷 Ganti foto profil <input id="editPhoto" type="file" accept="image/*" style="display:none"></label><br><button class="btn" onclick="saveProfile()">SAVE</button>`}
+async function saveProfile(){user.name=document.getElementById('editName').value.trim()||user.name;user.username=document.getElementById('editUser').value.trim()||user.username;let f=document.getElementById('editPhoto').files[0];if(f)user.photo=await readImage(f);localStorage.setItem('now_user',JSON.stringify(user));profileModal.classList.add('hidden');show('me')}
+function logout(){user=null;localStorage.removeItem('now_user');show('me')}
+function follow(n){alert('Mengikuti '+n+' (demo)')}
+function openPostFor(place){postModal.classList.remove('hidden');document.getElementById('postPlace').value=place}
+function closePost(){postModal.classList.add('hidden')}
+document.getElementById('plus').onclick=()=>openPostFor('Canggu Beach');
+document.getElementById('postPhoto').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{photoPreview.src=r.result;photoPreview.classList.remove('hidden')};r.readAsDataURL(f)}
+async function publishPost(){
+let t=postText.value.trim(),place=postPlace.value.trim()||'Canggu Beach',f=postPhoto.files[0];
+if(!t)return alert('Tulis dulu apa yang sedang terjadi.');
+let photo=await readImage(f);
+posts.unshift({t,u:user?.name||'You',place,time:Date.now(),photo});
+localStorage.setItem('now_posts_v2',JSON.stringify(posts));postText.value='';postPhoto.value='';photoPreview.classList.add('hidden');closePost();show('now');alert('🔥 NOW berhasil diposting!');
+}
+document.querySelectorAll('nav [data-tab]').forEach(b=>b.onclick=()=>show(b.dataset.tab));
+show('now');
+</script>
+</body></html>
