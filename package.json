@@ -1,0 +1,8 @@
+{
+  "name":"now-bali-v3",
+  "version":"1.0.0",
+  "private":true,
+  "type":"module",
+  "scripts":{"start":"node server.js"},
+  "dependencies":{"express":"^4.21.2","cors":"^2.8.5","socket.io":"^4.8.1"}
+}
