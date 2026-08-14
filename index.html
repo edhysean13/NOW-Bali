@@ -35,7 +35,7 @@ textarea,input{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 .profileTabs{display:flex;border-bottom:1px solid #2a3040;margin:12px 0}.profileTab{flex:1;padding:13px 6px;background:none;border:0;color:#8991a4;font-weight:800}.profileTab.active{color:#ff5a9f;border-bottom:2px solid #ff5a9f}
 .profilePost{padding:14px;border-bottom:1px solid #252b36;cursor:pointer}.profilePost:last-child{border-bottom:0}.profilePost h3{margin:0 0 5px;font-size:14px}.profilePost p{margin:0;color:#9da5b5;font-size:11px}
 .profileGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.profileGrid img{width:100%;aspect-ratio:1/1;object-fit:cover;cursor:pointer}.profilePhotoTile{position:relative;cursor:pointer}.photoMeta{position:absolute;left:5px;bottom:5px;background:#090b12dd;color:#fff;border-radius:10px;padding:4px 7px;font-size:10px}.empty{text-align:center;padding:30px 15px;color:#8991a4;font-size:12px}
-.accountChoices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.accountChoice{border:1px solid #303543;background:#1a1f2a;color:#fff;border-radius:14px;padding:14px 8px;text-align:center;font-weight:800}.accountChoice.active{border-color:#ff5a9f;background:#2b1b2a;box-shadow:0 0 0 1px #ff5a9f33}.accountChoice span{display:block;font-size:24px;margin-bottom:5px}
+#app.guest{padding-bottom:0}.guestPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:30px 20px}.guestCard{width:100%;background:#12151e;border:1px solid #282d39;border-radius:26px;padding:34px 22px;text-align:center}.guestLogo{font-size:46px;font-weight:950;letter-spacing:-2px;margin-bottom:8px}.guestLogo span{color:#ff7438}.guestTitle{font-size:23px;font-weight:900;margin:20px 0 8px}.guestText{color:#8d95a8;font-size:12px;line-height:1.5;margin-bottom:22px}.guestLogin{border:0;background:none;color:#ff6a9e;font-weight:800;padding:12px}.guestCard .btn{margin-top:6px}.guestLock{font-size:11px;color:#697286;margin-top:18px}.accountChoices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.accountChoice{border:1px solid #303543;background:#1a1f2a;color:#fff;border-radius:14px;padding:14px 8px;text-align:center;font-weight:800}.accountChoice.active{border-color:#ff5a9f;background:#2b1b2a;box-shadow:0 0 0 1px #ff5a9f33}.accountChoice span{display:block;font-size:24px;margin-bottom:5px}
 .formSection{padding:12px 0;border-top:1px solid #252b36;margin-top:10px}.formSection h3{margin:0 0 5px;font-size:13px}.requiredNote{font-size:10px;color:#8991a4;margin:5px 0 10px}
 </style>
 </head>
@@ -63,7 +63,17 @@ function avatar(u){return u?.photo?`<img class="avatar" src="${u.photo}">`:`<div
 function profileAvatar(u){const icon=u?.accountType==='driver'?'🚗':u?.accountType==='business'?'🏪':'👤';return `<div class="avatarWrap">${avatar(u)}<div class="accountBadge">${icon}</div></div>`}
 function ago(t){let m=Math.floor((Date.now()-t)/60000);return m<1?'baru saja':m+' min lalu'}
 function setActive(tab){document.querySelectorAll('nav [data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab))}
-function show(tab){setActive(tab);if(tab==='now')renderNow();if(tab==='near')renderNear();if(tab==='people')renderPeople();if(tab==='me')renderMe()}
+function renderGuest(){
+ document.getElementById('app').classList.add('guest');
+ document.querySelector('nav').style.display='none';
+ main.innerHTML=`<div class="guestPage"><div class="guestCard"><div class="guestLogo">NOW <span>BALI</span></div><div class="guestTitle">Selamat datang di NOW Bali</div><div class="guestText">Buat akun terlebih dahulu untuk mengakses Feed, Near, People, Profile, postingan, komentar, dan fitur NOW Bali lainnya.</div><button class="btn" onclick="openAuth();renderAuth('register')">REGISTER</button><button class="guestLogin" onclick="openAuth();renderAuth('login')">Sudah punya akun? Login</button><div class="guestLock">🔒 Akses aplikasi hanya untuk pengguna yang sudah memiliki akun.</div></div></div>`;
+}
+function show(tab){
+ if(!user){renderGuest();return;}
+ document.getElementById('app').classList.remove('guest');
+ document.querySelector('nav').style.display='flex';
+ setActive(tab);if(tab==='now')renderNow();if(tab==='near')renderNear();if(tab==='people')renderPeople();if(tab==='me')renderMe();
+}
 function renderNow(){let p=places[0];main.innerHTML=`<div class="page"><div class="title"><h2>🔥 Happening Now</h2><span class="muted">real-time demo</span></div>
 <div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.emoji} ${p.name}</h1><span class="muted">${p.people} people • ${p.posts} posts • sangat ramai sekarang</span></div></div></div>
 <div class="title"><h2>⚡ Live Feed</h2><span class="muted">terbaru</span></div><div class="card">${[{t:'Sunset gila hari ini! 🌅',u:'Made Dharma',time:Date.now()-120000,id:'demo1',likes:12,comments:[{u:'Sari',t:'Bagus banget!'}]},{t:'Ramai banget malam ini 🔥',u:'Sara Kim',time:Date.now()-300000,id:'demo2',likes:8,comments:[]},...posts].slice(0,12).map((x,i)=>{let id=x.id||('p'+i);return `<div class="row postRow" onclick='openPostDetail(${JSON.stringify({...x,id})})'>${x.photo?`<img class="thumb" src="${x.photo}">`:''}<div><h3>${esc(x.t)}</h3><p class="muted">${esc(x.u)} • ${ago(x.time)} • ${esc(x.place||'Canggu Beach')}</p>${x.photo?'<span class="tag">📷 foto</span>':''}<span class="tag">🔥 ${x.likes||0}</span><span class="tag">💬 ${(x.comments||[]).length}</span></div></div>`}).join('')}</div>
@@ -159,9 +169,9 @@ user={...newAccount};delete user.password;localStorage.setItem('now_user',JSON.s
 }
 function editProfile(){profileModal.classList.remove('hidden');profileBox.innerHTML=`<h2>Edit Profile</h2><input id="editName" value="${esc(user.name)}"><input id="editUser" value="${esc(user.username)}"><label class="btn secondary" style="display:block;text-align:center">📷 Ganti foto profil <input id="editPhoto" type="file" accept="image/*" style="display:none"></label><br><button class="btn" onclick="saveProfile()">SAVE</button>`}
 async function saveProfile(){user.name=document.getElementById('editName').value.trim()||user.name;user.username=document.getElementById('editUser').value.trim()||user.username;let f=document.getElementById('editPhoto').files[0];if(f)user.photo=await readImage(f);localStorage.setItem('now_user',JSON.stringify(user));profileModal.classList.add('hidden');show('me')}
-function logout(){user=null;localStorage.removeItem('now_user');show('me')}function follow(n){alert('Mengikuti '+n+' (demo)')}
+function logout(){user=null;localStorage.removeItem('now_user');closePost();closePostDetail();closeAuth();show('now')}function follow(n){alert('Mengikuti '+n+' (demo)')}
 function openPostFor(place){postModal.classList.remove('hidden');document.getElementById('postPlace').value=place}function closePost(){postModal.classList.add('hidden')}
-document.getElementById('plus').onclick=()=>openPostFor('Canggu Beach');
+document.getElementById('plus').onclick=()=>{if(!user){renderGuest();return;}openPostFor('Canggu Beach')};
 document.getElementById('postPhoto').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{photoPreview.src=r.result;photoPreview.classList.remove('hidden')};r.readAsDataURL(f)}
 async function publishPost(){let t=postText.value.trim(),place=postPlace.value.trim()||'Canggu Beach',f=postPhoto.files[0];if(!t)return alert('Tulis dulu apa yang sedang terjadi.');let photo=await readImage(f);posts.unshift({id:'p'+Date.now(),t,u:user?.name||'You',place,time:Date.now(),photo,likes:0,comments:[]});localStorage.setItem('now_posts_v2',JSON.stringify(posts));postText.value='';postPhoto.value='';photoPreview.classList.add('hidden');closePost();show('now');alert('🔥 NOW berhasil diposting!')}
 document.querySelectorAll('nav [data-tab]').forEach(b=>b.onclick=()=>show(b.dataset.tab));show('now');
