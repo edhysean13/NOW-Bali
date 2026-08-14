@@ -33,7 +33,7 @@ textarea,input{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 .notice{padding:11px;border-radius:12px;background:#171c27;color:#aeb5c4;font-size:11px;margin:10px 0}
 .postRow{cursor:pointer}.postRow:active{opacity:.75}.postPhotoLarge{width:100%;max-height:430px;object-fit:cover;border-radius:14px;margin-top:10px}.postDetailText{font-size:17px;line-height:1.45;margin:12px 0}.actions{display:flex;gap:10px;margin:12px 0}.actionBtn{flex:1;border:1px solid #303543;background:#1a1f2a;color:#fff;border-radius:12px;padding:11px}.actionBtn.liked{background:#3a2019;color:#ff7043;border-color:#ff7043}.comment{padding:10px 0;border-bottom:1px solid #252b36}.comment:last-child{border-bottom:0}.comment b{font-size:12px}.comment p{margin:4px 0;color:#b8bfcd;font-size:12px}
 .profileTabs{display:flex;border-bottom:1px solid #2a3040;margin:12px 0}.profileTab{flex:1;padding:13px 6px;background:none;border:0;color:#8991a4;font-weight:800}.profileTab.active{color:#ff5a9f;border-bottom:2px solid #ff5a9f}
-.profilePost{padding:14px;border-bottom:1px solid #252b36;cursor:pointer}.profilePost:last-child{border-bottom:0}.profilePost h3{margin:0 0 5px;font-size:14px}.profilePost p{margin:0;color:#9da5b5;font-size:11px}.profileGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.profileGrid img{width:100%;aspect-ratio:1/1;object-fit:cover;cursor:pointer}.empty{text-align:center;padding:30px 15px;color:#8991a4;font-size:12px}
+.profilePost{padding:14px;border-bottom:1px solid #252b36;cursor:pointer}.profilePost:last-child{border-bottom:0}.profilePost h3{margin:0 0 5px;font-size:14px}.profilePost p{margin:0;color:#9da5b5;font-size:11px}.profileGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.profileGrid img{width:100%;aspect-ratio:1/1;object-fit:cover;cursor:pointer}.profilePhotoTile{position:relative;cursor:pointer}.photoMeta{position:absolute;left:5px;bottom:5px;background:#090b12dd;color:#fff;border-radius:10px;padding:4px 7px;font-size:10px}.empty{text-align:center;padding:30px 15px;color:#8991a4;font-size:12px}
 </style>
 </head>
 <body>
@@ -87,7 +87,7 @@ main.innerHTML=`<div class="page">
 {t:'Sunset gila hari ini! 🌅',u:'Made Dharma',time:Date.now()-120000,id:'demo1',likes:12,comments:[{u:'Sari',t:'Bagus banget!'}]},
 {t:'Ramai banget malam ini 🔥',u:'Sara Kim',time:Date.now()-300000,id:'demo2',likes:8,comments:[]},
 ...posts
-].slice(0,12).map((x,i)=>{let id=x.id||('p'+i);return `<div class="row postRow" onclick='openPostDetail(${JSON.stringify({...x,id})})'>${x.photo?`<img class="thumb" src="${x.photo}">`:''}<div><h3>${esc(x.t)}</h3><p class="muted">${esc(x.u)} • ${ago(x.time)} • ${esc(x.place||'Canggu Beach')}</p>${x.photo?'<span class="tag">📷 foto</span>':''}<span class="tag">❤️ ${x.likes||0}</span><span class="tag">💬 ${(x.comments||[]).length}</span></div></div>`}).join('')}</div>
+].slice(0,12).map((x,i)=>{let id=x.id||('p'+i);return `<div class="row postRow" onclick='openPostDetail(${JSON.stringify({...x,id})})'>${x.photo?`<img class="thumb" src="${x.photo}" onclick='event.stopPropagation();openPostDetail(${JSON.stringify({...x,id})})'>`:''}<div><h3>${esc(x.t)}</h3><p class="muted">${esc(x.u)} • ${ago(x.time)} • ${esc(x.place||'Canggu Beach')}</p>${x.photo?'<span class="tag">📷 foto</span>':''}<span class="tag">🔥 ${x.likes||0}</span><span class="tag">💬 ${(x.comments||[]).length}</span></div></div>`}).join('')}</div>
 <div class="title"><h2>🔥 Top Places</h2></div>
 <div class="card">${places.map(p=>`<div class="row" onclick="placeDetail('${p.name}')"><span class="score">${p.score}</span><div><h3>${p.emoji} ${p.name}</h3><p class="muted">${p.people} people active • ${p.posts} posts</p></div></div>`).join('')}</div>
 <div class="notice">💡 <b>NOW Score</b> menggabungkan aktivitas, jumlah orang, posting baru, dan momentum.</div>
@@ -135,10 +135,64 @@ main.innerHTML=`<div class="page"><h2>👤 ME</h2>
 </div>
 ${tab==='posts'
 ? (myPosts.length?myPosts.map(p=>`<div class="profilePost" onclick='openPostDetail(${JSON.stringify(p)})'><h3>${esc(p.t)}</h3><p>📍 ${esc(p.place||'Canggu Beach')} • ${ago(p.time)} • 🔥 ${p.likes||0} • 💬 ${(p.comments||[]).length}</p>${p.photo?`<img class="postPhotoLarge" src="${p.photo}">`:''}</div>`).join(''):`<div class="empty">Belum ada postingan.<br>Tekan + untuk membuat posting pertama.</div>`)
-: (myPosts.filter(p=>p.photo).length?`<div class="profileGrid">${myPosts.filter(p=>p.photo).map(p=>`<img src="${p.photo}" onclick='openPostDetail(${JSON.stringify(p)})'>`).join('')}</div>`:`<div class="empty">Belum ada foto yang kamu posting.</div>`)}
+: (myPosts.filter(p=>p.photo).length?`<div class="profileGrid">${myPosts.filter(p=>p.photo).map(p=>`<div class="profilePhotoTile" onclick='openPostDetail(${JSON.stringify(p)})'><img src="${p.photo}"><div class="photoMeta">🔥 ${p.likes||0} &nbsp; 💬 ${(p.comments||[]).length}</div></div>`).join('')}</div>`:`<div class="empty">Belum ada foto yang kamu posting.</div>`)}
 </div>
 <button class="btn danger" onclick="logout()">LOG OUT</button></div>`;
 }
+
+let activePost=null;
+function openPostDetail(p){
+  activePost={...p,likes:p.likes||0,comments:p.comments||[]};
+  if(activePost.id && !String(activePost.id).startsWith('demo')){
+    const saved=posts.find(x=>x.id===activePost.id);
+    if(saved) activePost={...saved,likes:saved.likes||0,comments:saved.comments||[]};
+  }
+  document.getElementById('postDetailModal').classList.remove('hidden');
+  renderPostDetail();
+}
+function closePostDetail(){document.getElementById('postDetailModal').classList.add('hidden');activePost=null}
+function renderPostDetail(){
+  if(!activePost)return;
+  document.getElementById('postDetailBox').innerHTML=`<div class="muted">📍 ${esc(activePost.place||'Canggu Beach')} • ${ago(activePost.time)}</div>
+  <h2>${esc(activePost.u||'You')}</h2>
+  <div class="postDetailText">${esc(activePost.t||'')}</div>
+  ${activePost.photo?`<img class="postPhotoLarge" src="${activePost.photo}" onclick="this.classList.toggle('zoomed')">`:''}
+  <div class="actions">
+    <button class="actionBtn ${activePost._liked?'liked':''}" onclick="toggleLike()">🔥 ${activePost.likes||0} NOW</button>
+    <button class="actionBtn" onclick="document.getElementById('commentInput').focus()">💬 ${(activePost.comments||[]).length} Komentar</button>
+    <button class="actionBtn" onclick="sharePost()">↗️ Bagikan</button>
+  </div>
+  <div style="display:flex;gap:8px;margin:10px 0"><input id="commentInput" placeholder="Tulis komentar..." style="margin:0"><button class="btn" style="width:auto;padding:10px 14px" onclick="addComment()">KIRIM</button></div>
+  <h3>Komentar</h3>
+  <div>${(activePost.comments||[]).length?activePost.comments.map(c=>`<div class="comment"><b>${esc(c.u)}</b><p>${esc(c.t)}</p></div>`).join(''):'<p class="muted">Belum ada komentar. Jadilah yang pertama.</p>'}</div>`;
+}
+function toggleLike(){
+  if(!activePost)return;
+  activePost._liked=!activePost._liked;
+  activePost.likes=Math.max(0,(activePost.likes||0)+(activePost._liked?1:-1));
+  if(activePost.id && !String(activePost.id).startsWith('demo')){
+    const i=posts.findIndex(x=>x.id===activePost.id);
+    if(i>=0){posts[i].likes=activePost.likes;localStorage.setItem('now_posts_v2',JSON.stringify(posts));}
+  }
+  renderPostDetail();
+}
+function addComment(){
+  if(!activePost)return;
+  const el=document.getElementById('commentInput'),t=el.value.trim();
+  if(!t)return;
+  activePost.comments.push({u:user?.name||'You',t});
+  if(activePost.id && !String(activePost.id).startsWith('demo')){
+    const i=posts.findIndex(x=>x.id===activePost.id);
+    if(i>=0){posts[i].comments=activePost.comments;localStorage.setItem('now_posts_v2',JSON.stringify(posts));}
+  }
+  renderPostDetail();
+}
+function sharePost(){
+  const text=`${activePost?.t||''} — NOW BALI`;
+  if(navigator.share) navigator.share({title:'NOW BALI',text}).catch(()=>{});
+  else alert('Posting siap dibagikan.');
+}
+
 function openAuth(){authModal.classList.remove('hidden');renderAuth('login')}
 function closeAuth(){authModal.classList.add('hidden')}
 function renderAuth(mode){
