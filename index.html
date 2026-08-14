@@ -1,45 +1,41 @@
-<!doctype html><html lang="id"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#090b12"><title>NOW BALI — Live</title>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOW BALI</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#05060a;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-#app{max-width:430px;min-height:100vh;margin:auto;background:#090b12;padding-bottom:85px}
-header{height:64px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #252936;position:sticky;top:0;background:#090b12ee;backdrop-filter:blur(15px);z-index:5}
-.logo{font-size:26px;font-weight:900}.logo i{font-style:normal;color:#ff7838}.live{font-size:10px;color:#55e39a;border:1px solid #276c4b;padding:6px 9px;border-radius:20px}
-.page{padding:15px}.title{display:flex;justify-content:space-between;align-items:center}.title h2{font-size:14px;text-transform:uppercase}.muted{font-size:11px;color:#8d95a8}
-.card{background:#12151e;border:1px solid #282d39;border-radius:18px;overflow:hidden;margin:12px 0}.hero{height:180px;background:linear-gradient(#0000,#000d),url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80") center/cover;position:relative}.heroText{position:absolute;bottom:14px;left:14px}.badge{background:linear-gradient(90deg,#ff3fa4,#ff7b35);padding:5px 9px;border-radius:99px;font-size:10px;font-weight:800}.hero h1{margin:8px 0 3px;font-size:22px}.row{display:flex;gap:12px;padding:13px;border-bottom:1px solid #222631}.row:last-child{border:0}.score{font-size:21px;font-weight:900;color:#ff7846;min-width:42px}.row h3{margin:0 0 4px;font-size:14px}.row p{margin:0;color:#8d95a8;font-size:11px}.btn{width:100%;padding:14px;border:0;border-radius:14px;background:linear-gradient(90deg,#ff3fa4,#ff7b35);color:#fff;font-weight:800}.tabs{display:flex;gap:7px;overflow:auto;margin:10px 0}.chip{padding:8px 12px;border:1px solid #303543;border-radius:99px;font-size:11px;white-space:nowrap}
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:72px;background:#0d1018f5;border-top:1px solid #282d39;display:flex;justify-content:space-around;align-items:center;z-index:8}nav button{border:0;background:none;color:#777f92;font-size:17px;display:flex;flex-direction:column;align-items:center;gap:4px}nav button.active{color:#ff4da7}nav small{font-size:9px}#plus{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff3fa4,#ff7b35);color:#fff;font-size:25px;border:4px solid #090b12;margin-top:-20px}
-#modal{position:fixed;inset:0;background:#000c;display:flex;align-items:flex-end;z-index:20}.hidden{display:none!important}.sheet{width:min(430px,100%);background:#12151e;border-radius:24px 24px 0 0;padding:20px}.close{float:right;background:none;border:0;color:#aaa;font-size:25px}textarea{width:100%;height:120px;background:#090c13;color:#fff;border:1px solid #303543;border-radius:14px;padding:12px;margin:10px 0;resize:none}#toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-90px);background:#1c222e;border:1px solid #3a4050;padding:10px 15px;border-radius:99px;font-size:12px;z-index:30;transition:.25s}#toast.show{transform:translate(-50%,0)}
-</style></head><body><div id="app">
-<header><div class="logo">NOW <i>BALI</i></div><div class="live">● LIVE</div></header>
+*{box-sizing:border-box}body{margin:0;background:#080a10;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#app{max-width:430px;min-height:100vh;margin:auto;padding-bottom:80px}
+header{height:65px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292e3a;position:sticky;top:0;background:#090b12;z-index:2}
+.logo{font-size:27px;font-weight:900}.logo span{color:#ff7438}.live{color:#55e39a;border:1px solid #28704e;border-radius:20px;padding:6px 9px;font-size:10px}
+.page{padding:15px}.muted{color:#8991a4;font-size:11px}.card{background:#12151e;border:1px solid #292e3a;border-radius:18px;margin:12px 0;overflow:hidden}
+.hero{height:190px;background:linear-gradient(#0000,#000d),url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80") center/cover;position:relative}
+.hero div{position:absolute;bottom:14px;left:14px}.badge{background:linear-gradient(90deg,#ff3fa4,#ff7438);padding:6px 10px;border-radius:20px;font-size:10px;font-weight:bold}
+.row{padding:14px;border-bottom:1px solid #252936}.row:last-child{border:0}.score{color:#ff7438;font-size:21px;font-weight:bold;margin-right:12px}
+.btn{width:100%;border:0;border-radius:14px;padding:14px;background:linear-gradient(90deg,#ff3fa4,#ff7438);color:#fff;font-weight:bold}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:72px;background:#0d1018;border-top:1px solid #292e3a;display:flex;justify-content:space-around;align-items:center;z-index:5}
+nav button{border:0;background:none;color:#778094;font-size:18px}nav small{display:block;font-size:9px;margin-top:3px}#plus{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff3fa4,#ff7438);color:#fff;font-size:26px}
+.modal{position:fixed;inset:0;background:#000c;display:flex;align-items:flex-end;z-index:10}.hidden{display:none}
+.sheet{width:min(430px,100%);background:#12151e;border-radius:24px 24px 0 0;padding:20px}textarea{width:100%;height:110px;background:#080a10;color:#fff;border:1px solid #303644;border-radius:14px;padding:12px;margin:12px 0}
+.close{float:right;background:none;border:0;color:#aaa;font-size:25px}
+</style>
+</head>
+<body><div id="app">
+<header><div class="logo">NOW <span>BALI</span></div><div class="live">● LIVE</div></header>
 <main id="main"></main>
-<nav><button data-tab="now" class="active">🔥<small>NOW</small></button><button data-tab="near">📍<small>NEAR</small></button><button id="plus">+</button><button data-tab="people">👥<small>PEOPLE</small></button><button data-tab="me">◉<small>ME</small></button></nav>
-<div id="modal" class="hidden"><div class="sheet"><button class="close" id="close">×</button><h2>Post NOW</h2><div class="muted">📍 Canggu Beach</div><textarea id="text" placeholder="Apa yang sedang terjadi sekarang?"></textarea><button class="btn" id="publish">POST NOW</button></div></div>
-<div id="toast"></div></div>
-<script src="/socket.io/socket.io.js"></script>
+<nav><button onclick="show('now')">🔥<small>NOW</small></button><button onclick="show('near')">📍<small>NEAR</small></button><button id="plus">+</button><button onclick="show('people')">👥<small>PEOPLE</small></button><button onclick="show('me')">◉<small>ME</small></button></nav>
+<div id="modal" class="modal hidden"><div class="sheet"><button class="close" onclick="modal.classList.add('hidden')">×</button><h2>Post NOW</h2><div class="muted">📍 Canggu Beach</div><textarea id="txt" placeholder="Apa yang sedang terjadi sekarang?"></textarea><button class="btn" onclick="post()">POST NOW</button></div></div>
+</div>
 <script>
-const main=document.querySelector("#main"),socket=io();
-let places=[],posts=[];
-const toast=x=>{const t=document.querySelector("#toast");t.textContent=x;t.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove("show"),2200)};
-async function load(){[places,posts]=await Promise.all([fetch("/api/places").then(r=>r.json()),fetch("/api/posts").then(r=>r.json())]);renderNow()}
-function renderNow(){
- const p=places[0]||{name:"Canggu Beach",people:0,posts:0,score:0};
- main.innerHTML=`<div class="page"><div class="title"><h2>🔥 Happening Now</h2><span class="muted">real-time</span></div>
- <div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.name}</h1><span class="muted">${p.people} people • ${p.posts} posts</span></div></div></div>
- <div class="title"><h2>⚡ Live Feed</h2><span class="muted">baru → lama</span></div><div class="card">${posts.slice(0,8).map(x=>`<div class="row"><div><h3>${esc(x.text)}</h3><p>${esc(x.user)} • ${time(x.createdAt)} • ${esc(x.place)}</p></div></div>`).join("")}</div>
- <div class="title"><h2>🔥 Top Places</h2></div><div class="card">${places.map(x=>`<div class="row"><div class="score">${x.score}</div><div><h3>${esc(x.name)}</h3><p>${x.people} people • ${x.posts} posts • NOW Score</p></div></div>`).join("")}</div></div>`;
+const main=document.getElementById('main'),modal=document.getElementById('modal');
+let posts=JSON.parse(localStorage.getItem('now_posts')||'[]');
+function show(t){
+if(t==='now')main.innerHTML='<div class="page"><h2>🔥 HAPPENING NOW</h2><div class="card"><div class="hero"><div><span class="badge">NOW SCORE 94</span><h1>🔥 Canggu Beach</h1><span class="muted">126 people • 38 posts • sangat ramai sekarang</span></div></div></div><h2>⚡ LIVE FEED</h2><div class="card"><div class="row"><b>Sunset gila hari ini! 🌅</b><p class="muted">Made Dharma • 2 menit lalu</p></div><div class="row"><b>Ramai banget malam ini 🔥</b><p class="muted">Sara Kim • 5 menit lalu</p></div>'+posts.map(x=>'<div class="row"><b>'+x+'</b><p class="muted">You • baru saja</p></div>').join('')+'</div><h2>🔥 TOP PLACES</h2><div class="card"><div class="row"><span class="score">94</span><b>Canggu Beach</b></div><div class="row"><span class="score">88</span><b>Seminyak</b></div><div class="row"><span class="score">81</span><b>Kuta Beach</b></div></div></div>';
+if(t==='near')main.innerHTML='<div class="page"><h2>📍 NEAR YOU</h2><div class="card"><div class="row"><span class="score">94</span><b>🔥 Canggu Beach<br><span class="muted">2.4 km • 126 people</span></b></div><div class="row"><span class="score">88</span><b>🎵 Seminyak<br><span class="muted">4.1 km • 74 people</span></b></div><div class="row"><span class="score">81</span><b>🌅 Kuta Beach<br><span class="muted">7.2 km • 61 people</span></b></div></div></div>';
+if(t==='people')main.innerHTML='<div class="page"><h2>👥 PEOPLE ACTIVE NOW</h2><div class="card"><div class="row"><b>🔥 Made Dharma</b><p class="muted">Canggu Beach</p></div><div class="row"><b>🔥 Sara Kim</b><p class="muted">Canggu Beach</p></div><div class="row"><b>🔥 Gus Arya</b><p class="muted">Seminyak</p></div></div></div>';
+if(t==='me')main.innerHTML='<div class="page"><h2>👤 ME</h2><div class="card" style="padding:24px;text-align:center"><h2>My NOW</h2><p class="muted">'+posts.length+' posts</p><button class="btn">LOGIN / REGISTER</button></div></div>';
 }
-function renderNear(){main.innerHTML=`<div class="page"><div class="title"><h2>📍 Near You</h2><span class="muted">demo location</span></div><div class="tabs">${places.map(x=>`<span class="chip">${x.name} • ${x.score}</span>`).join("")}</div>${places.map(x=>`<div class="card"><div class="row"><div class="score">${x.score}</div><div><h3>${x.name}</h3><p>${x.people} people active • ${x.posts} posts</p></div></div></div>`).join("")}</div>`}
-function renderPeople(){main.innerHTML=`<div class="page"><div class="title"><h2>👥 People</h2></div><div class="card"><div class="row"><div class="score">🔥</div><div><h3>Made Dharma</h3><p>Active at Canggu Beach</p></div></div><div class="row"><div class="score">🔥</div><div><h3>Sara Kim</h3><p>Active at Canggu Beach</p></div></div><div class="row"><div class="score">🔥</div><div><h3>Gus Arya</h3><p>Active at Canggu Beach</p></div></div></div></div>`}
-function renderMe(){main.innerHTML=`<div class="page"><div class="title"><h2>👤 Me</h2></div><div class="card" style="padding:24px;text-align:center"><h2>My NOW</h2><p class="muted">Akun demo</p><button class="btn" onclick="toast('Login akan disambungkan pada tahap auth')">LOGIN / REGISTER</button></div></div>`}
-function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function time(ms){let m=Math.max(0,Math.floor((Date.now()-ms)/60000));return m<1?"baru saja":m+" min lalu"}
-document.querySelectorAll("nav [data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");({now:renderNow,near:renderNear,people:renderPeople,me:renderMe})[b.dataset.tab]()});
-document.querySelector("#plus").onclick=()=>document.querySelector("#modal").classList.remove("hidden");
-document.querySelector("#close").onclick=()=>document.querySelector("#modal").classList.add("hidden");
-document.querySelector("#publish").onclick=async()=>{const el=document.querySelector("#text"),text=el.value.trim();if(!text)return toast("Tulis dulu kejadian");const r=await fetch("/api/posts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:"You",text,place:"Canggu Beach"})});if(r.ok){el.value="";document.querySelector("#modal").classList.add("hidden");toast("🔥 Terkirim realtime");}else toast("Gagal mengirim")};
-socket.on("new_post",p=>{posts.unshift(p);toast("🔥 Ada NOW baru: "+p.text);renderNow()});
-socket.on("places_updated",p=>{places=p.map(x=>({...x,score:x.score}));renderNow()});
-socket.on("hello",()=>console.log("NOW realtime connected"));
-load();
+function post(){let x=txt.value.trim();if(!x)return alert('Tulis dulu kejadian');posts.unshift(x);localStorage.setItem('now_posts',JSON.stringify(posts));txt.value='';modal.classList.add('hidden');show('now');alert('🔥 NOW kamu berhasil diposting!')}
+plus.onclick=()=>modal.classList.remove('hidden');show('now');
 </script></body></html>
