@@ -56,7 +56,7 @@ textarea,input{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 </div>
 <script>
 const main=document.getElementById('main'),postModal=document.getElementById('postModal'),authModal=document.getElementById('authModal'),profileModal=document.getElementById('profileModal'),postDetailModal=document.getElementById('postDetailModal');
-let posts=JSON.parse(localStorage.getItem('now_posts_v2')||'[]').map((p,i)=>({...p,id:p.id||('old'+i),likes:p.likes||0,comments:p.comments||[]}));let user=JSON.parse(localStorage.getItem('now_user')||'null');
+let posts=JSON.parse(localStorage.getItem('now_posts_v2')||'[]').map((p,i)=>({...p,id:p.id||('old'+i),likes:p.likes||0,comments:p.comments||[]}));let accounts=JSON.parse(localStorage.getItem('now_accounts_v1')||'[]');let user=JSON.parse(localStorage.getItem('now_user')||'null');
 const places=[{name:'Canggu Beach',score:94,people:126,posts:38,distance:'2.4 km',emoji:'🔥'},{name:'Seminyak',score:88,people:74,posts:22,distance:'4.1 km',emoji:'🎵'},{name:'Kuta Beach',score:81,people:61,posts:17,distance:'7.2 km',emoji:'🌅'}];
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function avatar(u){return u?.photo?`<img class="avatar" src="${u.photo}">`:`<div class="avatar">${(u?.name||'U').slice(0,1).toUpperCase()}</div>`}
@@ -125,20 +125,38 @@ ${detail}${type!=='business'?`<label class="btn secondary" style="display:block;
 <p style="text-align:center;color:#8991a4;font-size:12px;margin-top:16px">Sudah punya akun? <button style="border:0;background:none;color:#ff6a9e" onclick="renderAuth('login')">Login</button></p>`}
 function readImage(file){return new Promise((resolve,reject)=>{if(!file)return resolve('');let r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
 async function doAuth(mode,type='personal'){
-let name=document.getElementById('authName')?.value.trim(),un=document.getElementById('authUser').value.trim(),email=document.getElementById('authEmail').value.trim(),pass=document.getElementById('authPass').value;
-if(!un||!email||!pass||(mode==='register'&&!name))return alert('Lengkapi data dulu.');
-if(mode==='register'&&type==='driver'){
+let un=document.getElementById('authUser')?.value.trim(),email=document.getElementById('authEmail')?.value.trim(),pass=document.getElementById('authPass')?.value||'';
+if(!un||!email||!pass)return alert('Lengkapi username, email, dan password.');
+
+if(mode==='login'){
+const found=accounts.find(a=>(a.username||'').toLowerCase()===un.toLowerCase() && (a.email||'').toLowerCase()===email.toLowerCase() && a.password===pass);
+if(!found)return alert('Username, email, atau password salah.');
+user={...found};delete user.password;
+localStorage.setItem('now_user',JSON.stringify(user));closeAuth();show('me');return;
+}
+
+let name=document.getElementById('authName')?.value.trim();
+if(!name)return alert('Isi Nama dulu.');
+if(accounts.some(a=>(a.username||'').toLowerCase()===un.toLowerCase()))return alert('Username sudah digunakan.');
+if(accounts.some(a=>(a.email||'').toLowerCase()===email.toLowerCase()))return alert('Email sudah digunakan.');
+
+let newAccount={name,username:un,email,password:pass,accountType:type};
+if(type==='driver'){
 let car=document.getElementById('driverCar')?.value.trim(),vehicle=document.getElementById('driverVehicle')?.value.trim(),phone=document.getElementById('driverPhone')?.value.trim();
 if(!car||!vehicle||!phone)return alert('Lengkapi data Driver dulu.');
-let photo=await readImage(document.getElementById('authPhoto')?.files[0]);user={name,username:un,email,photo,accountType:'driver',driver:{carType:car,vehicleNumber:vehicle,orderPhone:phone}};
-}else if(mode==='register'&&type==='business'){
+let photo=await readImage(document.getElementById('authPhoto')?.files[0]);
+newAccount.photo=photo;newAccount.driver={carType:car,vehicleNumber:vehicle,orderPhone:phone};
+}else if(type==='business'){
 let businessName=document.getElementById('businessName')?.value.trim(),businessType=document.getElementById('businessType')?.value.trim(),address=document.getElementById('businessAddress')?.value.trim(),phone=document.getElementById('businessPhone')?.value.trim();
 if(!businessName||!businessType||!address||!phone)return alert('Lengkapi data Usaha dulu.');
-let businessPhoto=await readImage(document.getElementById('businessPhoto')?.files[0]);user={name,username:un,email,accountType:'business',displayName:businessName,business:{name:businessName,type:businessType,address,phone,photo:businessPhoto}};
-}else if(mode==='register'){
-let photo=await readImage(document.getElementById('authPhoto')?.files[0]);user={name,username:un,email,photo,accountType:'personal'};
-}else{user={name:name||un,username:un,email,accountType:user?.accountType||'personal',...(user?.driver?{driver:user.driver}:{}),...(user?.business?{business:user.business}:{})}}
-localStorage.setItem('now_user',JSON.stringify(user));closeAuth();show('me')}
+let businessPhoto=await readImage(document.getElementById('businessPhoto')?.files[0]);
+newAccount.displayName=businessName;newAccount.business={name:businessName,type:businessType,address,phone,photo:businessPhoto};
+}else{
+newAccount.photo=await readImage(document.getElementById('authPhoto')?.files[0]);
+}
+accounts.push(newAccount);localStorage.setItem('now_accounts_v1',JSON.stringify(accounts));
+user={...newAccount};delete user.password;localStorage.setItem('now_user',JSON.stringify(user));closeAuth();show('me');
+}
 function editProfile(){profileModal.classList.remove('hidden');profileBox.innerHTML=`<h2>Edit Profile</h2><input id="editName" value="${esc(user.name)}"><input id="editUser" value="${esc(user.username)}"><label class="btn secondary" style="display:block;text-align:center">📷 Ganti foto profil <input id="editPhoto" type="file" accept="image/*" style="display:none"></label><br><button class="btn" onclick="saveProfile()">SAVE</button>`}
 async function saveProfile(){user.name=document.getElementById('editName').value.trim()||user.name;user.username=document.getElementById('editUser').value.trim()||user.username;let f=document.getElementById('editPhoto').files[0];if(f)user.photo=await readImage(f);localStorage.setItem('now_user',JSON.stringify(user));profileModal.classList.add('hidden');show('me')}
 function logout(){user=null;localStorage.removeItem('now_user');show('me')}function follow(n){alert('Mengikuti '+n+' (demo)')}
