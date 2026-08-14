@@ -15,25 +15,28 @@ header{height:64px;padding:0 16px;display:flex;align-items:center;justify-conten
 .card{background:#12151e;border:1px solid #282d39;border-radius:18px;margin:12px 0;overflow:hidden}
 .hero{height:190px;background:linear-gradient(#0000,#000d),url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80") center/cover;position:relative}
 .heroText{position:absolute;left:14px;bottom:14px}.badge{background:linear-gradient(90deg,#ff3fa4,#ff7438);padding:6px 10px;border-radius:99px;font-size:10px;font-weight:800}.hero h1{margin:8px 0 3px}
-.row{display:flex;gap:12px;padding:14px;border-bottom:1px solid #242935;align-items:center}.row:last-child{border:0}.row h3{margin:0 0 4px;font-size:14px}.row p{margin:0}.score{font-size:21px;font-weight:900;color:#ff7846;min-width:42px;text-align:center}
-.thumb{width:54px;height:54px;border-radius:12px;object-fit:cover;background:#202531}
+.row{display:flex;gap:12px;padding:14px;border-bottom:1px solid #242935;align-items:center}.row:last-child{border:0}.row h3{margin:0 0 4px;font-size:14px}.row p{margin:0}
+.score{font-size:21px;font-weight:900;color:#ff7846;min-width:42px;text-align:center}.thumb{width:54px;height:54px;border-radius:12px;object-fit:cover;background:#202531}
 .btn{width:100%;border:0;border-radius:14px;padding:14px;background:linear-gradient(90deg,#ff3fa4,#ff7438);color:#fff;font-weight:800}.btn.secondary{background:#222733}.btn.danger{background:#5a2028}
-.chips{display:flex;gap:8px;overflow:auto;margin:10px 0}.chip{white-space:nowrap;border:1px solid #303543;border-radius:99px;padding:8px 12px;font-size:11px}
 .profileHead{text-align:center;padding:22px}.avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;margin:auto;border:3px solid #ff5b8f;background:linear-gradient(135deg,#ff3fa4,#ff7438);display:grid;place-items:center;font-size:30px;font-weight:900}
 .stats{display:flex;justify-content:space-around;text-align:center;margin:18px 0}.stats b{display:block;font-size:18px}.stats span{font-size:10px;color:#8991a4}
 nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:74px;background:#0d1018f7;border-top:1px solid #282d39;display:flex;justify-content:space-around;align-items:center;z-index:8}
 nav button{border:0;background:none;color:#747d91;font-size:18px;display:flex;flex-direction:column;align-items:center;gap:3px}nav button.active{color:#ff4da7}nav small{font-size:9px}
 #plus{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#ff3fa4,#ff7438);color:#fff;font-size:27px;border:3px solid #090b12;margin-top:-18px}
-.overlay{position:fixed;inset:0;background:#000c;z-index:20;display:flex;align-items:flex-end}.hidden{display:none!important}.sheet{width:min(430px,100%);background:#12151e;border-radius:25px 25px 0 0;padding:20px;max-height:92vh;overflow:auto}.close{float:right;border:0;background:none;color:#aaa;font-size:27px}
+.overlay{position:fixed;inset:0;background:#000c;z-index:20;display:flex;align-items:flex-end}.hidden{display:none!important}
+.sheet{width:min(430px,100%);background:#12151e;border-radius:25px 25px 0 0;padding:20px;max-height:92vh;overflow:auto}.close{float:right;border:0;background:none;color:#aaa;font-size:27px}
 textarea,input{width:100%;background:#090c13;color:#fff;border:1px solid #303543;border-radius:13px;padding:12px;margin:7px 0;outline:none}textarea{height:110px;resize:none}
-.photoPreview{width:100%;max-height:220px;object-fit:cover;border-radius:14px;margin:8px 0}.back{background:none;border:0;color:#ff7846;padding:0;font-size:13px}
-.map{height:330px;border-radius:18px;border:1px solid #303543;background:radial-gradient(circle at 30% 30%,#203746,#101821 45%,#0b1016);position:relative;overflow:hidden}
-.pin{position:absolute;background:#141a24;border:1px solid #454d5d;border-radius:12px;padding:8px;font-size:10px;box-shadow:0 5px 20px #0008}.pin b{display:block;color:#ff7947}
-.tag{display:inline-block;padding:4px 8px;border-radius:99px;background:#202632;color:#cdd2dd;font-size:10px;margin:2px}
+.photoPreview{width:100%;max-height:220px;object-fit:cover;border-radius:14px;margin:8px 0}
+.back{background:none;border:0;color:#ff7846;padding:0;font-size:13px}.tag{display:inline-block;padding:4px 8px;border-radius:99px;background:#202632;color:#cdd2dd;font-size:10px;margin:2px}
 .notice{padding:11px;border-radius:12px;background:#171c27;color:#aeb5c4;font-size:11px;margin:10px 0}
-.postRow{cursor:pointer}.postRow:active{opacity:.75}.postPhotoLarge{width:100%;max-height:430px;object-fit:cover;border-radius:14px;margin-top:10px}.postDetailText{font-size:17px;line-height:1.45;margin:12px 0}.actions{display:flex;gap:10px;margin:12px 0}.actionBtn{flex:1;border:1px solid #303543;background:#1a1f2a;color:#fff;border-radius:12px;padding:11px}.actionBtn.liked{background:#3a2019;color:#ff7043;border-color:#ff7043}.comment{padding:10px 0;border-bottom:1px solid #252b36}.comment:last-child{border-bottom:0}.comment b{font-size:12px}.comment p{margin:4px 0;color:#b8bfcd;font-size:12px}
+.postRow{cursor:pointer}.postRow:active{opacity:.75}.postPhotoLarge{width:100%;max-height:430px;object-fit:cover;border-radius:14px;margin-top:10px}.postDetailText{font-size:17px;line-height:1.45;margin:12px 0}
+.actions{display:flex;gap:10px;margin:12px 0}.actionBtn{flex:1;border:1px solid #303543;background:#1a1f2a;color:#fff;border-radius:12px;padding:11px}.actionBtn.liked{background:#3a2019;color:#ff7043;border-color:#ff7043}
+.comment{padding:10px 0;border-bottom:1px solid #252b36}.comment:last-child{border-bottom:0}.comment b{font-size:12px}.comment p{margin:4px 0;color:#b8bfcd;font-size:12px}
 .profileTabs{display:flex;border-bottom:1px solid #2a3040;margin:12px 0}.profileTab{flex:1;padding:13px 6px;background:none;border:0;color:#8991a4;font-weight:800}.profileTab.active{color:#ff5a9f;border-bottom:2px solid #ff5a9f}
-.profilePost{padding:14px;border-bottom:1px solid #252b36;cursor:pointer}.profilePost:last-child{border-bottom:0}.profilePost h3{margin:0 0 5px;font-size:14px}.profilePost p{margin:0;color:#9da5b5;font-size:11px}.profileGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.profileGrid img{width:100%;aspect-ratio:1/1;object-fit:cover;cursor:pointer}.profilePhotoTile{position:relative;cursor:pointer}.photoMeta{position:absolute;left:5px;bottom:5px;background:#090b12dd;color:#fff;border-radius:10px;padding:4px 7px;font-size:10px}.empty{text-align:center;padding:30px 15px;color:#8991a4;font-size:12px}
+.profilePost{padding:14px;border-bottom:1px solid #252b36;cursor:pointer}.profilePost:last-child{border-bottom:0}.profilePost h3{margin:0 0 5px;font-size:14px}.profilePost p{margin:0;color:#9da5b5;font-size:11px}
+.profileGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.profileGrid img{width:100%;aspect-ratio:1/1;object-fit:cover;cursor:pointer}.profilePhotoTile{position:relative;cursor:pointer}.photoMeta{position:absolute;left:5px;bottom:5px;background:#090b12dd;color:#fff;border-radius:10px;padding:4px 7px;font-size:10px}.empty{text-align:center;padding:30px 15px;color:#8991a4;font-size:12px}
+.accountChoices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.accountChoice{border:1px solid #303543;background:#1a1f2a;color:#fff;border-radius:14px;padding:14px 8px;text-align:center;font-weight:800}.accountChoice.active{border-color:#ff5a9f;background:#2b1b2a;box-shadow:0 0 0 1px #ff5a9f33}.accountChoice span{display:block;font-size:24px;margin-bottom:5px}
+.formSection{padding:12px 0;border-top:1px solid #252b36;margin-top:10px}.formSection h3{margin:0 0 5px;font-size:13px}.requiredNote{font-size:10px;color:#8991a4;margin:5px 0 10px}
 </style>
 </head>
 <body>
@@ -41,195 +44,82 @@ textarea,input{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 <header><div class="logo">NOW <span>BALI</span></div><div class="live">● LIVE</div></header>
 <main id="main"></main>
 <nav>
-<button data-tab="now">🔥<small>NOW</small></button>
-<button data-tab="near">📍<small>NEAR</small></button>
-<button id="plus">+</button>
-<button data-tab="people">👥<small>PEOPLE</small></button>
-<button data-tab="me">◉<small>ME</small></button>
+<button data-tab="now">🔥<small>NOW</small></button><button data-tab="near">📍<small>NEAR</small></button><button id="plus">+</button><button data-tab="people">👥<small>PEOPLE</small></button><button data-tab="me">◉<small>ME</small></button>
 </nav>
 <div id="postModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closePost()">×</button><h2>Post NOW</h2><div class="muted">📍 Canggu Beach</div>
-<textarea id="postText" placeholder="Apa yang sedang terjadi sekarang?"></textarea>
-<input id="postPlace" placeholder="Lokasi / tempat" value="Canggu Beach">
+<textarea id="postText" placeholder="Apa yang sedang terjadi sekarang?"></textarea><input id="postPlace" placeholder="Lokasi / tempat" value="Canggu Beach">
 <label class="btn secondary" style="display:block;text-align:center;margin:7px 0">📷 Tambah foto <input id="postPhoto" type="file" accept="image/*" style="display:none"></label>
-<img id="photoPreview" class="photoPreview hidden">
-<button class="btn" onclick="publishPost()">POST NOW</button></div></div>
-
+<img id="photoPreview" class="photoPreview hidden"><button class="btn" onclick="publishPost()">POST NOW</button></div></div>
 <div id="postDetailModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closePostDetail()">×</button><div id="postDetailBox"></div></div></div>
 <div id="authModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closeAuth()">×</button><div id="authBox"></div></div></div>
 <div id="profileModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="profileModal.classList.add('hidden')">×</button><div id="profileBox"></div></div></div>
 </div>
-
 <script>
-const main=document.getElementById('main'), postModal=document.getElementById('postModal'), authModal=document.getElementById('authModal'), profileModal=document.getElementById('profileModal'), postDetailModal=document.getElementById('postDetailModal');
-let posts=JSON.parse(localStorage.getItem('now_posts_v2')||'[]').map((p,i)=>({...p,id:p.id||('old'+i),likes:p.likes||0,comments:p.comments||[]}));
-let user=JSON.parse(localStorage.getItem('now_user')||'null');
-
-const places=[
-{name:'Canggu Beach',score:94,people:126,posts:38,distance:'2.4 km',emoji:'🔥'},
-{name:'Seminyak',score:88,people:74,posts:22,distance:'4.1 km',emoji:'🎵'},
-{name:'Kuta Beach',score:81,people:61,posts:17,distance:'7.2 km',emoji:'🌅'}
-];
-
+const main=document.getElementById('main'),postModal=document.getElementById('postModal'),authModal=document.getElementById('authModal'),profileModal=document.getElementById('profileModal'),postDetailModal=document.getElementById('postDetailModal');
+let posts=JSON.parse(localStorage.getItem('now_posts_v2')||'[]').map((p,i)=>({...p,id:p.id||('old'+i),likes:p.likes||0,comments:p.comments||[]}));let user=JSON.parse(localStorage.getItem('now_user')||'null');
+const places=[{name:'Canggu Beach',score:94,people:126,posts:38,distance:'2.4 km',emoji:'🔥'},{name:'Seminyak',score:88,people:74,posts:22,distance:'4.1 km',emoji:'🎵'},{name:'Kuta Beach',score:81,people:61,posts:17,distance:'7.2 km',emoji:'🌅'}];
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function avatar(u){return u?.photo?`<img class="avatar" src="${u.photo}">`:`<div class="avatar">${(u?.name||'U').slice(0,1).toUpperCase()}</div>`}
 function ago(t){let m=Math.floor((Date.now()-t)/60000);return m<1?'baru saja':m+' min lalu'}
-
 function setActive(tab){document.querySelectorAll('nav [data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab))}
 function show(tab){setActive(tab);if(tab==='now')renderNow();if(tab==='near')renderNear();if(tab==='people')renderPeople();if(tab==='me')renderMe()}
-
-function renderNow(){
-let p=places[0];
-main.innerHTML=`<div class="page">
-<div class="title"><h2>🔥 Happening Now</h2><span class="muted">real-time demo</span></div>
+function renderNow(){let p=places[0];main.innerHTML=`<div class="page"><div class="title"><h2>🔥 Happening Now</h2><span class="muted">real-time demo</span></div>
 <div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.emoji} ${p.name}</h1><span class="muted">${p.people} people • ${p.posts} posts • sangat ramai sekarang</span></div></div></div>
-<div class="title"><h2>⚡ Live Feed</h2><span class="muted">terbaru</span></div>
-<div class="card">${[
-{t:'Sunset gila hari ini! 🌅',u:'Made Dharma',time:Date.now()-120000,id:'demo1',likes:12,comments:[{u:'Sari',t:'Bagus banget!'}]},
-{t:'Ramai banget malam ini 🔥',u:'Sara Kim',time:Date.now()-300000,id:'demo2',likes:8,comments:[]},
-...posts
-].slice(0,12).map((x,i)=>{let id=x.id||('p'+i);return `<div class="row postRow" onclick='openPostDetail(${JSON.stringify({...x,id})})'>${x.photo?`<img class="thumb" src="${x.photo}" onclick='event.stopPropagation();openPostDetail(${JSON.stringify({...x,id})})'>`:''}<div><h3>${esc(x.t)}</h3><p class="muted">${esc(x.u)} • ${ago(x.time)} • ${esc(x.place||'Canggu Beach')}</p>${x.photo?'<span class="tag">📷 foto</span>':''}<span class="tag">🔥 ${x.likes||0}</span><span class="tag">💬 ${(x.comments||[]).length}</span></div></div>`}).join('')}</div>
-<div class="title"><h2>🔥 Top Places</h2></div>
-<div class="card">${places.map(p=>`<div class="row" onclick="placeDetail('${p.name}')"><span class="score">${p.score}</span><div><h3>${p.emoji} ${p.name}</h3><p class="muted">${p.people} people active • ${p.posts} posts</p></div></div>`).join('')}</div>
-<div class="notice">💡 <b>NOW Score</b> menggabungkan aktivitas, jumlah orang, posting baru, dan momentum.</div>
-</div>`;
-}
-
-function renderNear(){
-main.innerHTML=`<div class="page"><div class="title"><h2>📍 Near You</h2><span class="muted">lokasi demo</span></div>
-<div class="notice">Nanti GPS akan menentukan tempat terdekat secara otomatis. Untuk sekarang lokasi demo: Bali.</div>
-<div class="map">${places.map((p,i)=>`<div class="pin" style="left:${10+i*30}%;top:${18+i*23}%"><b>${p.emoji} ${p.name}</b>${p.people} active</div>`).join('')}</div>
-<h2>🔥 Sekitar kamu sekarang</h2><div class="card">${places.map(p=>`<div class="row" onclick="placeDetail('${p.name}')"><span class="score">${p.score}</span><div><h3>${p.emoji} ${p.name}</h3><p class="muted">${p.distance} • ${p.people} people active • ${p.posts} posts</p></div></div>`).join('')}</div></div>`;
-}
-
-function placeDetail(name){
-let p=places.find(x=>x.name===name)||places[0];
-main.innerHTML=`<div class="page"><button class="back" onclick="show('near')">← Kembali</button>
-<h2>${p.emoji} ${p.name}</h2><div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.people} people active</h1><span class="muted">${p.posts} posts • ${p.distance}</span></div></div>
-<div class="row"><div><h3>⚡ Yang sedang terjadi</h3><p class="muted">Aktivitas sedang tinggi di lokasi ini.</p></div></div>
-${posts.filter(x=>(x.place||'Canggu Beach')===p.name).slice(0,5).map(x=>`<div class="row"><div><h3>${esc(x.t)}</h3><p class="muted">${esc(x.u)} • ${ago(x.time)}</p></div></div>`).join('')}
-<div class="row"><button class="btn" onclick="openPostFor('${p.name}')">➕ Post di sini</button></div>
-</div></div>`;
-}
-
-function renderPeople(){
-main.innerHTML=`<div class="page"><div class="title"><h2>👥 People</h2><span class="muted">aktif sekarang</span></div>
-<div class="card">${[
-['Made Dharma','Canggu Beach'],['Sara Kim','Canggu Beach'],['Gus Arya','Seminyak']
-].map(x=>`<div class="row"><div class="avatar" style="width:52px;height:52px;font-size:18px">${x[0][0]}</div><div><h3>${x[0]}</h3><p class="muted">🔥 Active • ${x[1]}</p></div><button class="btn secondary" style="width:auto;padding:9px 12px;margin-left:auto" onclick="follow('${x[0]}')">FOLLOW</button></div>`).join('')}</div></div>`;
-}
-
-function renderMe(tab='posts'){
-if(!user){
-main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead">${avatar(null)}<h2>Masuk ke NOW</h2><p class="muted">Buat profil, upload foto, follow orang, dan simpan aktivitas.</p><button class="btn" onclick="openAuth()">LOGIN / REGISTER</button></div></div>`;
-return;
-}
-const myPosts=posts.filter(x=>x.u===user.name).sort((a,b)=>b.time-a.time);
-main.innerHTML=`<div class="page"><h2>👤 ME</h2>
-<div class="card profileHead">${avatar(user)}<h2>${esc(user.name)}</h2><p class="muted">@${esc(user.username||user.name.toLowerCase().replace(/\\s+/g,''))}</p>
-<div class="stats"><div><b>${myPosts.length}</b><span>POSTS</span></div><div><b>0</b><span>FOLLOWERS</span></div><div><b>0</b><span>FOLLOWING</span></div></div>
-<button class="btn" onclick="editProfile()">EDIT PROFILE</button></div>
-<div class="card">
-<div class="profileTabs">
-<button class="profileTab ${tab==='posts'?'active':''}" onclick="renderMe('posts')">📝 POSTS</button>
-<button class="profileTab ${tab==='photos'?'active':''}" onclick="renderMe('photos')">📷 PHOTOS</button>
-</div>
-${tab==='posts'
-? (myPosts.length?myPosts.map(p=>`<div class="profilePost" onclick='openPostDetail(${JSON.stringify(p)})'><h3>${esc(p.t)}</h3><p>📍 ${esc(p.place||'Canggu Beach')} • ${ago(p.time)} • 🔥 ${p.likes||0} • 💬 ${(p.comments||[]).length}</p>${p.photo?`<img class="postPhotoLarge" src="${p.photo}">`:''}</div>`).join(''):`<div class="empty">Belum ada postingan.<br>Tekan + untuk membuat posting pertama.</div>`)
-: (myPosts.filter(p=>p.photo).length?`<div class="profileGrid">${myPosts.filter(p=>p.photo).map(p=>`<div class="profilePhotoTile" onclick='openPostDetail(${JSON.stringify(p)})'><img src="${p.photo}"><div class="photoMeta">🔥 ${p.likes||0} &nbsp; 💬 ${(p.comments||[]).length}</div></div>`).join('')}</div>`:`<div class="empty">Belum ada foto yang kamu posting.</div>`)}
-</div>
-<button class="btn danger" onclick="logout()">LOG OUT</button></div>`;
-}
-
+<div class="title"><h2>⚡ Live Feed</h2><span class="muted">terbaru</span></div><div class="card">${[{t:'Sunset gila hari ini! 🌅',u:'Made Dharma',time:Date.now()-120000,id:'demo1',likes:12,comments:[{u:'Sari',t:'Bagus banget!'}]},{t:'Ramai banget malam ini 🔥',u:'Sara Kim',time:Date.now()-300000,id:'demo2',likes:8,comments:[]},...posts].slice(0,12).map((x,i)=>{let id=x.id||('p'+i);return `<div class="row postRow" onclick='openPostDetail(${JSON.stringify({...x,id})})'>${x.photo?`<img class="thumb" src="${x.photo}">`:''}<div><h3>${esc(x.t)}</h3><p class="muted">${esc(x.u)} • ${ago(x.time)} • ${esc(x.place||'Canggu Beach')}</p>${x.photo?'<span class="tag">📷 foto</span>':''}<span class="tag">🔥 ${x.likes||0}</span><span class="tag">💬 ${(x.comments||[]).length}</span></div></div>`}).join('')}</div>
+<div class="title"><h2>🔥 Top Places</h2></div><div class="card">${places.map(p=>`<div class="row" onclick="placeDetail('${p.name}')"><span class="score">${p.score}</span><div><h3>${p.emoji} ${p.name}</h3><p class="muted">${p.people} people active • ${p.posts} posts</p></div></div>`).join('')}</div>
+<div class="notice">💡 <b>NOW Score</b> menggabungkan aktivitas, jumlah orang, posting baru, dan momentum.</div></div>`}
+function renderNear(){main.innerHTML=`<div class="page"><div class="title"><h2>📍 Near You</h2><span class="muted">lokasi demo</span></div><div class="notice">Nanti GPS akan menentukan tempat terdekat secara otomatis. Untuk sekarang lokasi demo: Bali.</div><div class="card"><div class="row"><div><h3>📍 Bali</h3><p class="muted">Lokasi demo untuk tahap pengembangan.</p></div></div></div><div class="card">${places.map(p=>`<div class="row" onclick="placeDetail('${p.name}')"><span class="score">${p.score}</span><div><h3>${p.emoji} ${p.name}</h3><p class="muted">${p.distance} • ${p.people} people active • ${p.posts} posts</p></div></div>`).join('')}</div></div>`}
+function placeDetail(name){let p=places.find(x=>x.name===name)||places[0];main.innerHTML=`<div class="page"><button class="back" onclick="show('near')">← Kembali</button><h2>${p.emoji} ${p.name}</h2><div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.people} people active</h1><span class="muted">${p.posts} posts • ${p.distance}</span></div></div><div class="row"><div><h3>⚡ Yang sedang terjadi</h3><p class="muted">Aktivitas sedang tinggi di lokasi ini.</p></div></div>${posts.filter(x=>(x.place||'Canggu Beach')===p.name).slice(0,5).map(x=>`<div class="row"><div><h3>${esc(x.t)}</h3><p class="muted">${esc(x.u)} • ${ago(x.time)}</p></div></div>`).join('')}<div class="row"><button class="btn" onclick="openPostFor('${p.name}')">➕ Post di sini</button></div></div></div>`}
+function renderPeople(){main.innerHTML=`<div class="page"><div class="title"><h2>👥 People</h2><span class="muted">aktif sekarang</span></div><div class="card">${[['Made Dharma','Canggu Beach'],['Sara Kim','Canggu Beach'],['Gus Arya','Seminyak']].map(x=>`<div class="row"><div class="avatar" style="width:52px;height:52px;font-size:18px">${x[0][0]}</div><div><h3>${x[0]}</h3><p class="muted">🔥 Active • ${x[1]}</p></div><button class="btn secondary" style="width:auto;padding:9px 12px;margin-left:auto" onclick="follow('${x[0]}')">FOLLOW</button></div>`).join('')}</div></div>`}
+function renderMe(tab='posts'){if(!user){main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead">${avatar(null)}<h2>Masuk ke NOW</h2><p class="muted">Buat profil, upload foto, follow orang, dan simpan aktivitas.</p><button class="btn" onclick="openAuth()">LOGIN / REGISTER</button></div></div>`;return}
+const myPosts=posts.filter(x=>x.u===user.name).sort((a,b)=>b.time-a.time);main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead">${avatar(user)}<h2>${esc(user.displayName||user.name)}</h2><p class="muted">@${esc(user.username||user.name.toLowerCase().replace(/\s+/g,''))}</p><div class="stats"><div><b>${myPosts.length}</b><span>POSTS</span></div><div><b>0</b><span>FOLLOWERS</span></div><div><b>0</b><span>FOLLOWING</span></div></div><button class="btn" onclick="editProfile()">EDIT PROFILE</button></div>
+<div class="card"><div class="profileTabs"><button class="profileTab ${tab==='posts'?'active':''}" onclick="renderMe('posts')">📝 POSTS</button><button class="profileTab ${tab==='photos'?'active':''}" onclick="renderMe('photos')">📷 PHOTOS</button></div>
+${tab==='posts'?(myPosts.length?myPosts.map(p=>`<div class="profilePost" onclick='openPostDetail(${JSON.stringify(p)})'><h3>${esc(p.t)}</h3><p>📍 ${esc(p.place||'Canggu Beach')} • ${ago(p.time)} • 🔥 ${p.likes||0} • 💬 ${(p.comments||[]).length}</p>${p.photo?`<img class="postPhotoLarge" src="${p.photo}">`:''}</div>`).join(''):`<div class="empty">Belum ada postingan.<br>Tekan + untuk membuat posting pertama.</div>`):(myPosts.filter(p=>p.photo).length?`<div class="profileGrid">${myPosts.filter(p=>p.photo).map(p=>`<div class="profilePhotoTile" onclick='openPostDetail(${JSON.stringify(p)})'><img src="${p.photo}"><div class="photoMeta">🔥 ${p.likes||0} &nbsp; 💬 ${(p.comments||[]).length}</div></div>`).join('')}</div>`:`<div class="empty">Belum ada foto yang kamu posting.</div>`)}</div><button class="btn danger" onclick="logout()">LOG OUT</button></div>`}
 let activePost=null;
-function openPostDetail(p){
-  activePost={...p,likes:p.likes||0,comments:p.comments||[]};
-  if(activePost.id && !String(activePost.id).startsWith('demo')){
-    const saved=posts.find(x=>x.id===activePost.id);
-    if(saved) activePost={...saved,likes:saved.likes||0,comments:saved.comments||[]};
-  }
-  document.getElementById('postDetailModal').classList.remove('hidden');
-  renderPostDetail();
-}
-function closePostDetail(){document.getElementById('postDetailModal').classList.add('hidden');activePost=null}
-function renderPostDetail(){
-  if(!activePost)return;
-  document.getElementById('postDetailBox').innerHTML=`<div class="muted">📍 ${esc(activePost.place||'Canggu Beach')} • ${ago(activePost.time)}</div>
-  <h2>${esc(activePost.u||'You')}</h2>
-  <div class="postDetailText">${esc(activePost.t||'')}</div>
-  ${activePost.photo?`<img class="postPhotoLarge" src="${activePost.photo}" onclick="this.classList.toggle('zoomed')">`:''}
-  <div class="actions">
-    <button class="actionBtn ${activePost._liked?'liked':''}" onclick="toggleLike()">🔥 ${activePost.likes||0} NOW</button>
-    <button class="actionBtn" onclick="document.getElementById('commentInput').focus()">💬 ${(activePost.comments||[]).length} Komentar</button>
-    <button class="actionBtn" onclick="sharePost()">↗️ Bagikan</button>
-  </div>
-  <div style="display:flex;gap:8px;margin:10px 0"><input id="commentInput" placeholder="Tulis komentar..." style="margin:0"><button class="btn" style="width:auto;padding:10px 14px" onclick="addComment()">KIRIM</button></div>
-  <h3>Komentar</h3>
-  <div>${(activePost.comments||[]).length?activePost.comments.map(c=>`<div class="comment"><b>${esc(c.u)}</b><p>${esc(c.t)}</p></div>`).join(''):'<p class="muted">Belum ada komentar. Jadilah yang pertama.</p>'}</div>`;
-}
-function toggleLike(){
-  if(!activePost)return;
-  activePost._liked=!activePost._liked;
-  activePost.likes=Math.max(0,(activePost.likes||0)+(activePost._liked?1:-1));
-  if(activePost.id && !String(activePost.id).startsWith('demo')){
-    const i=posts.findIndex(x=>x.id===activePost.id);
-    if(i>=0){posts[i].likes=activePost.likes;localStorage.setItem('now_posts_v2',JSON.stringify(posts));}
-  }
-  renderPostDetail();
-}
-function addComment(){
-  if(!activePost)return;
-  const el=document.getElementById('commentInput'),t=el.value.trim();
-  if(!t)return;
-  activePost.comments.push({u:user?.name||'You',t});
-  if(activePost.id && !String(activePost.id).startsWith('demo')){
-    const i=posts.findIndex(x=>x.id===activePost.id);
-    if(i>=0){posts[i].comments=activePost.comments;localStorage.setItem('now_posts_v2',JSON.stringify(posts));}
-  }
-  renderPostDetail();
-}
-function sharePost(){
-  const text=`${activePost?.t||''} — NOW BALI`;
-  if(navigator.share) navigator.share({title:'NOW BALI',text}).catch(()=>{});
-  else alert('Posting siap dibagikan.');
-}
-
-function openAuth(){authModal.classList.remove('hidden');renderAuth('login')}
-function closeAuth(){authModal.classList.add('hidden')}
-function renderAuth(mode){
-authBox.innerHTML=`<h2>${mode==='login'?'Login ke NOW':'Buat akun NOW'}</h2>
-<div class="notice">Demo lokal: akun ini tersimpan di perangkat ini. Login Google/Apple/OTP akan dipasang saat backend sudah aktif.</div>
-<input id="authName" placeholder="Nama" ${mode==='login'?'style="display:none"':''}>
-<input id="authUser" placeholder="Username">
-<input id="authEmail" placeholder="Email">
-<input id="authPass" type="password" placeholder="Password">
-<label class="btn secondary" style="display:block;text-align:center;margin:8px 0">📷 Foto profil <input id="authPhoto" type="file" accept="image/*" style="display:none"></label>
-<button class="btn" onclick="doAuth('${mode}')">${mode==='login'?'LOGIN':'REGISTER'}</button>
-<p style="text-align:center;color:#8991a4;font-size:12px;margin-top:16px">${mode==='login'?`Belum punya akun? <button style="border:0;background:none;color:#ff6a9e" onclick="renderAuth('register')">Register</button>`:`Sudah punya akun? <button style="border:0;background:none;color:#ff6a9e" onclick="renderAuth('login')">Login</button>`}</p>`;
-}
+function openPostDetail(p){activePost={...p,likes:p.likes||0,comments:p.comments||[]};if(activePost.id&&!String(activePost.id).startsWith('demo')){const saved=posts.find(x=>x.id===activePost.id);if(saved)activePost={...saved,likes:saved.likes||0,comments:saved.comments||[]}}postDetailModal.classList.remove('hidden');renderPostDetail()}
+function closePostDetail(){postDetailModal.classList.add('hidden');activePost=null}
+function renderPostDetail(){if(!activePost)return;document.getElementById('postDetailBox').innerHTML=`<div class="muted">📍 ${esc(activePost.place||'Canggu Beach')} • ${ago(activePost.time)}</div><h2>${esc(activePost.u||'You')}</h2><div class="postDetailText">${esc(activePost.t||'')}</div>${activePost.photo?`<img class="postPhotoLarge" src="${activePost.photo}">`:''}<div class="actions"><button class="actionBtn ${activePost._liked?'liked':''}" onclick="toggleLike()">🔥 ${activePost.likes||0} NOW</button><button class="actionBtn" onclick="document.getElementById('commentInput').focus()">💬 ${(activePost.comments||[]).length} Komentar</button><button class="actionBtn" onclick="sharePost()">↗️ Bagikan</button></div><div style="display:flex;gap:8px;margin:10px 0"><input id="commentInput" placeholder="Tulis komentar..." style="margin:0"><button class="btn" style="width:auto;padding:10px 14px" onclick="addComment()">KIRIM</button></div><h3>Komentar</h3><div>${(activePost.comments||[]).length?activePost.comments.map(c=>`<div class="comment"><b>${esc(c.u)}</b><p>${esc(c.t)}</p></div>`).join(''):'<p class="muted">Belum ada komentar. Jadilah yang pertama.</p>'}</div>`}
+function toggleLike(){if(!activePost)return;activePost._liked=!activePost._liked;activePost.likes=Math.max(0,(activePost.likes||0)+(activePost._liked?1:-1));if(activePost.id&&!String(activePost.id).startsWith('demo')){const i=posts.findIndex(x=>x.id===activePost.id);if(i>=0){posts[i].likes=activePost.likes;localStorage.setItem('now_posts_v2',JSON.stringify(posts))}}renderPostDetail()}
+function addComment(){if(!activePost)return;const el=document.getElementById('commentInput'),t=el.value.trim();if(!t)return;activePost.comments.push({u:user?.name||'You',t});if(activePost.id&&!String(activePost.id).startsWith('demo')){const i=posts.findIndex(x=>x.id===activePost.id);if(i>=0){posts[i].comments=activePost.comments;localStorage.setItem('now_posts_v2',JSON.stringify(posts))}}renderPostDetail()}
+function sharePost(){const text=`${activePost?.t||''} — NOW BALI`;if(navigator.share)navigator.share({title:'NOW BALI',text}).catch(()=>{});else alert('Posting siap dibagikan.')}
+function openAuth(){authModal.classList.remove('hidden');renderAuth('login')}function closeAuth(){authModal.classList.add('hidden')}
+function renderAuth(mode,selectedType='personal'){
+if(mode==='login'){authBox.innerHTML=`<h2>Login ke NOW</h2><div class="notice">Demo lokal: akun ini tersimpan di perangkat ini.</div><input id="authUser" placeholder="Username"><input id="authEmail" placeholder="Email"><input id="authPass" type="password" placeholder="Password"><button class="btn" onclick="doAuth('login')">LOGIN</button><p style="text-align:center;color:#8991a4;font-size:12px;margin-top:16px">Belum punya akun? <button style="border:0;background:none;color:#ff6a9e" onclick="renderAuth('register')">Register</button></p>`;return}
+const type=selectedType;const typeData={personal:{icon:'👤',label:'Personal'},driver:{icon:'🚗',label:'Driver'},business:{icon:'🏪',label:'Usaha'}}[type];
+const detail=type==='driver'?`<div class="formSection"><h3>🚗 Data Driver</h3><input id="driverCar" placeholder="Jenis Mobil"><input id="driverVehicle" placeholder="Nomor Kendaraan"><input id="driverPhone" placeholder="Nomor Telepon untuk Order" type="tel"></div>`:
+type==='business'?`<div class="formSection"><h3>🏪 Data Usaha</h3><input id="businessName" placeholder="Nama Usaha"><input id="businessType" placeholder="Jenis Usaha"><input id="businessAddress" placeholder="Alamat Usaha"><input id="businessPhone" placeholder="Nomor Telepon" type="tel"><label class="btn secondary" style="display:block;text-align:center;margin:8px 0">📷 Foto / Logo Usaha <input id="businessPhoto" type="file" accept="image/*" style="display:none"></label></div>`:'';
+authBox.innerHTML=`<h2>Buat akun NOW</h2><div class="notice">Pilih jenis akun. Semua akun gratis.</div>
+<div class="accountChoices"><button class="accountChoice ${type==='personal'?'active':''}" onclick="renderAuth('register','personal')"><span>👤</span>Personal</button><button class="accountChoice ${type==='driver'?'active':''}" onclick="renderAuth('register','driver')"><span>🚗</span>Driver</button><button class="accountChoice ${type==='business'?'active':''}" onclick="renderAuth('register','business')"><span>🏪</span>Usaha</button></div>
+<div class="requiredNote">Jenis akun: <b>${typeData.icon} ${typeData.label}</b></div>
+${type==='business'?`<input id="authName" placeholder="Nama">`:`<input id="authName" placeholder="Nama">`}
+<input id="authUser" placeholder="Username"><input id="authEmail" placeholder="Email"><input id="authPass" type="password" placeholder="Password">
+${detail}${type!=='business'?`<label class="btn secondary" style="display:block;text-align:center;margin:8px 0">📷 Foto profil <input id="authPhoto" type="file" accept="image/*" style="display:none"></label>`:''}
+<button class="btn" onclick="doAuth('register','${type}')">REGISTER</button>
+<p style="text-align:center;color:#8991a4;font-size:12px;margin-top:16px">Sudah punya akun? <button style="border:0;background:none;color:#ff6a9e" onclick="renderAuth('login')">Login</button></p>`}
 function readImage(file){return new Promise((resolve,reject)=>{if(!file)return resolve('');let r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
-async function doAuth(mode){
+async function doAuth(mode,type='personal'){
 let name=document.getElementById('authName')?.value.trim(),un=document.getElementById('authUser').value.trim(),email=document.getElementById('authEmail').value.trim(),pass=document.getElementById('authPass').value;
 if(!un||!email||!pass||(mode==='register'&&!name))return alert('Lengkapi data dulu.');
-let photo=await readImage(document.getElementById('authPhoto')?.files[0]);
-if(mode==='register')user={name,username:un,email,photo};else user={name:name||un,username:un,email,photo};
-localStorage.setItem('now_user',JSON.stringify(user));closeAuth();show('me');
-}
+if(mode==='register'&&type==='driver'){
+let car=document.getElementById('driverCar')?.value.trim(),vehicle=document.getElementById('driverVehicle')?.value.trim(),phone=document.getElementById('driverPhone')?.value.trim();
+if(!car||!vehicle||!phone)return alert('Lengkapi data Driver dulu.');
+let photo=await readImage(document.getElementById('authPhoto')?.files[0]);user={name,username:un,email,photo,accountType:'driver',driver:{carType:car,vehicleNumber:vehicle,orderPhone:phone}};
+}else if(mode==='register'&&type==='business'){
+let businessName=document.getElementById('businessName')?.value.trim(),businessType=document.getElementById('businessType')?.value.trim(),address=document.getElementById('businessAddress')?.value.trim(),phone=document.getElementById('businessPhone')?.value.trim();
+if(!businessName||!businessType||!address||!phone)return alert('Lengkapi data Usaha dulu.');
+let businessPhoto=await readImage(document.getElementById('businessPhoto')?.files[0]);user={name,username:un,email,accountType:'business',displayName:businessName,business:{name:businessName,type:businessType,address,phone,photo:businessPhoto}};
+}else if(mode==='register'){
+let photo=await readImage(document.getElementById('authPhoto')?.files[0]);user={name,username:un,email,photo,accountType:'personal'};
+}else{user={name:name||un,username:un,email,accountType:user?.accountType||'personal',...(user?.driver?{driver:user.driver}:{}),...(user?.business?{business:user.business}:{})}}
+localStorage.setItem('now_user',JSON.stringify(user));closeAuth();show('me')}
 function editProfile(){profileModal.classList.remove('hidden');profileBox.innerHTML=`<h2>Edit Profile</h2><input id="editName" value="${esc(user.name)}"><input id="editUser" value="${esc(user.username)}"><label class="btn secondary" style="display:block;text-align:center">📷 Ganti foto profil <input id="editPhoto" type="file" accept="image/*" style="display:none"></label><br><button class="btn" onclick="saveProfile()">SAVE</button>`}
 async function saveProfile(){user.name=document.getElementById('editName').value.trim()||user.name;user.username=document.getElementById('editUser').value.trim()||user.username;let f=document.getElementById('editPhoto').files[0];if(f)user.photo=await readImage(f);localStorage.setItem('now_user',JSON.stringify(user));profileModal.classList.add('hidden');show('me')}
-function logout(){user=null;localStorage.removeItem('now_user');show('me')}
-function follow(n){alert('Mengikuti '+n+' (demo)')}
-function openPostFor(place){postModal.classList.remove('hidden');document.getElementById('postPlace').value=place}
-function closePost(){postModal.classList.add('hidden')}
+function logout(){user=null;localStorage.removeItem('now_user');show('me')}function follow(n){alert('Mengikuti '+n+' (demo)')}
+function openPostFor(place){postModal.classList.remove('hidden');document.getElementById('postPlace').value=place}function closePost(){postModal.classList.add('hidden')}
 document.getElementById('plus').onclick=()=>openPostFor('Canggu Beach');
 document.getElementById('postPhoto').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{photoPreview.src=r.result;photoPreview.classList.remove('hidden')};r.readAsDataURL(f)}
-async function publishPost(){
-let t=postText.value.trim(),place=postPlace.value.trim()||'Canggu Beach',f=postPhoto.files[0];
-if(!t)return alert('Tulis dulu apa yang sedang terjadi.');
-let photo=await readImage(f);
-posts.unshift({id:'p'+Date.now(),t,u:user?.name||'You',place,time:Date.now(),photo,likes:0,comments:[]});
-localStorage.setItem('now_posts_v2',JSON.stringify(posts));postText.value='';postPhoto.value='';photoPreview.classList.add('hidden');closePost();show('now');alert('🔥 NOW berhasil diposting!');
-}
-document.querySelectorAll('nav [data-tab]').forEach(b=>b.onclick=()=>show(b.dataset.tab));
-show('now');
+async function publishPost(){let t=postText.value.trim(),place=postPlace.value.trim()||'Canggu Beach',f=postPhoto.files[0];if(!t)return alert('Tulis dulu apa yang sedang terjadi.');let photo=await readImage(f);posts.unshift({id:'p'+Date.now(),t,u:user?.name||'You',place,time:Date.now(),photo,likes:0,comments:[]});localStorage.setItem('now_posts_v2',JSON.stringify(posts));postText.value='';postPhoto.value='';photoPreview.classList.add('hidden');closePost();show('now');alert('🔥 NOW berhasil diposting!')}
+document.querySelectorAll('nav [data-tab]').forEach(b=>b.onclick=()=>show(b.dataset.tab));show('now');
 </script>
-</body></html>
+</body>
+</html>
