@@ -18,7 +18,7 @@ header{height:64px;padding:0 16px;display:flex;align-items:center;justify-conten
 .row{display:flex;gap:12px;padding:14px;border-bottom:1px solid #242935;align-items:center}.row:last-child{border:0}.row h3{margin:0 0 4px;font-size:14px}.row p{margin:0}
 .score{font-size:21px;font-weight:900;color:#ff7846;min-width:42px;text-align:center}.thumb{width:54px;height:54px;border-radius:12px;object-fit:cover;background:#202531}
 .btn{width:100%;border:0;border-radius:14px;padding:14px;background:linear-gradient(90deg,#ff3fa4,#ff7438);color:#fff;font-weight:800}.btn.secondary{background:#222733}.btn.danger{background:#5a2028}
-.profileHead{text-align:center;padding:22px}.avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;margin:auto;border:3px solid #ff5b8f;background:linear-gradient(135deg,#ff3fa4,#ff7438);display:grid;place-items:center;font-size:30px;font-weight:900}
+.profileHead{text-align:center;padding:22px}.avatarWrap{width:108px;height:108px;margin:auto;position:relative;display:grid;place-items:center}.avatarWrap .avatar{width:88px;height:88px}.accountBadge{position:absolute;right:0;bottom:2px;width:38px;height:38px;border-radius:50%;background:#1a202b;border:3px solid #ff5b8f;display:grid;place-items:center;font-size:22px;box-shadow:0 5px 14px #0008}.accountLabel{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:6px 11px;border-radius:99px;background:#202632;border:1px solid #343b4b;color:#dce1ea;font-size:11px;font-weight:800}.driverInfo{margin-top:16px;text-align:left;background:#0d1119;border:1px solid #2b3240;border-radius:16px;padding:14px}.driverInfo h3{margin:0 0 9px;font-size:13px}.driverItem{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #242a35}.driverItem:last-child{border-bottom:0}.driverIcon{width:30px;text-align:center;font-size:18px}.driverItem div{flex:1}.driverItem b{display:block;font-size:12px}.driverItem span{display:block;color:#8d95a8;font-size:10px;margin-top:2px}.waBtn{display:inline-block;background:#183d2a;color:#69e7a0;border:1px solid #286545;border-radius:10px;padding:8px 10px;font-size:10px;font-weight:800;text-decoration:none}
 .stats{display:flex;justify-content:space-around;text-align:center;margin:18px 0}.stats b{display:block;font-size:18px}.stats span{font-size:10px;color:#8991a4}
 nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:74px;background:#0d1018f7;border-top:1px solid #282d39;display:flex;justify-content:space-around;align-items:center;z-index:8}
 nav button{border:0;background:none;color:#747d91;font-size:18px;display:flex;flex-direction:column;align-items:center;gap:3px}nav button.active{color:#ff4da7}nav small{font-size:9px}
@@ -60,6 +60,7 @@ let posts=JSON.parse(localStorage.getItem('now_posts_v2')||'[]').map((p,i)=>({..
 const places=[{name:'Canggu Beach',score:94,people:126,posts:38,distance:'2.4 km',emoji:'🔥'},{name:'Seminyak',score:88,people:74,posts:22,distance:'4.1 km',emoji:'🎵'},{name:'Kuta Beach',score:81,people:61,posts:17,distance:'7.2 km',emoji:'🌅'}];
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function avatar(u){return u?.photo?`<img class="avatar" src="${u.photo}">`:`<div class="avatar">${(u?.name||'U').slice(0,1).toUpperCase()}</div>`}
+function profileAvatar(u){const icon=u?.accountType==='driver'?'🚗':u?.accountType==='business'?'🏪':'👤';return `<div class="avatarWrap">${avatar(u)}<div class="accountBadge">${icon}</div></div>`}
 function ago(t){let m=Math.floor((Date.now()-t)/60000);return m<1?'baru saja':m+' min lalu'}
 function setActive(tab){document.querySelectorAll('nav [data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab))}
 function show(tab){setActive(tab);if(tab==='now')renderNow();if(tab==='near')renderNear();if(tab==='people')renderPeople();if(tab==='me')renderMe()}
@@ -71,10 +72,36 @@ function renderNow(){let p=places[0];main.innerHTML=`<div class="page"><div clas
 function renderNear(){main.innerHTML=`<div class="page"><div class="title"><h2>📍 Near You</h2><span class="muted">lokasi demo</span></div><div class="notice">Nanti GPS akan menentukan tempat terdekat secara otomatis. Untuk sekarang lokasi demo: Bali.</div><div class="card"><div class="row"><div><h3>📍 Bali</h3><p class="muted">Lokasi demo untuk tahap pengembangan.</p></div></div></div><div class="card">${places.map(p=>`<div class="row" onclick="placeDetail('${p.name}')"><span class="score">${p.score}</span><div><h3>${p.emoji} ${p.name}</h3><p class="muted">${p.distance} • ${p.people} people active • ${p.posts} posts</p></div></div>`).join('')}</div></div>`}
 function placeDetail(name){let p=places.find(x=>x.name===name)||places[0];main.innerHTML=`<div class="page"><button class="back" onclick="show('near')">← Kembali</button><h2>${p.emoji} ${p.name}</h2><div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.people} people active</h1><span class="muted">${p.posts} posts • ${p.distance}</span></div></div><div class="row"><div><h3>⚡ Yang sedang terjadi</h3><p class="muted">Aktivitas sedang tinggi di lokasi ini.</p></div></div>${posts.filter(x=>(x.place||'Canggu Beach')===p.name).slice(0,5).map(x=>`<div class="row"><div><h3>${esc(x.t)}</h3><p class="muted">${esc(x.u)} • ${ago(x.time)}</p></div></div>`).join('')}<div class="row"><button class="btn" onclick="openPostFor('${p.name}')">➕ Post di sini</button></div></div></div>`}
 function renderPeople(){main.innerHTML=`<div class="page"><div class="title"><h2>👥 People</h2><span class="muted">aktif sekarang</span></div><div class="card">${[['Made Dharma','Canggu Beach'],['Sara Kim','Canggu Beach'],['Gus Arya','Seminyak']].map(x=>`<div class="row"><div class="avatar" style="width:52px;height:52px;font-size:18px">${x[0][0]}</div><div><h3>${x[0]}</h3><p class="muted">🔥 Active • ${x[1]}</p></div><button class="btn secondary" style="width:auto;padding:9px 12px;margin-left:auto" onclick="follow('${x[0]}')">FOLLOW</button></div>`).join('')}</div></div>`}
-function renderMe(tab='posts'){if(!user){main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead">${avatar(null)}<h2>Masuk ke NOW</h2><p class="muted">Buat profil, upload foto, follow orang, dan simpan aktivitas.</p><button class="btn" onclick="openAuth()">LOGIN / REGISTER</button></div></div>`;return}
-const myPosts=posts.filter(x=>x.u===user.name).sort((a,b)=>b.time-a.time);main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead">${avatar(user)}<h2>${esc(user.displayName||user.name)}</h2><p class="muted">@${esc(user.username||user.name.toLowerCase().replace(/\s+/g,''))}</p><div class="stats"><div><b>${myPosts.length}</b><span>POSTS</span></div><div><b>0</b><span>FOLLOWERS</span></div><div><b>0</b><span>FOLLOWING</span></div></div><button class="btn" onclick="editProfile()">EDIT PROFILE</button></div>
+function renderMe(tab='posts'){
+if(!user){
+main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead">${profileAvatar(null)}<h2>Masuk ke NOW</h2><p class="muted">Buat profil, upload foto, follow orang, dan simpan aktivitas.</p><button class="btn" onclick="openAuth()">LOGIN / REGISTER</button></div></div>`;
+return
+}
+const myPosts=posts.filter(x=>x.u===user.name).sort((a,b)=>b.time-a.time);
+const accountIcon=user.accountType==='driver'?'🚗':user.accountType==='business'?'🏪':'👤';
+const accountLabel=user.accountType==='driver'?'Driver':user.accountType==='business'?'Usaha':'Personal';
+const driver=user.driver;
+const driverInfo=user.accountType==='driver'&&driver?`
+<div class="driverInfo">
+<h3>🚗 Informasi Driver</h3>
+<div class="driverItem"><div class="driverIcon">🚙</div><div><b>${esc(driver.carType)}</b><span>Jenis mobil</span></div></div>
+<div class="driverItem"><div class="driverIcon">🔖</div><div><b>${esc(driver.vehicleNumber)}</b><span>Nomor kendaraan</span></div></div>
+<div class="driverItem"><div class="driverIcon">📱</div><div><b>${esc(driver.orderPhone)}</b><span>Nomor telepon untuk order</span></div>${driver.orderPhone?`<a class="waBtn" href="https://wa.me/${String(driver.orderPhone).replace(/\D/g,'')}" target="_blank">WhatsApp</a>`:''}</div>
+</div>`:'';
+main.innerHTML=`<div class="page"><h2>👤 ME</h2>
+<div class="card profileHead">
+${profileAvatar(user)}
+<div class="accountLabel">${accountIcon} Akun ${accountLabel}</div>
+<h2>${esc(user.displayName||user.name)}</h2>
+<p class="muted">@${esc(user.username||user.name.toLowerCase().replace(/\s+/g,''))}</p>
+${driverInfo}
+<div class="stats"><div><b>${myPosts.length}</b><span>POSTS</span></div><div><b>0</b><span>FOLLOWERS</span></div><div><b>0</b><span>FOLLOWING</span></div></div>
+<button class="btn" onclick="editProfile()">EDIT PROFILE</button>
+</div>
 <div class="card"><div class="profileTabs"><button class="profileTab ${tab==='posts'?'active':''}" onclick="renderMe('posts')">📝 POSTS</button><button class="profileTab ${tab==='photos'?'active':''}" onclick="renderMe('photos')">📷 PHOTOS</button></div>
-${tab==='posts'?(myPosts.length?myPosts.map(p=>`<div class="profilePost" onclick='openPostDetail(${JSON.stringify(p)})'><h3>${esc(p.t)}</h3><p>📍 ${esc(p.place||'Canggu Beach')} • ${ago(p.time)} • 🔥 ${p.likes||0} • 💬 ${(p.comments||[]).length}</p>${p.photo?`<img class="postPhotoLarge" src="${p.photo}">`:''}</div>`).join(''):`<div class="empty">Belum ada postingan.<br>Tekan + untuk membuat posting pertama.</div>`):(myPosts.filter(p=>p.photo).length?`<div class="profileGrid">${myPosts.filter(p=>p.photo).map(p=>`<div class="profilePhotoTile" onclick='openPostDetail(${JSON.stringify(p)})'><img src="${p.photo}"><div class="photoMeta">🔥 ${p.likes||0} &nbsp; 💬 ${(p.comments||[]).length}</div></div>`).join('')}</div>`:`<div class="empty">Belum ada foto yang kamu posting.</div>`)}</div><button class="btn danger" onclick="logout()">LOG OUT</button></div>`}
+${tab==='posts'?(myPosts.length?myPosts.map(p=>`<div class="profilePost" onclick='openPostDetail(${JSON.stringify(p)})'><h3>${esc(p.t)}</h3><p>📍 ${esc(p.place||'Canggu Beach')} • ${ago(p.time)} • 🔥 ${p.likes||0} • 💬 ${(p.comments||[]).length}</p>${p.photo?`<img class="postPhotoLarge" src="${p.photo}">`:''}</div>`).join(''):`<div class="empty">Belum ada postingan.<br>Tekan + untuk membuat posting pertama.</div>`):(myPosts.filter(p=>p.photo).length?`<div class="profileGrid">${myPosts.filter(p=>p.photo).map(p=>`<div class="profilePhotoTile" onclick='openPostDetail(${JSON.stringify(p)})'><img src="${p.photo}"><div class="photoMeta">🔥 ${p.likes||0} &nbsp; 💬 ${(p.comments||[]).length}</div></div>`).join('')}</div>`:`<div class="empty">Belum ada foto yang kamu posting.</div>`)}</div>
+<button class="btn danger" onclick="logout()">LOG OUT</button></div>`
+}
 let activePost=null;
 function openPostDetail(p){activePost={...p,likes:p.likes||0,comments:p.comments||[]};if(activePost.id&&!String(activePost.id).startsWith('demo')){const saved=posts.find(x=>x.id===activePost.id);if(saved)activePost={...saved,likes:saved.likes||0,comments:saved.comments||[]}}postDetailModal.classList.remove('hidden');renderPostDetail()}
 function closePostDetail(){postDetailModal.classList.add('hidden');activePost=null}
