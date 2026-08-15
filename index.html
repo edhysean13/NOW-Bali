@@ -23,7 +23,7 @@ input,textarea{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 
 .pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}
 .pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}
-.pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}.pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}.commentsBox{margin-top:10px}.comment{padding:9px 10px;border-bottom:1px solid #252b36;font-size:12px}.comment b{display:block;margin-bottom:3px}</style>
+.pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}.pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}.commentsBox{margin-top:10px}.comment{padding:9px 10px;border-bottom:1px solid #252b36;font-size:12px}.comment b{display:block;margin-bottom:3px}.packageCard{cursor:pointer}.packageCard .packageActions button{position:relative;z-index:2}.avatar{cursor:default}</style>
 </head>
 <body>
 <div id="app">
@@ -240,6 +240,47 @@ function viewPerson(p){
     <div class="actions">${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}<button class="action" onclick="closeProfile()">Tutup</button></div>`;
 }
 
+async function openDriverProfile(driverId){
+  if(!driverId)return alert("Profil Driver tidak ditemukan.");
+  $("profileModal").classList.remove("hidden");
+  $("profileBox").innerHTML=`<div class="loading">Memuat profil Driver...</div>`;
+
+  const [pr,dr,pk]=await Promise.all([
+    sb.from("profiles").select("id,name,username,phone,avatar_url,account_type").eq("id",driverId).maybeSingle(),
+    sb.from("driver_profiles").select("vehicle_type,vehicle_plate").eq("profile_id",driverId).maybeSingle(),
+    sb.from("travel_packages").select("*").eq("owner_id",driverId).eq("is_published",true).order("created_at",{ascending:false})
+  ]);
+
+  if(pr.error||!pr.data){
+    $("profileBox").innerHTML=`<div class="empty">Profil Driver tidak ditemukan.</div>`;
+    return;
+  }
+
+  const d=pr.data, info=dr.data||{}, packages=pk.data||[];
+  const phone=d.phone||"";
+  $("profileBox").innerHTML=`<button class="guestLogin" id="driverProfileBack">← Kembali ke Paket</button>
+    <div class="profileHead card">
+      ${avatar({name:d.name,photo:d.avatar_url})}
+      <div class="accountLabel">🚗 Akun Driver</div>
+      <h2>${esc(d.name)}</h2>
+      <p class="muted">@${esc(d.username||"")}</p>
+      <div class="driverInfo">
+        <div class="driverItem"><b>${esc(info.vehicle_type||"Belum diisi")}</b><span>Jenis mobil</span></div>
+        <div class="driverItem"><b>${esc(info.vehicle_plate||"Belum diisi")}</b><span>Nomor kendaraan</span></div>
+      </div>
+      <div class="actions">
+        ${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 Hubungi Driver</a>`:""}
+        <button class="action" type="button" onclick="startDriverChat(${JSON.stringify({id:d.id,name:d.name,username:d.username,phone:d.phone}).replace(/"/g,'&quot;')})">💬 Chat Driver</button>
+        ${phone?`<a class="action" style="text-align:center;text-decoration:none;color:#fff" href="tel:${esc(phone)}">☎️ Telepon</a>`:""}
+      </div>
+    </div>
+    <div class="card">
+      <div class="title" style="padding:12px"><h3>🎒 Paket Liburan ${packages.length}</h3></div>
+      ${packages.length?packages.map(p=>packageCard(p,false,d)).join(""):`<div class="empty">Driver ini belum membuat paket.</div>`}
+    </div>`;
+  $("driverProfileBack").onclick=()=>{closeProfile();show("people");};
+}
+
 function openPublicPackageById(id){
   const item=window.__packageCache?.[id];
   if(!item)return alert("Paket tidak ditemukan. Silakan muat ulang halaman.");
@@ -255,7 +296,7 @@ function openPublicPackage(p,driver){
   const name=driver?.name||"Driver",phone=driver?.phone||"";
 
   $("profileBox").innerHTML=`<button class="guestLogin" id="packageBackBtn">← Kembali ke Paket</button>
-    <div style="text-align:center">${avatar({name})}<h2>${esc(name)}</h2><p class="muted">@${esc(driver?.username||"")} • 🚗 Driver</p></div>
+    <div style="text-align:center">${avatar({name,photo:driver?.avatar_url||driver?.photo})}<h2>${esc(name)}</h2><p class="muted">@${esc(driver?.username||"")} • 🚗 Driver</p><button class="btn secondary" id="viewDriverProfileBtn" type="button">👤 Lihat Profil Driver</button></div>
     <div class="card" style="margin-top:14px">${packageCard(p,false,driver)}</div>
     <div class="pkgEngage" style="margin-top:14px">
       🔥 <span id="packageLikeCount">${Number(p.like_count||0)}</span>
@@ -275,6 +316,7 @@ function openPublicPackage(p,driver){
     <div class="notice">Tanggal, jam, rute dan kesepakatan diselesaikan langsung antara customer dan Driver. Tidak ada transaksi pembayaran di NOW BALI.</div>`;
 
   $("packageBackBtn").onclick=()=>{closeProfile();show("people");};
+  $("viewDriverProfileBtn").onclick=()=>openDriverProfile(driver?.id);
   $("chatDriverBtn").onclick=()=>startDriverChat(window.__chatDriver||{});
   $("packageLikeBtn").onclick=()=>togglePackageLike(p.id);
   $("packageCommentBtn").onclick=()=>showPackageCommentBox(p.id);
@@ -538,8 +580,72 @@ function openAuth(){ $("authModal").classList.remove("hidden")}function closeAut
 function renderAuth(mode="login",type="personal"){if(mode==="login"){authBox.innerHTML=`<h2>Login ke NOW</h2><div class="notice">Gunakan email yang sudah diverifikasi.</div><input id="loginEmail" type="email" placeholder="Email"><input id="loginPassword" type="password" placeholder="Password"><button class="btn" onclick="doLogin()">LOGIN</button><p class="muted" style="text-align:center">Belum punya akun? <button class="guestLogin" onclick="renderAuth('register','personal')">Register</button></p>`;return}let extra=type==="driver"?`<input id="car" placeholder="Jenis Mobil"><input id="plate" placeholder="Nomor Kendaraan"><input id="phone" type="tel" placeholder="Nomor WhatsApp">`:type==="usaha"?`<input id="bn" placeholder="Nama Usaha"><input id="bt" placeholder="Jenis Usaha"><input id="ba" placeholder="Alamat Usaha"><input id="phone" type="tel" placeholder="Nomor WhatsApp">`:`<input id="phone" type="tel" placeholder="Nomor WhatsApp">`;authBox.innerHTML=`<h2>Buat akun NOW</h2><div class="notice">Semua akun gratis.</div><div class="accountChoices"><button class="accountChoice ${type==="personal"?"active":""}" onclick="renderAuth('register','personal')"><span>👤</span>Personal</button><button class="accountChoice ${type==="driver"?"active":""}" onclick="renderAuth('register','driver')"><span>🚗</span>Driver</button><button class="accountChoice ${type==="usaha"?"active":""}" onclick="renderAuth('register','usaha')"><span>🏪</span>UMKM</button></div><input id="regName" placeholder="Nama"><input id="regUsername" placeholder="Username (unik)"><input id="regEmail" type="email" placeholder="Email">${extra}<input id="regPassword" type="password" placeholder="Password (min. 6 karakter)"><button class="btn" onclick="doRegister('${type}')">REGISTER</button><p class="muted" style="text-align:center">Sudah punya akun? <button class="guestLogin" onclick="renderAuth('login')">Login</button></p>`}
 async function doLogin(){let email=val("loginEmail").toLowerCase(),password=$("loginPassword").value;if(!emailOK(email))return alert("Email salah atau tidak valid.");let r=await sb.auth.signInWithPassword({email,password});if(r.error)return alert(r.error.message);user=await sync(r.data.session);if(!user)return alert("Profil belum tersedia.");closeAuth();show("now")}
 async function doRegister(type){let name=val("regName"),un=val("regUsername"),email=val("regEmail").toLowerCase(),pw=$("regPassword").value;if(!name)return alert("Isi Nama dulu.");if(!userOK(un))return alert("Username 3–30 karakter, hanya huruf, angka dan underscore.");if(!emailOK(email))return alert("Email salah atau tidak valid.");if(pw.length<6)return alert("Password minimal 6 karakter.");let phone=val("phone").replace(/[\s().-]/g,"");if(!phoneOK(phone))return alert("Nomor WhatsApp tidak valid.");let dup=await sb.from("profiles").select("id").ilike("username",un).limit(1);if(dup.data?.length)return alert("Username sudah digunakan.");let meta={name,username:un,account_type:type,phone};if(type==="driver"){if(!val("car")||!val("plate"))return alert("Lengkapi data Driver.");meta.vehicle_type=val("car");meta.vehicle_plate=val("plate")}if(type==="usaha"){if(!val("bn")||!val("bt")||!val("ba"))return alert("Lengkapi data UMKM / Usaha.");meta.business_name=val("bn");meta.business_type=val("bt");meta.business_address=val("ba")}let r=await sb.auth.signUp({email,password:pw,options:{data:meta,emailRedirectTo:location.origin}});if(r.error){if(/invalid.*email|email.*valid/i.test(r.error.message))return alert("Email salah atau tidak valid.");return alert(r.error.message)}if(!r.data.session){alert("Registrasi berhasil. Silakan konfirmasi email melalui link yang dikirim ke email kamu.");renderAuth("login")}else{user=await sync(r.data.session);closeAuth();show("now")}}
-function editProfile(){$("profileModal").classList.remove("hidden");$("profileBox").innerHTML=`<h2>Edit Profile</h2><input id="editName" value="${esc(user.name)}"><input id="editUsername" value="${esc(user.username)}"><button class="btn" onclick="saveProfile()">SAVE</button>`}
-async function saveProfile(){let name=val("editName")||user.name,un=val("editUsername")||user.username;if(!userOK(un))return alert("Username tidak valid.");let dup=await sb.from("profiles").select("id").ilike("username",un).neq("id",user.id).limit(1);if(dup.data?.length)return alert("Username sudah digunakan.");let r=await sb.from("profiles").update({name,username:un}).eq("id",user.id);if(r.error)return alert(r.error.message);user.name=name;user.username=un;$("profileModal").classList.add("hidden");show("me")}
+function editProfile(){
+  $("profileModal").classList.remove("hidden");
+  $("profileBox").innerHTML=`<h2>Edit Profile</h2>
+    <div style="text-align:center;margin:12px 0">
+      <div id="editAvatarPreview">${avatar(user)}</div>
+      <label class="btn secondary" style="display:inline-block;margin-top:10px;cursor:pointer">
+        📷 Ganti Foto
+        <input id="editAvatarFile" type="file" accept="image/jpeg,image/png,image/webp" style="display:none">
+      </label>
+    </div>
+    <input id="editName" value="${esc(user.name)}" placeholder="Nama">
+    <input id="editUsername" value="${esc(user.username)}" placeholder="Username">
+    <button class="btn" id="saveProfileBtn">SAVE</button>
+    <div id="editProfileStatus" class="muted" style="text-align:center;margin-top:8px"></div>`;
+
+  $("editAvatarFile").onchange=()=>{
+    const file=$("editAvatarFile").files?.[0];
+    if(!file)return;
+    if(file.size>5*1024*1024)return alert("Foto maksimal 5 MB.");
+    const reader=new FileReader();
+    reader.onload=()=>{$("editAvatarPreview").innerHTML=`<img class="avatar" src="${reader.result}">`;};
+    reader.readAsDataURL(file);
+  };
+  $("saveProfileBtn").onclick=saveProfile;
+}
+
+async function saveProfile(){
+  const btn=$("saveProfileBtn"),status=$("editProfileStatus");
+  let name=val("editName")||user.name,un=val("editUsername")||user.username;
+  if(!userOK(un))return alert("Username tidak valid.");
+  let dup=await sb.from("profiles").select("id").ilike("username",un).neq("id",user.id).limit(1);
+  if(dup.error)return alert(dup.error.message);
+  if(dup.data?.length)return alert("Username sudah digunakan.");
+
+  btn.disabled=true;
+  if(status)status.textContent="Menyimpan...";
+  let avatarUrl=user.photo||"";
+  const file=$("editAvatarFile")?.files?.[0];
+
+  if(file){
+    const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
+    const path=`${user.id}/avatar.${ext}`;
+    const up=await sb.storage.from("avatars").upload(path,file,{upsert:true,contentType:file.type});
+    if(up.error){
+      btn.disabled=false;
+      if(status)status.textContent="";
+      return alert("Foto gagal diupload: "+up.error.message);
+    }
+    avatarUrl=sb.storage.from("avatars").getPublicUrl(path).data.publicUrl+`?v=${Date.now()}`;
+  }
+
+  const r=await sb.from("profiles").update({name,username:un,avatar_url:avatarUrl}).eq("id",user.id);
+  if(r.error){
+    btn.disabled=false;
+    if(status)status.textContent="";
+    return alert(r.error.message);
+  }
+
+  user.name=name;
+  user.displayName=user.accountType==="usaha"&&user.business?.name?user.business.name:name;
+  user.username=un;
+  user.photo=avatarUrl;
+
+  $("profileModal").classList.add("hidden");
+  show("me");
+}
 function closeProfile(){$("profileModal").classList.add("hidden")}
 function logout(){sb.auth.signOut();user=null;localStorage.removeItem("now_user");show()}
 document.querySelectorAll("nav [data-tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));$("plus").onclick=()=>user?openPost():guest();
