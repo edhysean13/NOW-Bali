@@ -162,7 +162,7 @@ function viewPerson(p){
     <div class="actions">${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}<button class="action" onclick="closeProfile()">Tutup</button></div>`;
 }
 
-function openPublicPackage(p,driver){window.__activePackage=p;
+function openPublicPackage(p,driver){window.__activePackage=p;window.__chatDriver=driver||{};
   $("profileModal").classList.remove("hidden");
   const name=driver?.name||"Driver",phone=driver?.phone||"";
   $("profileBox").innerHTML=`<button class="guestLogin" onclick="closeProfile();show('people')">← Kembali ke Paket</button>
@@ -172,13 +172,17 @@ function openPublicPackage(p,driver){window.__activePackage=p;
     </div>
     <div class="actions">
       ${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 Hubungi Driver</a>`:""}
-      <button class="action" onclick="startDriverChat(${JSON.stringify(driver||{}).replace(/'/g,"&#39;")})">💬 Chat Driver</button>
+      <button id="chatDriverBtn" class="action" type="button">💬 Chat Driver</button>
       ${phone?`<a class="action" style="text-align:center;text-decoration:none;color:#fff" href="tel:${esc(phone)}">☎️ Telepon</a>`:""}
     </div>
     <div class="notice">Tanggal, jam, rute dan kesepakatan diselesaikan langsung antara customer dan Driver. Tidak ada transaksi pembayaran di NOW BALI.</div>`;
+  const chatBtn=$("chatDriverBtn");
+  if(chatBtn) chatBtn.onclick=()=>startDriverChat(window.__chatDriver||{});
 }
 
 function startDriverChat(driver){
+  driver=driver||window.__chatDriver||{};
+  window.__chatDriver=driver;
   const name=driver?.name||"Driver";
   const key=`nowbali_chat_${driver?.id||driver?.username||name}`;
   const messages=JSON.parse(localStorage.getItem(key)||"[]");
