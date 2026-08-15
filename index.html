@@ -23,13 +23,13 @@ input,textarea{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 
 .pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}
 .pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}
-.pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}.pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}.commentsBox{margin-top:10px}.comment{padding:9px 10px;border-bottom:1px solid #252b36;font-size:12px}.comment b{display:block;margin-bottom:3px}.packageCard{cursor:pointer}.packageCard .packageActions button{position:relative;z-index:2}.avatar{cursor:default}.postCategory{font-size:12px;font-weight:700;color:#ff9a6b;margin:4px 0 6px}.businessPostCard{border-bottom:1px solid #252b36;cursor:pointer}.businessPostCard img{width:100%;max-height:280px;object-fit:cover;display:block}.businessPostBody{padding:12px 14px}.businessPostBody h3{margin:3px 0 5px;font-size:14px}.businessPostBody p{font-size:12px;line-height:1.45;color:#c4cad5;margin:6px 0}</style>
+.pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}.pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}.commentsBox{margin-top:10px}.comment{padding:9px 10px;border-bottom:1px solid #252b36;font-size:12px}.comment b{display:block;margin-bottom:3px}.packageCard{cursor:pointer}.packageCard .packageActions button{position:relative;z-index:2}.avatar{cursor:default}.postCategory{font-size:12px;font-weight:700;color:#ff9a6b;margin:4px 0 6px}.businessPostCard{border-bottom:1px solid #252b36;cursor:pointer}.businessPostCard img{width:100%;max-height:280px;object-fit:cover;display:block}.businessPostBody{padding:12px 14px}.businessPostBody h3{margin:3px 0 5px;font-size:14px}.businessPostBody p{font-size:12px;line-height:1.45;color:#c4cad5;margin:6px 0}.notifBadge{position:absolute;top:-7px;right:18px;background:#ff3f8e;color:#fff;border-radius:999px;min-width:18px;height:18px;font-size:10px;font-weight:800;display:none;align-items:center;justify-content:center;padding:0 4px}.notificationRow{width:100%;display:flex;gap:10px;text-align:left;background:transparent;border:0;border-bottom:1px solid #252b36;color:#fff;padding:12px}.notificationRow.unread{background:#181d27}.notificationIcon{font-size:22px}.notifCount{background:#ff3f8e;color:#fff;border-radius:999px;padding:2px 7px;font-size:11px}</style>
 </head>
 <body>
 <div id="app">
 <header><div class="logo">NOW <span>BALI</span></div><div class="live">● LIVE</div></header>
 <main id="main"></main>
-<nav><button data-tab="now">🔥<small>NOW</small></button><button data-tab="near">📍<small>NEAR</small></button><button id="plus">+</button><button data-tab="people">👥<small>PEOPLE</small></button><button data-tab="me">◉<small>ME</small></button></nav>
+<nav><button data-tab="now">🔥<small>NOW</small></button><button data-tab="near">📍<small>NEAR</small></button><button id="plus">+</button><button data-tab="people" id="peopleNavBtn" style="position:relative">👥<span id="peopleNotifBadge" class="notifBadge">0</span><small>PEOPLE</small></button><button data-tab="me">◉<small>ME</small></button></nav>
 <div id="authModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closeAuth()">×</button><div id="authBox"></div></div></div>
 <div id="postModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closePost()">×</button><h2>Post NOW</h2><textarea id="postText" placeholder="Apa yang sedang terjadi sekarang?"></textarea><select id="postCategory"><option value="">Pilih kategori postingan</option><option value="food">🍜 Makanan & Minuman</option><option value="fashion">👕 Fashion & Retail</option><option value="activity">🏄 Aktivitas & Wisata</option><option value="spa">💆 Spa & Wellness</option><option value="hotel">🏨 Hotel & Villa</option><option value="souvenir">🛍️ Souvenir</option><option value="rental">🚗 Rental</option><option value="beauty">💇 Beauty</option><option value="service">🔧 Jasa</option><option value="art">🎨 Seni & Kreatif</option></select><input id="postPlace" placeholder="Lokasi / tempat" value="Canggu Beach"><input id="postPhoto" type="file" accept="image/*"><img id="photoPreview" class="postPhotoLarge hidden"><button class="btn" onclick="publishPost()">POST NOW</button></div></div>
 <div id="detailModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closeDetail()">×</button><div id="detailBox"></div></div></div>
@@ -47,7 +47,7 @@ function avatar(u,small=false){return u?.photo?`<img class="avatar ${small?"smal
 async function loadProfile(session){if(!session?.user)return null;let {data:p}=await sb.from("profiles").select("*").eq("id",session.user.id).maybeSingle();if(!p)return null;let u={id:p.id,name:p.name,displayName:p.name,username:p.username,phone:p.phone,accountType:p.account_type,photo:p.avatar_url||""};if(p.account_type==="driver"){let {data:d}=await sb.from("driver_profiles").select("*").eq("profile_id",p.id).maybeSingle();if(d)u.driver={carType:d.vehicle_type,vehicleNumber:d.vehicle_plate}}if(p.account_type==="usaha"){let {data:b}=await sb.from("business_profiles").select("*").eq("profile_id",p.id).maybeSingle();if(b)u.business={name:b.business_name,type:b.business_type,address:b.address,phone:p.phone};u.displayName=u.business?.name||u.displayName}return u}
 async function sync(session){let a=session.user.user_metadata||{},id=session.user.id,type=a.account_type||"personal",name=a.name||session.user.email?.split("@")[0]||"User",username=a.username||name.toLowerCase().replace(/[^a-z0-9_]/g,"").slice(0,30),phone=a.phone||"";await sb.from("profiles").upsert({id,name,username,phone,account_type:type},{onConflict:"id"});if(type==="driver")await sb.from("driver_profiles").upsert({profile_id:id,vehicle_type:a.vehicle_type||"",vehicle_plate:a.vehicle_plate||""},{onConflict:"profile_id"});if(type==="usaha")await sb.from("business_profiles").upsert({profile_id:id,business_name:a.business_name||"",business_type:a.business_type||"",address:a.business_address||""},{onConflict:"profile_id"});return loadProfile(session)}
 function guest(){document.querySelector("nav").style.display="none";main.innerHTML=`<div class="guestPage"><div class="guestCard"><div class="guestLogo">NOW <span>BALI</span></div><div class="guestTitle">Selamat datang di NOW Bali</div><div class="guestText">Buat akun untuk mengakses Feed, Near, People, Profile, postingan, komentar dan fitur NOW Bali.</div><button class="btn" onclick="openAuth();renderAuth('register','personal')">REGISTER</button><button class="guestLogin" onclick="openAuth();renderAuth('login')">Sudah punya akun? Login</button></div></div>`}
-function show(tab="now"){if(!user)return guest();document.querySelector("nav").style.display="flex";document.querySelectorAll("nav [data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));({now:renderNow,near:renderNear,people:renderPeople,me:renderMe}[tab]||renderNow)()}
+function show(tab="now"){if(!user)return guest();document.querySelector("nav").style.display="flex";document.querySelectorAll("nav [data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));({now:renderNow,near:renderNear,people:renderPeople,me:renderMe}[tab]||renderNow)();refreshPeopleBadge()}
 function postRow(p){return `<div class="row" onclick='openDetail(${JSON.stringify(p).replace(/'/g,"&#39;")})'>${p.photo?`<img class="thumb" src="${esc(p.photo)}">`:``}<div style="flex:1"><h3>${esc(p.t)}</h3><p class="muted">${esc(p.u)} • ${ago(p.time)} • 📍 ${esc(p.place||"Canggu Beach")}</p>${p.category?`<div class="postCategory">🏷️ ${esc(p.category)}</div>`:""}<span class="tag">🔥 ${p.likes||0}</span><span class="tag">💬 ${(p.comments||[]).length}</span></div></div>`}
 function renderNow(){let p=places[0],demo=[{id:"demo1",t:"Sunset gila hari ini! 🌅",u:"Made Dharma",time:Date.now()-120000,likes:12,comments:[{u:"Sari",t:"Bagus banget!"}],photo:""},{id:"demo2",t:"Ramai banget malam ini 🔥",u:"Sara Kim",time:Date.now()-300000,likes:8,comments:[],photo:""}];main.innerHTML=`<div class="page"><div class="title"><h2>🔥 Happening Now</h2><span class="muted">LIVE</span></div><div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.emoji} ${p.name}</h1><span class="muted">${p.people} people • ${p.posts} posts • sangat ramai sekarang</span></div></div></div><div class="title"><h2>⚡ Live Feed</h2></div><div class="card">${[...demo,...posts].slice(0,12).map(postRow).join("")||`<div class="empty">Belum ada postingan.</div>`}</div><div class="title"><h2>🔥 Top Places</h2></div><div class="card">${places.map(x=>`<div class="row" onclick="placeDetail('${x.name}')"><span class="score">${x.score}</span><div><h3>${x.emoji} ${x.name}</h3><p class="muted">${x.people} people active • ${x.posts} posts • ${x.distance}</p></div></div>`).join("")}</div></div>`}
 function renderNear(){main.innerHTML=`<div class="page"><h2>📍 Near You</h2><div class="notice">GPS akan kita sambungkan pada tahap berikutnya.</div><div class="card">${places.map(x=>`<div class="row" onclick="placeDetail('${x.name}')"><span class="score">${x.score}</span><div><h3>${x.emoji} ${x.name}</h3><p class="muted">${x.distance} • ${x.people} people active</p></div></div>`).join("")}</div></div>`}
@@ -59,8 +59,17 @@ let discoverLoading=false;
 let discoverDuration="all"; window.__packageCache={};
 
 function renderPeople(){
+  if(!user)return guest();
   if(user.accountType!=="personal"){
-    main.innerHTML=`<div class="page"><h2>👥 Discover</h2><div class="notice">Fitur ini digunakan oleh akun Personal / Customer.</div></div>`;
+    main.innerHTML=`<div class="page">
+      <h2>👥 PEOPLE</h2>
+      <div class="notice">🔔 Aktivitas akun Anda tampil di sini.</div>
+      <div id="peopleNotifications" class="card"><div class="loading">Memuat notifikasi...</div></div>
+      ${user.accountType==="driver"
+        ? `<button class="btn secondary" style="width:100%;margin:8px 0" onclick="renderDriverInbox()">💬 PESAN MASUK DRIVER</button>`
+        : `<div class="card"><div class="title" style="padding:12px"><h3>🏪 Aktivitas UMKM</h3></div><div class="muted" style="padding:12px">Like, komentar, dan aktivitas postingan usaha akan masuk ke notifikasi di atas.</div></div>`}
+    </div>`;
+    loadPeopleNotifications();
     return;
   }
   main.innerHTML=`<div class="page">
@@ -76,15 +85,48 @@ function renderPeople(){
       <button class="filter" onclick="setBusinessPostCategory('food',this)">🍜 Makanan & Minuman</button><button class="filter" onclick="setBusinessPostCategory('fashion',this)">👕 Fashion & Retail</button><button class="filter" onclick="setBusinessPostCategory('activity',this)">🏄 Aktivitas & Wisata</button><button class="filter" onclick="setBusinessPostCategory('spa',this)">💆 Spa & Wellness</button><button class="filter" onclick="setBusinessPostCategory('hotel',this)">🏨 Hotel & Villa</button><button class="filter" onclick="setBusinessPostCategory('souvenir',this)">🛍️ Souvenir</button><button class="filter" onclick="setBusinessPostCategory('rental',this)">🚗 Rental</button><button class="filter" onclick="setBusinessPostCategory('beauty',this)">💇 Beauty</button><button class="filter" onclick="setBusinessPostCategory('service',this)">🔧 Jasa</button><button class="filter" onclick="setBusinessPostCategory('art',this)">🎨 Seni & Kreatif</button>
     </div>
     <div id="packageFilters" class="filterRow">
-      <button class="filter active" onclick="setDuration('all',this)">Semua</button>
-      <button class="filter" onclick="setDuration('8',this)">8 Jam</button>
-      <button class="filter" onclick="setDuration('24',this)">1 Hari</button>
-      <button class="filter" onclick="setDuration('48',this)">2 Hari+</button>
+      <button class="filter active" onclick="setDuration('all',this)">Semua</button><button class="filter" onclick="setDuration('8',this)">8 Jam</button><button class="filter" onclick="setDuration('24',this)">1 Hari</button><button class="filter" onclick="setDuration('48',this)">2 Hari+</button>
     </div>
     <div id="peopleResults" class="card"><div class="loading">Memuat Paket Liburan...</div></div>
     <div id="loadMoreWrap" style="text-align:center;margin:14px 0"></div>
   </div>`;
   resetDiscovery();
+}
+async function loadPeopleNotifications(){
+  const box=$("peopleNotifications"); if(!box||!user?.id)return;
+  const r=await sb.from("notifications").select("id,actor_id,type,title,body,target_type,target_id,is_read,created_at")
+    .eq("recipient_id",user.id).order("created_at",{ascending:false}).limit(30);
+  if(r.error){box.innerHTML=`<div class="empty">${esc(r.error.message)}</div>`;return;}
+  const rows=r.data||[], ids=[...new Set(rows.map(x=>x.actor_id).filter(Boolean))];
+  const ar=ids.length?await sb.from("profiles").select("id,name,username,avatar_url").in("id",ids):{data:[]};
+  const actors=new Map((ar.data||[]).map(x=>[x.id,x]));
+  const unread=rows.filter(x=>!x.is_read).length;
+  const badge=$("peopleNotifBadge"); if(badge){badge.textContent=unread>99?"99+":unread;badge.style.display=unread?"inline-flex":"none";}
+  if(!rows.length){box.innerHTML=`<div class="title" style="padding:12px"><h3>🔔 NOTIFIKASI</h3></div><div class="empty">Belum ada aktivitas.</div>`;return;}
+  box.innerHTML=`<div class="title" style="padding:12px;display:flex;justify-content:space-between;align-items:center"><h3>🔔 NOTIFIKASI ${unread?`<span class="notifCount">${unread}</span>`:""}</h3>${unread?`<button class="btn small" onclick="markPeopleNotificationsRead()">Tandai dibaca</button>`:""}</div>`+
+    rows.map(n=>{const u=actors.get(n.actor_id)||{},icon=n.type==="like"?"🔥":n.type==="comment"?"💬":"✉️";return `<button class="notificationRow ${n.is_read?"":"unread"}" onclick="openNotificationTarget('${n.target_type||""}','${n.target_id||""}','${n.id}')"><div class="notificationIcon">${icon}</div><div><b>${esc(u.name||"Customer")}</b><div>${esc(n.title||"Aktivitas baru")}</div><div class="muted">${esc(n.body||"")} · ${ago(new Date(n.created_at).getTime())}</div></div></button>`}).join("");
+}
+async function markPeopleNotificationsRead(){
+  if(!user?.id)return;
+  const r=await sb.from("notifications").update({is_read:true}).eq("recipient_id",user.id).eq("is_read",false);
+  if(r.error)alert(r.error.message); else {refreshPeopleBadge();loadPeopleNotifications();}
+}
+async function refreshPeopleBadge(){
+  if(!user?.id)return;
+  const r=await sb.from("notifications").select("id",{count:"exact",head:true}).eq("recipient_id",user.id).eq("is_read",false);
+  const b=$("peopleNotifBadge"); if(b){const n=r.count||0;b.textContent=n>99?"99+":n;b.style.display=n?"inline-flex":"none";}
+}
+async function openNotificationTarget(type,id,nid){
+  if(nid)await sb.from("notifications").update({is_read:true}).eq("id",nid).eq("recipient_id",user.id);
+  refreshPeopleBadge();
+  if(type==="travel_package"&&id){
+    const r=await sb.from("travel_packages").select("*").eq("id",id).maybeSingle();
+    if(r.data){const d=await sb.from("profiles").select("id,name,username,phone,avatar_url").eq("id",r.data.owner_id).maybeSingle();openPublicPackage(r.data,d.data||{});return;}
+  }
+  if(type==="business_post"&&id){
+    const r=await sb.from("business_posts").select("*").eq("id",id).maybeSingle();
+    if(r.data){const [pr,br]=await Promise.all([sb.from("profiles").select("id,name,username,phone,avatar_url").eq("id",r.data.user_id).maybeSingle(),sb.from("business_profiles").select("profile_id,business_name,business_type,address").eq("profile_id",r.data.user_id).maybeSingle()]);viewBusinessPost({...(pr.data||{}),b:br.data||{},post:r.data});}
+  }
 }
 
 function resetDiscovery(){
@@ -256,28 +298,43 @@ function businessPostCard(post,p,b){
 }
 
 function viewBusinessPost(data){
-  const p=data||{},b=p.b||{},post=p.post||{};
-  const name=b.business_name||p.name||"UMKM",phone=p.phone||"";
+  const p=data||{},b=p.b||{},post=p.post||{},name=b.business_name||p.name||"UMKM",phone=p.phone||"";
   $("profileModal").classList.remove("hidden");
   $("profileBox").innerHTML=`<button class="guestLogin" onclick="closeProfile()">← Kembali</button>
-    <div class="profileHead">
-      ${avatar({name,photo:p.avatar_url})}
-      <div class="accountLabel">🏪 UMKM / Usaha</div>
-      <h2>${esc(name)}</h2>
-      <p class="muted">@${esc(p.username||"")}</p>
-    </div>
-    <div class="card">
-      ${post.image_url?`<img src="${esc(post.image_url)}" style="width:100%;max-height:360px;object-fit:cover">`:""}
-      <div style="padding:14px">
-        <div class="postCategory">🏷️ ${esc(post.category||"")}</div>
-        <p>${esc(post.caption||"")}</p>
-        <p class="muted">📍 ${esc(post.location||b.address||"Bali")}</p>
-      </div>
-    </div>
-    <div class="actions">
-      ${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}
-      <button class="action" onclick='viewPerson(${JSON.stringify({...p,b}).replace(/'/g,"&#39;")})'>👤 Profil Usaha</button>
-    </div>`;
+    <div class="profileHead">${avatar({name,photo:p.avatar_url})}<div class="accountLabel">🏪 UMKM / Usaha</div><h2>${esc(name)}</h2><p class="muted">@${esc(p.username||"")}</p></div>
+    <div class="card">${post.image_url?`<img src="${esc(post.image_url)}" style="width:100%;max-height:360px;object-fit:cover">`:""}<div style="padding:14px"><div class="postCategory">🏷️ ${esc(post.category||"")}</div><p>${esc(post.caption||"")}</p><p class="muted">📍 ${esc(post.location||b.address||"Bali")}</p></div></div>
+    <div class="pkgEngage">🔥 <span id="businessLikeCount">0</span> &nbsp; 💬 <span id="businessCommentCount">0</span></div>
+    <div class="actions"><button class="action" id="businessLikeBtn">🔥 Suka</button><button class="action" id="businessCommentBtn">💬 Komentar</button></div>
+    <div id="businessComments" class="commentsBox"><div class="loading">Memuat komentar...</div></div>
+    <div class="actions">${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}<button class="action" onclick='viewPerson(${JSON.stringify({...p,b}).replace(/'/g,"&#39;")})'>👤 Profil Usaha</button></div>`;
+  $("businessLikeBtn").onclick=()=>toggleBusinessPostLike(post.id);
+  $("businessCommentBtn").onclick=()=>showBusinessCommentBox(post.id);
+  loadBusinessPostEngagement(post.id);
+}
+async function loadBusinessPostEngagement(postId){
+  const [lr,cr]=await Promise.all([sb.from("business_post_likes").select("id",{count:"exact",head:true}).eq("post_id",postId),sb.from("business_post_comments").select("id",{count:"exact",head:true}).eq("post_id",postId)]);
+  if($("businessLikeCount"))$("businessLikeCount").textContent=lr.count||0;
+  if($("businessCommentCount"))$("businessCommentCount").textContent=cr.count||0;
+  const box=$("businessComments"); if(!box)return;
+  const r=await sb.from("business_post_comments").select("id,user_id,body,created_at").eq("post_id",postId).order("created_at",{ascending:true}).limit(50);
+  if(r.error){box.innerHTML=`<div class="empty">${esc(r.error.message)}</div>`;return;}
+  if(!r.data?.length){box.innerHTML=`<div class="empty">Belum ada komentar.</div>`;return;}
+  const ids=[...new Set(r.data.map(x=>x.user_id))],pr=ids.length?await sb.from("profiles").select("id,name,username").in("id",ids):{data:[]},map=new Map((pr.data||[]).map(x=>[x.id,x]));
+  box.innerHTML=r.data.map(c=>{const u=map.get(c.user_id)||{};return `<div class="comment"><b>${esc(u.name||"User")}</b><div>${esc(c.body)}</div></div>`}).join("");
+}
+async function toggleBusinessPostLike(postId){
+  if(!user?.id)return alert("Silakan login untuk memberi like.");
+  const e=await sb.from("business_post_likes").select("id").eq("post_id",postId).eq("user_id",user.id).maybeSingle();
+  if(e.error)return alert(e.error.message);
+  const r=e.data?await sb.from("business_post_likes").delete().eq("id",e.data.id):await sb.from("business_post_likes").insert({post_id:postId,user_id:user.id});
+  if(r.error)alert(r.error.message); else loadBusinessPostEngagement(postId);
+}
+function showBusinessCommentBox(postId){
+  if(!user?.id)return alert("Silakan login untuk berkomentar.");
+  const box=$("businessComments"); if(!box||$("businessCommentComposer"))return;
+  box.insertAdjacentHTML("afterbegin",`<div id="businessCommentComposer" style="display:flex;gap:8px;margin-bottom:10px"><input id="businessCommentInput" placeholder="Tulis komentar..." style="margin:0;flex:1"><button class="btn small" id="businessCommentSend">Kirim</button></div>`);
+  $("businessCommentSend").onclick=async()=>{const body=$("businessCommentInput")?.value.trim();if(!body)return;const r=await sb.from("business_post_comments").insert({post_id:postId,user_id:user.id,body});if(r.error)alert(r.error.message);else loadBusinessPostEngagement(postId);};
+  $("businessCommentInput")?.focus();
 }
 function personCard(p){
   const name=p.b?.business_name||p.name,phone=p.phone||"";
