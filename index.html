@@ -949,8 +949,11 @@ async function loadStoriesStrip(){
   if(r.error){wrap.innerHTML='';return}
   const rows=r.data||[]; storyItems=rows;
   const ids=[...new Set(rows.map(x=>x.user_id))]; const pr=ids.length?await sb.from('profiles').select('id,name,avatar_url').in('id',ids):{data:[]}; const pm=new Map((pr.data||[]).map(x=>[x.id,x]));
-  const grouped=[]; const seen=new Set(); for(const x of rows){if(seen.has(x.user_id))continue;seen.add(x.user_id);grouped.push(x)}
-  wrap.innerHTML=`<div class="title"><h2>📸 NOW Story</h2><span class="muted">24 jam</span></div><div class="storyStrip"><div class="storyBubble" onclick="openComposerTabFromHome('story')"><div class="storyRing storyAdd">+</div><div>Story kamu</div></div>${grouped.map(x=>{const u=pm.get(x.user_id)||{};return `<div class="storyBubble" onclick="openStoryViewer('${x.id}')"><div class="storyRing">${x.media_type==='video'?`<video src="${esc(x.media_url)}" muted></video>`:`<img src="${esc(u.avatar_url||x.media_url)}">`}</div><div>${esc(u.name||'NOW BALI')}</div></div>`}).join('')}</div>`;
+  // Satu bubble per pengguna; Story milik sendiri selalu paling depan setelah tombol +.
+  const grouped=[]; const seen=new Set();
+  const ordered=[...rows].sort((a,b)=>{const am=a.user_id===user.id?0:1,bm=b.user_id===user.id?0:1;return am-bm||new Date(b.created_at)-new Date(a.created_at)});
+  for(const x of ordered){if(seen.has(x.user_id))continue;seen.add(x.user_id);grouped.push(x)}
+  wrap.innerHTML=`<div class="title"><h2>📸 NOW Story</h2><span class="muted">24 jam</span></div><div class="storyStrip"><div class="storyBubble" onclick="openComposerTabFromHome('story')"><div class="storyRing storyAdd">+</div><div>Story kamu</div></div>${grouped.map(x=>{const u=pm.get(x.user_id)||{};const label=x.user_id===user.id?'Story kamu':(u.name||'NOW BALI');return `<div class="storyBubble" onclick="openStoryViewer('${x.id}')"><div class="storyRing">${x.media_type==='video'?`<video src="${esc(x.media_url)}" muted playsinline></video>`:`<img src="${esc(u.avatar_url||x.media_url)}">`}</div><div>${esc(label)}</div></div>`}).join('')}</div>`;
 }
 function openComposerTabFromHome(tab){$("postModal").classList.remove('hidden');openComposerTab(tab)}
 async function openStoryViewer(id){
