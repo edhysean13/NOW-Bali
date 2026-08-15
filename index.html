@@ -31,7 +31,7 @@ input,textarea{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 <main id="main"></main>
 <nav><button data-tab="now">🔥<small>NOW</small></button><button data-tab="near">📍<small>NEAR</small></button><button id="plus">+</button><button data-tab="people" id="peopleNavBtn" style="position:relative">👥<span id="peopleNotifBadge" class="notifBadge">0</span><small>PEOPLE</small></button><button data-tab="me">◉<small>ME</small></button></nav>
 <div id="authModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closeAuth()">×</button><div id="authBox"></div></div></div>
-<div id="postModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closePost()">×</button><h2>Post NOW</h2><textarea id="postText" placeholder="Apa yang sedang terjadi sekarang?"></textarea><select id="postCategory"><option value="">Pilih kategori postingan</option><option value="food">🍜 Makanan & Minuman</option><option value="fashion">👕 Fashion & Retail</option><option value="activity">🏄 Aktivitas & Wisata</option><option value="spa">💆 Spa & Wellness</option><option value="hotel">🏨 Hotel & Villa</option><option value="souvenir">🛍️ Souvenir</option><option value="rental">🚗 Rental</option><option value="beauty">💇 Beauty</option><option value="service">🔧 Jasa</option><option value="art">🎨 Seni & Kreatif</option></select><input id="postPlace" placeholder="Lokasi / tempat" value="Canggu Beach"><input id="postPhoto" type="file" accept="image/*"><img id="photoPreview" class="postPhotoLarge hidden"><button class="btn" onclick="publishPost()">POST NOW</button></div></div>
+<div id="postModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closePost()">×</button><h2>Post NOW</h2><textarea id="postText" placeholder="Apa yang sedang terjadi sekarang?"></textarea><select id="postCategory"><option value="">Pilih kategori postingan</option><option value="food">🍜 Makanan & Minuman</option><option value="fashion">👕 Fashion</option><option value="activity">🏄 Aktivitas & Wisata</option><option value="spa">💆 Spa & Wellness</option><option value="hotel">🏨 Hotel & Villa</option><option value="souvenir">🛍️ Souvenir</option><option value="rental">🚗 Rental</option><option value="beauty">💇 Beauty</option><option value="service">🔧 Jasa</option><option value="art">🎨 Seni & Kreatif</option></select><input id="postPlace" placeholder="Lokasi / tempat" value="Canggu Beach"><input id="postPhoto" type="file" accept="image/*"><img id="photoPreview" class="postPhotoLarge hidden"><button class="btn" onclick="publishPost()">POST NOW</button></div></div>
 <div id="detailModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closeDetail()">×</button><div id="detailBox"></div></div></div>
 <div id="packageModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closePackage()">×</button><div id="packageBox"></div></div></div>
 <div id="profileModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closeProfile()">×</button><div id="profileBox"></div></div></div>
@@ -47,7 +47,7 @@ function avatar(u,small=false){return u?.photo?`<img class="avatar ${small?"smal
 async function loadProfile(session){if(!session?.user)return null;let {data:p}=await sb.from("profiles").select("*").eq("id",session.user.id).maybeSingle();if(!p)return null;let u={id:p.id,name:p.name,displayName:p.name,username:p.username,phone:p.phone,accountType:p.account_type,photo:p.avatar_url||""};if(p.account_type==="driver"){let {data:d}=await sb.from("driver_profiles").select("*").eq("profile_id",p.id).maybeSingle();if(d)u.driver={carType:d.vehicle_type,vehicleNumber:d.vehicle_plate}}if(p.account_type==="usaha"){let {data:b}=await sb.from("business_profiles").select("*").eq("profile_id",p.id).maybeSingle();if(b)u.business={name:b.business_name,type:b.business_type,address:b.address,phone:p.phone};u.displayName=u.business?.name||u.displayName}return u}
 async function sync(session){let a=session.user.user_metadata||{},id=session.user.id,type=a.account_type||"personal",name=a.name||session.user.email?.split("@")[0]||"User",username=a.username||name.toLowerCase().replace(/[^a-z0-9_]/g,"").slice(0,30),phone=a.phone||"";await sb.from("profiles").upsert({id,name,username,phone,account_type:type},{onConflict:"id"});if(type==="driver")await sb.from("driver_profiles").upsert({profile_id:id,vehicle_type:a.vehicle_type||"",vehicle_plate:a.vehicle_plate||""},{onConflict:"profile_id"});if(type==="usaha")await sb.from("business_profiles").upsert({profile_id:id,business_name:a.business_name||"",business_type:a.business_type||"",address:a.business_address||""},{onConflict:"profile_id"});return loadProfile(session)}
 function guest(){document.querySelector("nav").style.display="none";main.innerHTML=`<div class="guestPage"><div class="guestCard"><div class="guestLogo">NOW <span>BALI</span></div><div class="guestTitle">Selamat datang di NOW Bali</div><div class="guestText">Buat akun untuk mengakses Feed, Near, People, Profile, postingan, komentar dan fitur NOW Bali.</div><button class="btn" onclick="openAuth();renderAuth('register','personal')">REGISTER</button><button class="guestLogin" onclick="openAuth();renderAuth('login')">Sudah punya akun? Login</button></div></div>`}
-function show(tab="now"){if(!user)return guest();document.querySelector("nav").style.display="flex";document.querySelectorAll("nav [data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));({now:renderNow,near:renderNear,people:renderPeople,me:renderMe}[tab]||renderNow)();refreshPeopleBadge()}
+function show(tab="now"){if(!user)return guest();document.querySelector("nav").style.display="flex";document.querySelectorAll("nav [data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));({now:renderNow,near:renderNear,people:renderPeople,me:renderMe}[tab]||renderNow)();refreshPeopleBadge();if(user.accountType==="usaha")syncLegacyBusinessPosts()}
 function postRow(p){return `<div class="row" onclick='openDetail(${JSON.stringify(p).replace(/'/g,"&#39;")})'>${p.photo?`<img class="thumb" src="${esc(p.photo)}">`:``}<div style="flex:1"><h3>${esc(p.t)}</h3><p class="muted">${esc(p.u)} • ${ago(p.time)} • 📍 ${esc(p.place||"Canggu Beach")}</p>${p.category?`<div class="postCategory">🏷️ ${esc(p.category)}</div>`:""}<span class="tag">🔥 ${p.likes||0}</span><span class="tag">💬 ${(p.comments||[]).length}</span></div></div>`}
 function renderNow(){let p=places[0],demo=[{id:"demo1",t:"Sunset gila hari ini! 🌅",u:"Made Dharma",time:Date.now()-120000,likes:12,comments:[{u:"Sari",t:"Bagus banget!"}],photo:""},{id:"demo2",t:"Ramai banget malam ini 🔥",u:"Sara Kim",time:Date.now()-300000,likes:8,comments:[],photo:""}];main.innerHTML=`<div class="page"><div class="title"><h2>🔥 Happening Now</h2><span class="muted">LIVE</span></div><div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.emoji} ${p.name}</h1><span class="muted">${p.people} people • ${p.posts} posts • sangat ramai sekarang</span></div></div></div><div class="title"><h2>⚡ Live Feed</h2></div><div class="card">${[...demo,...posts].slice(0,12).map(postRow).join("")||`<div class="empty">Belum ada postingan.</div>`}</div><div class="title"><h2>🔥 Top Places</h2></div><div class="card">${places.map(x=>`<div class="row" onclick="placeDetail('${x.name}')"><span class="score">${x.score}</span><div><h3>${x.emoji} ${x.name}</h3><p class="muted">${x.people} people active • ${x.posts} posts • ${x.distance}</p></div></div>`).join("")}</div></div>`}
 function renderNear(){main.innerHTML=`<div class="page"><h2>📍 Near You</h2><div class="notice">GPS akan kita sambungkan pada tahap berikutnya.</div><div class="card">${places.map(x=>`<div class="row" onclick="placeDetail('${x.name}')"><span class="score">${x.score}</span><div><h3>${x.emoji} ${x.name}</h3><p class="muted">${x.distance} • ${x.people} people active</p></div></div>`).join("")}</div></div>`}
@@ -69,7 +69,7 @@ function renderPeople(){
         ? `<button class="btn secondary" style="width:100%;margin:8px 0" onclick="renderDriverInbox()">💬 PESAN MASUK DRIVER</button>`
         : `<button class="btn secondary" style="width:100%;margin:8px 0" onclick="renderDriverInbox()">💬 PESAN MASUK UMKM</button><div class="card"><div class="title" style="padding:12px"><h3>🏪 Aktivitas UMKM</h3></div><div class="muted" style="padding:12px">Like, komentar, dan pesan customer akan masuk ke sini.</div></div>`}
     </div>`;
-    loadPeopleNotifications();
+    syncLegacyBusinessPosts().finally(()=>loadPeopleNotifications());
     return;
   }
   main.innerHTML=`<div class="page">
@@ -82,7 +82,7 @@ function renderPeople(){
     </div>
     <div id="businessPostFilters" class="filterRow" style="display:none">
       <button class="filter active" onclick="setBusinessPostCategory('all',this)">Semua</button>
-      <button class="filter" onclick="setBusinessPostCategory('food',this)">🍜 Makanan & Minuman</button><button class="filter" onclick="setBusinessPostCategory('fashion',this)">👕 Fashion & Retail</button><button class="filter" onclick="setBusinessPostCategory('activity',this)">🏄 Aktivitas & Wisata</button><button class="filter" onclick="setBusinessPostCategory('spa',this)">💆 Spa & Wellness</button><button class="filter" onclick="setBusinessPostCategory('hotel',this)">🏨 Hotel & Villa</button><button class="filter" onclick="setBusinessPostCategory('souvenir',this)">🛍️ Souvenir</button><button class="filter" onclick="setBusinessPostCategory('rental',this)">🚗 Rental</button><button class="filter" onclick="setBusinessPostCategory('beauty',this)">💇 Beauty</button><button class="filter" onclick="setBusinessPostCategory('service',this)">🔧 Jasa</button><button class="filter" onclick="setBusinessPostCategory('art',this)">🎨 Seni & Kreatif</button>
+      <button class="filter" onclick="setBusinessPostCategory('food',this)">🍜 Makanan & Minuman</button><button class="filter" onclick="setBusinessPostCategory('fashion',this)">👕 Fashion</button><button class="filter" onclick="setBusinessPostCategory('activity',this)">🏄 Aktivitas & Wisata</button><button class="filter" onclick="setBusinessPostCategory('spa',this)">💆 Spa & Wellness</button><button class="filter" onclick="setBusinessPostCategory('hotel',this)">🏨 Hotel & Villa</button><button class="filter" onclick="setBusinessPostCategory('souvenir',this)">🛍️ Souvenir</button><button class="filter" onclick="setBusinessPostCategory('rental',this)">🚗 Rental</button><button class="filter" onclick="setBusinessPostCategory('beauty',this)">💇 Beauty</button><button class="filter" onclick="setBusinessPostCategory('service',this)">🔧 Jasa</button><button class="filter" onclick="setBusinessPostCategory('art',this)">🎨 Seni & Kreatif</button>
     </div>
     <div id="packageFilters" class="filterRow">
       <button class="filter active" onclick="setDuration('all',this)">Semua</button><button class="filter" onclick="setDuration('8',this)">8 Jam</button><button class="filter" onclick="setDuration('24',this)">1 Hari</button><button class="filter" onclick="setDuration('48',this)">2 Hari+</button>
@@ -92,6 +92,37 @@ function renderPeople(){
   </div>`;
   resetDiscovery();
 }
+async function syncLegacyBusinessPosts(){
+  if(user?.accountType!=="usaha"||!user?.id)return;
+  let legacy=[];
+  try{legacy=JSON.parse(localStorage.getItem("now_posts_v2")||"[]")}catch(e){legacy=[]}
+  if(!Array.isArray(legacy)||!legacy.length)return;
+  const mine=legacy.filter(x=>x&&x.u===user.name&&x.t);
+  if(!mine.length)return;
+
+  const existing=await sb.from("business_posts")
+    .select("caption,created_at")
+    .eq("user_id",user.id)
+    .limit(200);
+  if(existing.error)return;
+
+  const keys=new Set((existing.data||[]).map(x=>`${x.caption}|${new Date(x.created_at).getTime()}`));
+  const rows=mine.filter(x=>{
+    const k=`${x.t}|${new Date(x.time||Date.now()).getTime()}`;
+    if(keys.has(k))return false;
+    keys.add(k);
+    return true;
+  }).map(x=>({
+    user_id:user.id,
+    caption:x.t,
+    image_url:x.photo||"",
+    location:x.place||"Canggu Beach",
+    category:x.category||"other",
+    created_at:new Date(x.time||Date.now()).toISOString()
+  }));
+  if(rows.length)await sb.from("business_posts").insert(rows);
+}
+
 async function loadPeopleNotifications(){
   const box=$("peopleNotifications"); if(!box||!user?.id)return;
   const r=await sb.from("notifications").select("id,actor_id,type,title,body,target_type,target_id,is_read,created_at")
