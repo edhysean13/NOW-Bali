@@ -229,11 +229,66 @@ function accountPersonCard(p,d,b){
   return `<div class="personCard"><div class="personTop">${avatar({name:display,photo:p.avatar_url},true)}<div class="personMeta"><h3>${esc(display||"User")}</h3><p class="muted">@${esc(p.username||"")} • ${type}</p>${p.account_type==="driver"&&d?.vehicle_type?`<p class="muted">${esc(d.vehicle_type)}${d.vehicle_plate?` • ${esc(d.vehicle_plate)}`:""}</p>`:""}${p.account_type==="usaha"&&b?.business_type?`<p class="muted">${esc(b.business_type)}</p>`:""}</div></div><div class="personActions">${followButton(p.id)}<button class="btn secondary small" onclick='openAccountProfile(${safe})'>LIHAT PROFIL</button></div></div>`;
 }
 
-function openAccountProfile(p){
+async function openAccountProfile(p){
   if(!p?.id)return;
-  if(p.account_type==="driver")return openDriverProfile(p.id);
-  if(p.account_type==="usaha")return viewPerson(p);
-  return viewPersonalProfile(p);
+  window.__activeFollowProfile=p;
+  window.__publicProfileTab='posts';
+  $("profileModal").classList.remove("hidden");
+  $("profileBox").innerHTML=`<div class="loading">Memuat profil...</div>`;
+  const [pr,dr,br,postsR,videoR,counts,following,pkR]=await Promise.all([
+    sb.from("profiles").select("id,name,username,phone,avatar_url,account_type").eq("id",p.id).maybeSingle(),
+    sb.from("driver_profiles").select("vehicle_type,vehicle_plate").eq("profile_id",p.id).maybeSingle(),
+    sb.from("business_profiles").select("business_name,business_type,address").eq("profile_id",p.id).maybeSingle(),
+    sb.from("posts").select("id,user_id,caption,image_url,location,latitude,longitude,category,created_at").eq("user_id",p.id).order("created_at",{ascending:false}).limit(100),
+    sb.from("near_videos").select("id,user_id,video_url,caption,location,latitude,longitude,created_at").eq("user_id",p.id).order("created_at",{ascending:false}).limit(100),
+    getFollowCounts(p.id),
+    getFollowState(p.id),
+    sb.from("travel_packages").select("*").eq("owner_id",p.id).eq("is_published",true).order("created_at",{ascending:false})
+  ]);
+  if(pr.error||!pr.data){$("profileBox").innerHTML=`<div class="empty">Profil tidak ditemukan.</div>`;return;}
+  const profile=pr.data, driver=dr.data||{}, business=br.data||{};
+  const posts=postsR.data||[], videos=videoR.data||[], packages=pkR.data||[];
+  const type=profile.account_type||"personal";
+  const icon=type==="driver"?"🚗":type==="usaha"?"🏪":"👤";
+  const label=type==="driver"?"Akun Driver":type==="usaha"?"Akun UMKM / Usaha":"Akun Personal / Customer";
+  const display=type==="usaha"?(business.business_name||profile.name):profile.name;
+  const safeId=esc(profile.id);
+  const postObjects=posts.map(x=>({id:x.id,t:x.caption||"",u:display,place:x.location||"Bali",latitude:x.latitude,longitude:x.longitude,category:x.category||"",time:new Date(x.created_at).getTime(),photo:x.image_url||"",likes:0,comments:[]}));
+  const postHtml=posts.length?posts.map((x,i)=>`<div class="profilePost" onclick='openDetail(${JSON.stringify(postObjects[i]).replace(/'/g,"&#39;")})' style="cursor:pointer">${x.image_url?`<img src="${esc(x.image_url)}" style="width:100%;max-height:360px;object-fit:cover;border-radius:12px">`:""}<p>${esc(x.caption||"")}</p>${x.category?`<div class="postCategory">🏷️ ${esc(x.category)}</div>`:""}${x.location?`<div class="muted">📍 ${esc(x.location)}</div>`:""}</div>`).join(""):`<div class="empty">Belum ada postingan.</div>`;
+  const photos=posts.filter(x=>x.image_url);
+  const photoHtml=photos.length?`<div class="profileGrid">${photos.map((x,i)=>`<div class="photoTile" onclick='openDetail(${JSON.stringify(postObjects[posts.indexOf(x)]).replace(/'/g,"&#39;")})'><img src="${esc(x.image_url)}"><div class="photoMeta">📷 ${esc(x.caption||"")}</div></div>`).join("")}</div>`:`<div class="empty">Belum ada foto.</div>`;
+  const videoHtml=videos.length?`<div class="profileVideoGrid">${videos.map(x=>`<div class="profileVideoTile"><video src="${esc(x.video_url)}" muted playsinline preload="metadata" onclick="openProfileVideo('${safeId}','${esc(x.video_url)}');return false"></video><div class="profileVideoShade"><div class="profileVideoStats"><button onclick="openProfileVideo('${safeId}','${esc(x.video_url)}');return false">▶️ Tonton</button></div></div></div>`).join("")}</div>`:`<div class="empty">Belum ada video.</div>`;
+  const driverInfo=type==="driver"?`<div class="driverInfo"><div class="driverItem"><b>${esc(driver.vehicle_type||"Belum diisi")}</b><span>Jenis mobil</span></div><div class="driverItem"><b>${esc(driver.vehicle_plate||"Belum diisi")}</b><span>Nomor kendaraan</span></div></div>`:"";
+  const businessInfo=type==="usaha"?`<div class="driverInfo"><div class="driverItem"><b>${esc(business.business_type||"Belum diisi")}</b><span>Jenis usaha</span></div><div class="driverItem"><b>${esc(business.address||"Belum diisi")}</b><span>Alamat</span></div></div>`:"";
+  const contact=profile.phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${profile.phone.replace(/\D/g,"")}" target="_blank">📱 ${type==="driver"?"Hubungi Driver":"WhatsApp"}</a>`:"";
+  const maps=type==="usaha"&&business.address?`<button class="action" type="button" onclick='openMaps(${JSON.stringify(business.address)})'>📍 Google Maps</button>`:"";
+  const packageSection=type==="driver"?`<div class="card"><div class="title" style="padding:12px"><h3>🎒 Paket Liburan ${packages.length?`(${packages.length})`:""}</h3></div>${packages.length?packages.slice(0,3).map(x=>packageCard(x,false,profile)).join(""):`<div class="empty">Belum ada paket liburan.</div>`}</div>`:"";
+  const renderPublicTab=(tab)=>{
+    window.__publicProfileTab=tab;
+    const body=tab==="posts"?postHtml:tab==="photos"?photoHtml:videoHtml;
+    const box=$("publicProfileContent");if(box)box.innerHTML=body;
+    document.querySelectorAll("#publicProfileTabs .profileTab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  };
+  window.__renderPublicProfileTab=renderPublicTab;
+  $("profileBox").innerHTML=`<div class="profileHead">
+      <div class="avatarWrap">${avatar({name:display,photo:profile.avatar_url})}</div>
+      <div class="accountLabel">${icon} ${label}</div>
+      <h2>${esc(display||"User")}</h2>
+      <p class="muted">@${esc(profile.username||"")}</p>
+      <div class="profileFollowStats"><button onclick="showFollowList('${safeId}','followers')"><b id="followFollowers-${safeId}">${counts.followers}</b><span>FOLLOWERS</span></button><button onclick="showFollowList('${safeId}','following')"><b id="followFollowing-${safeId}">${counts.following}</b><span>FOLLOWING</span></button></div>
+      ${driverInfo}${businessInfo}
+      <div class="actions" style="justify-content:center;flex-wrap:wrap">${followButton(profile.id,following)}${maps}${contact}<button class="action" onclick="closeProfile()">Tutup</button></div>
+    </div>
+    <div class="card">
+      <div id="publicProfileTabs" class="profileTabs">
+        <button class="profileTab active" data-tab="posts" type="button">📝 POSTS</button>
+        <button class="profileTab" data-tab="photos" type="button">📷 PHOTOS</button>
+        <button class="profileTab" data-tab="videos" type="button">🎥 VIDEOS</button>
+      </div>
+      <div id="publicProfileContent">${postHtml}</div>
+    </div>
+    ${packageSection}`;
+  $("publicProfileTabs").querySelectorAll(".profileTab").forEach(b=>b.onclick=()=>renderPublicTab(b.dataset.tab));
 }
 
 async function searchExplore(){
