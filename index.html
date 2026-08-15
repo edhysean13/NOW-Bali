@@ -111,13 +111,52 @@ function renderNow(){let p=places[0],demo=[{id:"demo1",t:"Sunset gila hari ini! 
 async function renderNear(){main.innerHTML=`<div class="nearPage"><div id="nearVideosWrap" class="nearVideoStage"><div class="nearTopBar"><h2>📍 Near You</h2><div id="nearTrend" class="nearTrend">🔥 Trending sekarang</div></div><div class="nearVideoEmpty"><div class="empty">Memuat video sekitar...</div></div></div></div>`;await loadNearVideos()}
 function startNearTrendTicker(rows=[]){
   const el=$("nearTrend");if(!el)return;
-  const fromVideos=[...new Set(rows.map(x=>(x.location||'').trim()).filter(Boolean))];
-  const fallback=places.slice().sort((a,b)=>b.score-a.score).map(x=>`${x.emoji} ${x.name} · ${x.score}`);
-  const items=(fromVideos.length?fromVideos.map(x=>`🔥 ${x}`):fallback);
+  // Selalu tampilkan lokasi trending secara bergiliran, bukan hanya lokasi dari video yang sedang login.
+  const trending=places.slice().sort((a,b)=>b.score-a.score).map(x=>`${x.emoji} ${x.name} · NOW SCORE ${x.score}`);
+  const videoLocations=[...new Set(rows.map(x=>(x.location||'').trim()).filter(Boolean))];
+  const extras=videoLocations.filter(loc=>!trending.some(t=>t.toLowerCase().includes(loc.toLowerCase()))).map(loc=>`🔥 ${loc} · VIDEO NEAR`);
+  const items=[...trending,...extras];
   if(!items.length)return;
   if(window._nearTrendTimer)clearInterval(window._nearTrendTimer);
-  let i=0;el.textContent=items[0];
-  window._nearTrendTimer=setInterval(()=>{el.classList.add('fade');setTimeout(()=>{i=(i+1)%items.length;el.textContent=items[i];el.classList.remove('fade')},430)},3000);
+  if(window._nearTrendFadeTimer)clearTimeout(window._nearTrendFadeTimer);
+  let i=0;
+  el.textContent=items[0];
+  window._nearTrendTimer=setInterval(()=>{
+    el.classList.add('fade');
+    window._nearTrendFadeTimer=setTimeout(()=>{
+      i=(i+1)%items.length;
+      el.textContent=items[i];
+      el.classList.remove('fade');
+    },430);
+  },2800);
+}
+function setupNearVideoAutoplay(){
+  const feed=$("nearVideoFeed");
+  if(!feed)return;
+  if(window._nearVideoObserver)window._nearVideoObserver.disconnect();
+  const videos=[...feed.querySelectorAll('video')];
+  const pauseOthers=(current)=>videos.forEach(v=>{if(v!==current){v.pause();v.removeAttribute('autoplay')}});
+  window._nearVideoObserver=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      const video=entry.target;
+      if(entry.isIntersecting && entry.intersectionRatio>=0.65){
+        pauseOthers(video);
+        video.muted=true;
+        video.setAttribute('playsinline','');
+        const promise=video.play();
+        if(promise&&promise.catch)promise.catch(()=>{});
+      }else if(!entry.isIntersecting || entry.intersectionRatio<0.35){
+        video.pause();
+      }
+    });
+  },{root:feed,threshold:[0.35,0.65,0.9]});
+  videos.forEach((video,i)=>{
+    video.muted=true;
+    video.setAttribute('playsinline','');
+    video.addEventListener('play',()=>pauseOthers(video));
+    window._nearVideoObserver.observe(video);
+    if(i===0){const promise=video.play();if(promise&&promise.catch)promise.catch(()=>{});}
+  });
 }
 async function loadNearVideos(){
   const wrap=$("nearVideosWrap");if(!wrap)return;
@@ -126,7 +165,8 @@ async function loadNearVideos(){
   const rows=r.data||[];startNearTrendTicker(rows);
   if(!rows.length){wrap.innerHTML=`<div class="nearVideoEmpty"><div class="empty">🎥<br><br>Belum ada video di sekitar.<br><span class="muted">Video yang diposting akan tampil penuh di sini.</span></div></div>`;return}
   const ids=[...new Set(rows.map(x=>x.user_id))];const pr=await sb.from('profiles').select('id,name,avatar_url,account_type').in('id',ids);const pm=new Map((pr.data||[]).map(x=>[x.id,x]));
-  wrap.innerHTML=`<div class="nearVideoFeed">${rows.map(x=>{const u=pm.get(x.user_id)||{};const type=u.account_type==='driver'?'Driver':u.account_type==='usaha'?'UMKM':'Personal';return `<article class="nearVideoCard"><video src="${esc(x.video_url)}" controls playsinline preload="metadata"></video><div class="nearVideoOverlay"><div class="nearVideoBody"><b>${esc(u.name||'NOW BALI')}</b><span class="nearVideoMeta">${esc(type)} · 📍 ${esc(x.location||'Bali')}</span><p>${esc(x.caption||'')}</p><div class="nearVideoActions"><button class="action" onclick="toggleNearVideoLike('${x.id}',this)">🔥 Like</button><button class="action" onclick="openNearVideoComments('${x.id}')">💬 Komentar</button></div><div id="nearVideoComments-${x.id}" class="commentsBox nearVideoCommentsFloat"></div></div></div><div class="nearVideoHint">Geser ↑ untuk video berikutnya</div></article>`}).join('')}</div>`;
+  wrap.innerHTML=`<div id="nearVideoFeed" class="nearVideoFeed">${rows.map(x=>{const u=pm.get(x.user_id)||{};const type=u.account_type==='driver'?'Driver':u.account_type==='usaha'?'UMKM':'Personal';return `<article class="nearVideoCard"><video src="${esc(x.video_url)}" controls muted playsinline preload="metadata"></video><div class="nearVideoOverlay"><div class="nearVideoBody"><b>${esc(u.name||'NOW BALI')}</b><span class="nearVideoMeta">${esc(type)} · 📍 ${esc(x.location||'Bali')}</span><p>${esc(x.caption||'')}</p><div class="nearVideoActions"><button class="action" onclick="toggleNearVideoLike('${x.id}',this)">🔥 Like</button><button class="action" onclick="openNearVideoComments('${x.id}')">💬 Komentar</button></div><div id="nearVideoComments-${x.id}" class="commentsBox nearVideoCommentsFloat"></div></div></div><div class="nearVideoHint">Geser ↑ untuk video berikutnya</div></article>`}).join('')}</div>`;
+  setupNearVideoAutoplay();
 }
 async function toggleNearVideoLike(id,btn){if(!user?.id)return alert('Silakan login untuk Like.');const q=await sb.from('near_video_likes').select('video_id').eq('video_id',id).eq('user_id',user.id).maybeSingle();if(q.data){const r=await sb.from('near_video_likes').delete().eq('video_id',id).eq('user_id',user.id);if(r.error)return alert(r.error.message);btn.classList.remove('liked');btn.textContent='🔥 Like'}else{const r=await sb.from('near_video_likes').insert({video_id:id,user_id:user.id});if(r.error){if(r.code==='23505'){btn.classList.add('liked');return}return alert(r.error.message)}btn.classList.add('liked');btn.textContent='🔥 Liked'}}
 async function openNearVideoComments(id){if(!user?.id)return alert('Silakan login untuk berkomentar.');const box=$("nearVideoComments-"+id);if(!box)return;const r=await sb.from('near_video_comments').select('user_id,body,created_at').eq('video_id',id).order('created_at',{ascending:true}).limit(50);const ids=[...new Set((r.data||[]).map(x=>x.user_id))];const pr=ids.length?await sb.from('profiles').select('id,name').in('id',ids):{data:[]};const pm=new Map((pr.data||[]).map(x=>[x.id,x.name]));box.innerHTML=(r.data||[]).map(x=>`<div class="comment"><b>${esc(pm.get(x.user_id)||'User')}</b><div>${esc(x.body)}</div></div>`).join('')+`<div style="display:flex;gap:8px;margin-top:8px"><input id="nearComment-${id}" placeholder="Tulis komentar..." style="margin:0"><button class="btn small" onclick="sendNearVideoComment('${id}')">Kirim</button></div>`}
