@@ -67,7 +67,7 @@ function renderPeople(){
       <div id="peopleNotifications" class="card"><div class="loading">Memuat notifikasi...</div></div>
       ${user.accountType==="driver"
         ? `<button class="btn secondary" style="width:100%;margin:8px 0" onclick="renderDriverInbox()">💬 PESAN MASUK DRIVER</button>`
-        : `<div class="card"><div class="title" style="padding:12px"><h3>🏪 Aktivitas UMKM</h3></div><div class="muted" style="padding:12px">Like, komentar, dan aktivitas postingan usaha akan masuk ke notifikasi di atas.</div></div>`}
+        : `<button class="btn secondary" style="width:100%;margin:8px 0" onclick="renderDriverInbox()">💬 PESAN MASUK UMKM</button><div class="card"><div class="title" style="padding:12px"><h3>🏪 Aktivitas UMKM</h3></div><div class="muted" style="padding:12px">Like, komentar, dan pesan customer akan masuk ke sini.</div></div>`}
     </div>`;
     loadPeopleNotifications();
     return;
@@ -306,11 +306,22 @@ function viewBusinessPost(data){
     <div class="pkgEngage">🔥 <span id="businessLikeCount">0</span> &nbsp; 💬 <span id="businessCommentCount">0</span></div>
     <div class="actions"><button class="action" id="businessLikeBtn">🔥 Suka</button><button class="action" id="businessCommentBtn">💬 Komentar</button></div>
     <div id="businessComments" class="commentsBox"><div class="loading">Memuat komentar...</div></div>
-    <div class="actions">${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}<button class="action" onclick='viewPerson(${JSON.stringify({...p,b}).replace(/'/g,"&#39;")})'>👤 Profil Usaha</button></div>`;
+    <div class="actions">
+      <button class="action primary" onclick='startBusinessChat(${JSON.stringify({...p,b}).replace(/'/g,"&#39;")})'>💬 Chat UMKM</button>
+      ${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}
+      <button class="action" onclick='viewPerson(${JSON.stringify({...p,b}).replace(/'/g,"&#39;")})'>👤 Profil Usaha</button>
+    </div>`;
   $("businessLikeBtn").onclick=()=>toggleBusinessPostLike(post.id);
   $("businessCommentBtn").onclick=()=>showBusinessCommentBox(post.id);
   loadBusinessPostEngagement(post.id);
 }
+function startBusinessChat(p){
+  // The chat backend is shared: recipient is the UMKM profile, while the UI
+  // remains the same internal conversation experience as Driver chat.
+  if(!p?.id)return;
+  startDriverChat(p);
+}
+
 async function loadBusinessPostEngagement(postId){
   const [lr,cr]=await Promise.all([sb.from("business_post_likes").select("id",{count:"exact",head:true}).eq("post_id",postId),sb.from("business_post_comments").select("id",{count:"exact",head:true}).eq("post_id",postId)]);
   if($("businessLikeCount"))$("businessLikeCount").textContent=lr.count||0;
