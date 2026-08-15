@@ -180,42 +180,192 @@ function openPublicPackage(p,driver){window.__activePackage=p;window.__chatDrive
   if(chatBtn) chatBtn.onclick=()=>startDriverChat(window.__chatDriver||{});
 }
 
-function startDriverChat(driver){
+async function startDriverChat(driver){
   driver=driver||window.__chatDriver||{};
   window.__chatDriver=driver;
-  const name=driver?.name||"Driver";
-  const key=`nowbali_chat_${driver?.id||driver?.username||name}`;
-  const messages=JSON.parse(localStorage.getItem(key)||"[]");
+  const packageId=window.__activePackage?.id;
+  const customerId=user?.id;
+  const driverId=driver?.id;
+
+  if(!customerId){alert("Silakan login sebagai Customer terlebih dahulu.");return;}
+  if(!driverId){alert("Profil Driver belum memiliki ID yang valid.");return;}
+  if(!packageId){alert("Paket belum terhubung dengan Driver.");return;}
+
   $("profileModal").classList.remove("hidden");
   $("profileBox").innerHTML=`<div class="chatHead">
-      <button class="guestLogin" onclick='openPublicPackage(window.__activePackage||{},${JSON.stringify(driver||{}).replace(/'/g,"&#39;")})'>← Kembali</button>
-      <div><h2>💬 Chat ${esc(name)}</h2><p class="muted">@${esc(driver?.username||"")} • 🚗 Driver</p></div>
+      <button class="guestLogin" id="chatBackBtn">← Kembali</button>
+      <div><h2>💬 Chat ${esc(driver.name||"Driver")}</h2><p class="muted">@${esc(driver.username||"")} • 🚗 Driver</p></div>
     </div>
-    <div id="chatMessages" class="chatMessages">
-      ${messages.length?messages.map(m=>`<div class="chatBubble ${m.from==="me"?"me":"them"}">${esc(m.text)}</div>`).join(""):`<div class="empty">Mulai percakapan dengan ${esc(name)}.</div>`}
-    </div>
+    <div id="chatMessages" class="chatMessages"><div class="loading">Menghubungkan chat...</div></div>
     <div class="chatComposer">
-      <input id="chatInput" placeholder="Tulis pesan..." onkeydown="if(event.key==='Enter')sendDriverChat()">
-      <button class="action" onclick="sendDriverChat()">Kirim</button>
+      <input id="chatInput" placeholder="Tulis pesan..." autocomplete="off">
+      <button id="chatSendBtn" class="action" type="button">Kirim</button>
     </div>
-    <div class="notice">Chat ini masih mode percakapan lokal untuk pengujian. Nanti kita sambungkan ke Supabase agar Driver dan Customer bisa saling menerima pesan secara real-time.</div>`;
-  window.__activeChat={key,driver};
-  window.__activePackage=window.__activePackage||{};
-  setTimeout(()=>{const el=$("chatMessages");if(el)el.scrollTop=el.scrollHeight},50);
-}
+    <div class="notice">Pesan dikirim melalui NOW BALI dan tersimpan di Supabase. Driver dapat menerimanya saat membuka akun Driver.</div>`;
 
-function sendDriverChat(){
+  window.__activeChat={driver,packageId,customerId,conversationId:null,channel:null};
+
+  const back=$("chatBackBtn");
+  if(back)back.onclick=()=>openPublicPackage(window.__activePackage||{},driver);
+  const send=$("chatSendBtn");
+  if(send)send.onclick=sendDriverChat;
   const input=$("chatInput");
-  if(!input||!input.value.trim()||!window.__activeChat)return;
-  const text=input.value.trim();
-  const data=JSON.parse(localStorage.getItem(window.__activeChat.key)||"[]");
-  data.push({from:"me",text,at:Date.now()});
-  localStorage.setItem(window.__activeChat.key,JSON.stringify(data));
-  input.value="";
-  startDriverChat(window.__activeChat.driver);
+  if(input)input.onkeydown=e=>{if(e.key==="Enter")sendDriverChat();};
+
+  // Find or create the conversation for this customer + driver + package.
+  let {data:conv,error}=await sb.from("chat_conversations")
+    .select("id")
+    .eq("customer_id",customerId)
+    .eq("driver_id",driverId)
+    .eq("package_id",packageId)
+    .maybeSingle();
+
+  if(error){$("chatMessages").innerHTML=`<div class="empty">${esc(error.message)}</div>`;return;}
+
+  if(!conv){
+    const ins=await sb.from("chat_conversations").insert({
+      customer_id:customerId,driver_id:driverId,package_id:packageId
+    }).select("id").single();
+    conv=ins.data;
+    error=ins.error;
+    if(error){$("chatMessages").innerHTML=`<div class="empty">${esc(error.message)}</div>`;return;}
+  }
+
+  window.__activeChat.conversationId=conv.id;
+
+  const loaded=await sb.from("chat_messages")
+    .select("id,sender_id,body,created_at")
+    .eq("conversation_id",conv.id)
+    .order("created_at",{ascending:true});
+
+  if(loaded.error){$("chatMessages").innerHTML=`<div class="empty">${esc(loaded.error.message)}</div>`;return;}
+  renderChatMessages(loaded.data||[]);
+
+  if(window.__chatChannel){try{await sb.removeChannel(window.__chatChannel);}catch(e){}}
+  window.__chatChannel=sb.channel(`chat-${conv.id}`)
+    .on("postgres_changes",
+      {event:"INSERT",schema:"public",table:"chat_messages",filter:`conversation_id=eq.${conv.id}`},
+      payload=>{
+        const current=document.querySelectorAll("#chatMessages .chatBubble");
+        const existing=[...current].some(x=>x.dataset.id===payload.new.id);
+        if(!existing){
+          appendChatMessage(payload.new);
+        }
+      })
+    .subscribe();
+
+  setTimeout(()=>{$("chatInput")?.focus();scrollChatToBottom()},50);
 }
 
-function renderMe(tab="posts"){let mine=posts.filter(p=>p.u===user.name).sort((a,b)=>b.time-a.time),type=user.accountType||"personal",icon=type==="driver"?"🚗":type==="usaha"?"🏪":"👤",label=type==="driver"?"Driver":type==="usaha"?"UMKM / Usaha":"Personal / Customer",extra=type==="driver"&&user.driver?`<div class="driverInfo"><b>🚗 Informasi Driver</b><div class="driverItem"><b>${esc(user.driver.carType)}</b><span>Jenis mobil</span></div><div class="driverItem"><b>${esc(user.driver.vehicleNumber)}</b><span>Nomor kendaraan</span></div><div class="driverItem"><b>${esc(user.phone)}</b><span>WhatsApp untuk order</span></div></div>`:type==="usaha"&&user.business?`<div class="driverInfo"><b>🏪 Informasi UMKM / Usaha</b><div class="driverItem"><b>${esc(user.business.name)}</b><span>Nama usaha</span></div><div class="driverItem"><b>${esc(user.business.type)}</b><span>Jenis usaha</span></div><div class="driverItem"><b>${esc(user.business.address)}</b><span>Alamat</span></div></div>`:"";main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead"><div class="avatarWrap">${avatar(user)}<div class="accountBadge">${icon}</div></div><div class="accountLabel">${icon} Akun ${label}</div><h2>${esc(user.displayName||user.name)}</h2><p class="muted">@${esc(user.username)}</p>${extra}<div class="stats"><div><b>${mine.length}</b><span>POSTS</span></div><div><b>0</b><span>FOLLOWERS</span></div><div><b>0</b><span>FOLLOWING</span></div></div><button class="btn" onclick="editProfile()">EDIT PROFILE</button>${type==="driver"?`<button class="btn secondary" style="margin-top:8px" onclick="openPackage()">➕ ADD PAKET LIBURAN</button>`:""}</div>${type==="driver"?`<div class="card"><div class="title" style="padding:12px"><h3>🎒 PAKET LIBURAN SAYA</h3><button class="btn small" onclick="openPackage()">+ Paket</button></div><div id="myPackages"><div class="empty">Memuat...</div></div></div>`:""}<div class="card"><div class="profileTabs"><button class="profileTab ${tab==="posts"?"active":""}" onclick="renderMe('posts')">📝 POSTS</button><button class="profileTab ${tab==="photos"?"active":""}" onclick="renderMe('photos')">📷 PHOTOS</button></div>${tab==="posts"?(mine.length?mine.map(postRow).join(""):`<div class="empty">Belum ada postingan.</div>`):(mine.filter(p=>p.photo).length?`<div class="profileGrid">${mine.filter(p=>p.photo).map(p=>`<div class="photoTile" onclick='openDetail(${JSON.stringify(p).replace(/'/g,"&#39;")})'><img src="${esc(p.photo)}"><div class="photoMeta">🔥 ${p.likes||0} • 💬 ${(p.comments||[]).length}</div></div>`).join("")}</div>`:`<div class="empty">Belum ada foto.</div>`)}</div><button class="btn danger" onclick="logout()">LOG OUT</button></div>`;if(type==="driver")loadPackages()}
+function renderChatMessages(messages){
+  const box=$("chatMessages");
+  if(!box)return;
+  box.innerHTML=messages.length
+    ? messages.map(chatMessageHtml).join("")
+    : `<div class="empty">Belum ada pesan. Mulai percakapan dengan Driver.</div>`;
+  scrollChatToBottom();
+}
+
+function chatMessageHtml(m){
+  const mine=m.sender_id===user?.id;
+  return `<div class="chatBubble ${mine?"me":"them"}" data-id="${esc(m.id)}">${esc(m.body)}</div>`;
+}
+
+function appendChatMessage(m){
+  const box=$("chatMessages");
+  if(!box)return;
+  const empty=box.querySelector(".empty");
+  if(empty)empty.remove();
+  box.insertAdjacentHTML("beforeend",chatMessageHtml(m));
+  scrollChatToBottom();
+}
+
+function scrollChatToBottom(){
+  const box=$("chatMessages");
+  if(box)box.scrollTop=box.scrollHeight;
+}
+
+async function sendDriverChat(){
+  const input=$("chatInput");
+  const chat=window.__activeChat;
+  if(!input||!chat?.conversationId)return;
+  const text=input.value.trim();
+  if(!text)return;
+
+  const btn=$("chatSendBtn");
+  if(btn){btn.disabled=true;btn.textContent="Mengirim...";}
+
+  const r=await sb.from("chat_messages").insert({
+    conversation_id:chat.conversationId,
+    sender_id:user.id,
+    body:text
+  }).select("id,sender_id,body,created_at").single();
+
+  if(r.error){
+    alert("Pesan belum terkirim: "+r.error.message);
+  }else{
+    input.value="";
+    // Realtime normally appends it; append immediately only if subscription has not done so.
+    const box=$("chatMessages");
+    if(box && !box.querySelector(`[data-id="${r.data.id}"]`))appendChatMessage(r.data);
+  }
+  if(btn){btn.disabled=false;btn.textContent="Kirim";}
+}
+async function renderDriverInbox(){
+  if(!user?.id||user.accountType!=="driver"){return;}
+  $("profileModal").classList.remove("hidden");
+  $("profileBox").innerHTML=`<div class="chatHead"><button class="guestLogin" onclick="closeProfile()">← Kembali</button><div><h2>💬 Pesan Masuk</h2><p class="muted">Percakapan Customer</p></div></div><div id="driverInbox"><div class="loading">Memuat pesan...</div></div>`;
+  const r=await sb.from("chat_conversations")
+    .select("id,customer_id,package_id,updated_at")
+    .eq("driver_id",user.id)
+    .order("updated_at",{ascending:false});
+  if(r.error){$("driverInbox").innerHTML=`<div class="empty">${esc(r.error.message)}</div>`;return;}
+  const rows=r.data||[];
+  if(!rows.length){$("driverInbox").innerHTML=`<div class="empty">Belum ada pesan masuk.</div>`;return;}
+
+  const customerIds=[...new Set(rows.map(x=>x.customer_id))];
+  const packageIds=[...new Set(rows.map(x=>x.package_id))];
+  const [cr,pr]=await Promise.all([
+    sb.from("profiles").select("id,name,username,phone,avatar_url").in("id",customerIds),
+    sb.from("travel_packages").select("id,title").in("id",packageIds)
+  ]);
+  const customers=new Map((cr.data||[]).map(x=>[x.id,x]));
+  const packages=new Map((pr.data||[]).map(x=>[x.id,x]));
+
+  $("driverInbox").innerHTML=rows.map(c=>{
+    const customer=customers.get(c.customer_id)||{};
+    const pack=packages.get(c.package_id)||{};
+    return `<button class="personCard" style="width:100%;text-align:left" onclick='openExistingChat(${JSON.stringify(c).replace(/'/g,"&#39;")},${JSON.stringify(customer).replace(/'/g,"&#39;")},${JSON.stringify(pack).replace(/'/g,"&#39;")})'>
+      <div class="personTop">${avatar({name:customer.name||"C"},true)}<div class="personMeta"><h3>${esc(customer.name||"Customer")}</h3><p class="muted">@${esc(customer.username||"")} • 🎒 ${esc(pack.title||"Paket Liburan")}</p><p class="muted">Buka percakapan →</p></div></div>
+    </button>`;
+  }).join("");
+}
+
+async function openExistingChat(conversation,customer,pack){
+  if(window.__chatChannel){try{await sb.removeChannel(window.__chatChannel);}catch(e){}}
+  window.__activeChat={conversationId:conversation.id,driver:customer,packageId:pack.id,customerId:conversation.customer_id};
+  $("profileModal").classList.remove("hidden");
+  $("profileBox").innerHTML=`<div class="chatHead"><button class="guestLogin" onclick="renderDriverInbox()">← Pesan Masuk</button><div><h2>💬 Chat ${esc(customer.name||"Customer")}</h2><p class="muted">@${esc(customer.username||"")} • 🎒 ${esc(pack.title||"Paket Liburan")}</p></div></div>
+    <div id="chatMessages" class="chatMessages"><div class="loading">Memuat...</div></div>
+    <div class="chatComposer"><input id="chatInput" placeholder="Tulis balasan..." autocomplete="off"><button id="chatSendBtn" class="action" type="button">Kirim</button></div>`;
+
+  const loaded=await sb.from("chat_messages").select("id,sender_id,body,created_at").eq("conversation_id",conversation.id).order("created_at",{ascending:true});
+  if(loaded.error){$("chatMessages").innerHTML=`<div class="empty">${esc(loaded.error.message)}</div>`;return;}
+  renderChatMessages(loaded.data||[]);
+
+  const send=$("chatSendBtn");
+  if(send)send.onclick=sendDriverChat;
+  const input=$("chatInput");
+  if(input)input.onkeydown=e=>{if(e.key==="Enter")sendDriverChat();};
+
+  window.__chatChannel=sb.channel(`chat-${conversation.id}`)
+    .on("postgres_changes",{event:"INSERT",schema:"public",table:"chat_messages",filter:`conversation_id=eq.${conversation.id}`},
+      payload=>{const box=$("chatMessages");if(box&&!box.querySelector(`[data-id="${payload.new.id}"]`))appendChatMessage(payload.new);})
+    .subscribe();
+  setTimeout(()=>input?.focus(),50);
+}
+
+function renderMe(tab="posts"){let mine=posts.filter(p=>p.u===user.name).sort((a,b)=>b.time-a.time),type=user.accountType||"personal",icon=type==="driver"?"🚗":type==="usaha"?"🏪":"👤",label=type==="driver"?"Driver":type==="usaha"?"UMKM / Usaha":"Personal / Customer",extra=type==="driver"&&user.driver?`<div class="driverInfo"><b>🚗 Informasi Driver</b><div class="driverItem"><b>${esc(user.driver.carType)}</b><span>Jenis mobil</span></div><div class="driverItem"><b>${esc(user.driver.vehicleNumber)}</b><span>Nomor kendaraan</span></div><div class="driverItem"><b>${esc(user.phone)}</b><span>WhatsApp untuk order</span></div></div>`:type==="usaha"&&user.business?`<div class="driverInfo"><b>🏪 Informasi UMKM / Usaha</b><div class="driverItem"><b>${esc(user.business.name)}</b><span>Nama usaha</span></div><div class="driverItem"><b>${esc(user.business.type)}</b><span>Jenis usaha</span></div><div class="driverItem"><b>${esc(user.business.address)}</b><span>Alamat</span></div></div>`:"";main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead"><div class="avatarWrap">${avatar(user)}<div class="accountBadge">${icon}</div></div><div class="accountLabel">${icon} Akun ${label}</div><h2>${esc(user.displayName||user.name)}</h2><p class="muted">@${esc(user.username)}</p>${extra}<div class="stats"><div><b>${mine.length}</b><span>POSTS</span></div><div><b>0</b><span>FOLLOWERS</span></div><div><b>0</b><span>FOLLOWING</span></div></div><button class="btn" onclick="editProfile()">EDIT PROFILE</button>${type==="driver"?`<button class="btn secondary" style="margin-top:8px" onclick="openPackage()">➕ ADD PAKET LIBURAN</button><button class="btn secondary" style="margin-top:8px" onclick="renderDriverInbox()">💬 PESAN MASUK</button>`:""}</div>${type==="driver"?`<div class="card"><div class="title" style="padding:12px"><h3>🎒 PAKET LIBURAN SAYA</h3><button class="btn small" onclick="openPackage()">+ Paket</button></div><div id="myPackages"><div class="empty">Memuat...</div></div></div>`:""}<div class="card"><div class="profileTabs"><button class="profileTab ${tab==="posts"?"active":""}" onclick="renderMe('posts')">📝 POSTS</button><button class="profileTab ${tab==="photos"?"active":""}" onclick="renderMe('photos')">📷 PHOTOS</button></div>${tab==="posts"?(mine.length?mine.map(postRow).join(""):`<div class="empty">Belum ada postingan.</div>`):(mine.filter(p=>p.photo).length?`<div class="profileGrid">${mine.filter(p=>p.photo).map(p=>`<div class="photoTile" onclick='openDetail(${JSON.stringify(p).replace(/'/g,"&#39;")})'><img src="${esc(p.photo)}"><div class="photoMeta">🔥 ${p.likes||0} • 💬 ${(p.comments||[]).length}</div></div>`).join("")}</div>`:`<div class="empty">Belum ada foto.</div>`)}</div><button class="btn danger" onclick="logout()">LOG OUT</button></div>`;if(type==="driver")loadPackages()}
 async function loadPackages(){let box=$("myPackages");if(!box)return;let r=await sb.from("travel_packages").select("*").eq("owner_id",user.id).order("created_at",{ascending:false});if(r.error)return box.innerHTML=`<div class="empty">${esc(r.error.message)}</div>`;box.innerHTML=(r.data||[]).length?r.data.map(p=>packageCard(p,true)).join(""):`<div class="empty">Belum ada paket.</div>`}
 function packageCard(p,owner,driver=null){return `<div class="packageCard" ${!owner&&driver?`onclick='openPublicPackage(${JSON.stringify(p).replace(/'/g,"&#39;")},${JSON.stringify(driver).replace(/'/g,"&#39;")})'`:``}>${p.photo_url?`<img class="packagePhoto" src="${esc(p.photo_url)}">`:""}<h3>🎒 ${esc(p.title)}</h3><div class="packagePrice">Rp ${Number(p.price||0).toLocaleString("id-ID")}</div><div class="packageMeta"><span>⏱️ ${esc(p.duration_hours)} jam</span></div>${p.description?`<div class="packageText">${esc(p.description)}</div>`:""}${p.itinerary?`<div class="packageText"><b>📍 Itinerary</b>\n${esc(p.itinerary)}</div>`:""}${p.hotel?`<div class="packageText"><b>🏨 Hotel</b> — ${esc(p.hotel)}</div>`:""}${p.restaurant?`<div class="packageText"><b>🍽️ Restoran</b> — ${esc(p.restaurant)}</div>`:""}<div class="packageActions">${owner?`<button class="btn danger small" onclick="deletePackage('${p.id}')">Hapus</button>`:`<button class="btn small" onclick='contactPackage(${JSON.stringify(p).replace(/'/g,"&#39;")},${JSON.stringify(driver||{}).replace(/'/g,"&#39;")})'>💬 Hubungi Driver</button>`}</div></div>`}
 function openPackage(){if(user.accountType!=="driver")return alert("Fitur ini hanya untuk akun Driver.");$("packageModal").classList.remove("hidden");$("packageBox").innerHTML=`<h2>➕ Add Paket Liburan</h2><div class="notice">Tidak ada pembayaran di NOW BALI. Customer menghubungi Driver langsung.</div><input id="pkgTitle" placeholder="Nama Paket"><input id="pkgPrice" type="number" placeholder="Harga (Rp)"><input id="pkgHours" type="number" step=".5" placeholder="Durasi (jam)"><textarea id="pkgDesc" placeholder="Keterangan"></textarea><textarea id="pkgItinerary" placeholder="Itinerary — Tempat A\nTempat B\nTempat C"></textarea><input id="pkgHotel" placeholder="Hotel (opsional)"><input id="pkgRestaurant" placeholder="Restoran (opsional)"><input id="pkgPhoto" type="url" placeholder="Link foto (opsional)"><button class="btn" onclick="savePackage()">TERBITKAN PAKET</button>`}
