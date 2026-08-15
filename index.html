@@ -23,7 +23,7 @@ input,textarea{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 
 .pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}
 .pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}
-.pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}.pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}.commentsBox{margin-top:10px}.comment{padding:9px 10px;border-bottom:1px solid #252b36;font-size:12px}.comment b{display:block;margin-bottom:3px}.packageCard{cursor:pointer}.packageCard .packageActions button{position:relative;z-index:2}.avatar{cursor:default}.postCategory{font-size:12px;font-weight:700;color:#ff9a6b;margin:4px 0 6px}</style>
+.pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}.pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}.commentsBox{margin-top:10px}.comment{padding:9px 10px;border-bottom:1px solid #252b36;font-size:12px}.comment b{display:block;margin-bottom:3px}.packageCard{cursor:pointer}.packageCard .packageActions button{position:relative;z-index:2}.avatar{cursor:default}.postCategory{font-size:12px;font-weight:700;color:#ff9a6b;margin:4px 0 6px}.businessPostCard{border-bottom:1px solid #252b36;cursor:pointer}.businessPostCard img{width:100%;max-height:280px;object-fit:cover;display:block}.businessPostBody{padding:12px 14px}.businessPostBody h3{margin:3px 0 5px;font-size:14px}.businessPostBody p{font-size:12px;line-height:1.45;color:#c4cad5;margin:6px 0}</style>
 </head>
 <body>
 <div id="app">
@@ -71,6 +71,10 @@ function renderPeople(){
       <button id="f-packages" class="filter active" onclick="setType('packages')">🎒 Paket Liburan</button>
       <button id="f-usaha" class="filter" onclick="setType('usaha')">🏪 UMKM / Usaha</button>
     </div>
+    <div id="businessPostFilters" class="filterRow" style="display:none">
+      <button class="filter active" onclick="setBusinessPostCategory('all',this)">Semua</button>
+      <button class="filter" onclick="setBusinessPostCategory('food',this)">🍜 Makanan & Minuman</button><button class="filter" onclick="setBusinessPostCategory('fashion',this)">👕 Fashion & Retail</button><button class="filter" onclick="setBusinessPostCategory('activity',this)">🏄 Aktivitas & Wisata</button><button class="filter" onclick="setBusinessPostCategory('spa',this)">💆 Spa & Wellness</button><button class="filter" onclick="setBusinessPostCategory('hotel',this)">🏨 Hotel & Villa</button><button class="filter" onclick="setBusinessPostCategory('souvenir',this)">🛍️ Souvenir</button><button class="filter" onclick="setBusinessPostCategory('rental',this)">🚗 Rental</button><button class="filter" onclick="setBusinessPostCategory('beauty',this)">💇 Beauty</button><button class="filter" onclick="setBusinessPostCategory('service',this)">🔧 Jasa</button><button class="filter" onclick="setBusinessPostCategory('art',this)">🎨 Seni & Kreatif</button>
+    </div>
     <div id="packageFilters" class="filterRow">
       <button class="filter active" onclick="setDuration('all',this)">Semua</button>
       <button class="filter" onclick="setDuration('8',this)">8 Jam</button>
@@ -99,10 +103,11 @@ function setType(t){
   document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
   const b=$("f-"+t);
   if(b)b.classList.add("active");
-  const pf=$("packageFilters");
+  const pf=$("packageFilters"),bf=$("businessPostFilters");
   if(pf)pf.style.display=t==="packages"?"flex":"none";
+  if(bf)bf.style.display=t==="usaha"?"flex":"none";
   if(t==="packages")resetDiscovery();
-  else searchPeople();
+  else {window.__businessPostCategory="all";searchPeople();}
 }
 
 function setDuration(v,el){
@@ -194,32 +199,85 @@ function discoverPackageCard(p,d){
 
 async function searchPeople(){
   if(discoverMode==="packages"){resetDiscovery();return;}
-  const box=$("peopleResults");
-  if(!box)return;
-  const q=val("peopleSearch").toLowerCase();
-  box.innerHTML=`<div class="loading">Memuat UMKM / Usaha...</div>`;
+  const box=$("peopleResults"); if(!box)return;
+  const q=(val("peopleSearch")||"").toLowerCase();
+  const category=window.__businessPostCategory||"all";
+  box.innerHTML=`<div class="loading">Memuat postingan UMKM...</div>`;
 
-  const r=await sb.from("profiles")
-    .select("id,name,username,phone,account_type,avatar_url")
-    .eq("account_type","usaha")
-    .limit(50);
+  let query=sb.from("business_posts")
+    .select("id,user_id,caption,image_url,location,category,created_at")
+    .order("created_at",{ascending:false})
+    .limit(60);
+  if(category!=="all")query=query.eq("category",category);
 
+  const r=await query;
   if(r.error){box.innerHTML=`<div class="empty">${esc(r.error.message)}</div>`;return;}
+  const posts=r.data||[];
+  if(!posts.length){box.innerHTML=`<div class="empty">Belum ada postingan UMKM di kategori ini.</div>`;return;}
 
-  const ids=(r.data||[]).map(x=>x.id);
-  const biz=ids.length
-    ? await sb.from("business_profiles").select("profile_id,business_name,business_type,address").in("profile_id",ids)
-    : {data:[]};
+  const ids=[...new Set(posts.map(x=>x.user_id))];
+  const [pr,br]=await Promise.all([
+    sb.from("profiles").select("id,name,username,phone,avatar_url").in("id",ids),
+    sb.from("business_profiles").select("profile_id,business_name,business_type,address").in("profile_id",ids)
+  ]);
+  const profiles=new Map((pr.data||[]).map(x=>[x.id,x]));
+  const businesses=new Map((br.data||[]).map(x=>[x.profile_id,x]));
 
-  const businesses=new Map((biz.data||[]).map(x=>[x.profile_id,x]));
-  const filtered=(r.data||[]).map(p=>({...p,b:businesses.get(p.id)||null})).filter(p=>{
-    const hay=`${p.name} ${p.username} ${p.b?.business_name||""} ${p.b?.business_type||""} ${p.b?.address||""}`.toLowerCase();
+  const filtered=posts.filter(x=>{
+    const p=profiles.get(x.user_id)||{},b=businesses.get(x.user_id)||{};
+    const hay=`${x.caption} ${x.location} ${x.category} ${p.name} ${p.username} ${b.business_name} ${b.business_type} ${b.address}`.toLowerCase();
     return !q||hay.includes(q);
   });
 
   box.innerHTML=filtered.length
-    ? filtered.map(personCard).join("")
-    : `<div class="empty">Belum ada UMKM / Usaha yang ditemukan.</div>`;
+    ? filtered.map(x=>businessPostCard(x,profiles.get(x.user_id)||{},businesses.get(x.user_id)||{})).join("")
+    : `<div class="empty">Tidak ada postingan UMKM yang cocok.</div>`;
+}
+
+function setBusinessPostCategory(cat,el){
+  window.__businessPostCategory=cat;
+  document.querySelectorAll("#businessPostFilters .filter").forEach(x=>x.classList.remove("active"));
+  if(el)el.classList.add("active");
+  searchPeople();
+}
+
+function businessPostCard(post,p,b){
+  const name=b.business_name||p.name||"UMKM";
+  const safe=JSON.stringify({...p,b,post}).replace(/'/g,"&#39;");
+  return `<div class="businessPostCard" onclick='viewBusinessPost(${safe})'>
+    ${post.image_url?`<img src="${esc(post.image_url)}" alt="">`:""}
+    <div class="businessPostBody">
+      <div class="postCategory">🏷️ ${esc(post.category)}</div>
+      <h3>${esc(name)}</h3>
+      ${post.caption?`<p>${esc(post.caption)}</p>`:""}
+      <div class="muted">📍 ${esc(post.location||b.address||"Bali")}</div>
+    </div>
+  </div>`;
+}
+
+function viewBusinessPost(data){
+  const p=data||{},b=p.b||{},post=p.post||{};
+  const name=b.business_name||p.name||"UMKM",phone=p.phone||"";
+  $("profileModal").classList.remove("hidden");
+  $("profileBox").innerHTML=`<button class="guestLogin" onclick="closeProfile()">← Kembali</button>
+    <div class="profileHead">
+      ${avatar({name,photo:p.avatar_url})}
+      <div class="accountLabel">🏪 UMKM / Usaha</div>
+      <h2>${esc(name)}</h2>
+      <p class="muted">@${esc(p.username||"")}</p>
+    </div>
+    <div class="card">
+      ${post.image_url?`<img src="${esc(post.image_url)}" style="width:100%;max-height:360px;object-fit:cover">`:""}
+      <div style="padding:14px">
+        <div class="postCategory">🏷️ ${esc(post.category||"")}</div>
+        <p>${esc(post.caption||"")}</p>
+        <p class="muted">📍 ${esc(post.location||b.address||"Bali")}</p>
+      </div>
+    </div>
+    <div class="actions">
+      ${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}
+      <button class="action" onclick='viewPerson(${JSON.stringify({...p,b}).replace(/'/g,"&#39;")})'>👤 Profil Usaha</button>
+    </div>`;
 }
 function personCard(p){
   const name=p.b?.business_name||p.name,phone=p.phone||"";
@@ -232,14 +290,35 @@ function personCard(p){
   </div>`;
 }
 
-function viewPerson(p){
+async function viewPerson(p){
   const name=p.b?.business_name||p.name,phone=p.phone||"";
   $("profileModal").classList.remove("hidden");
-  $("profileBox").innerHTML=`<div style="text-align:center">${avatar({name})}<h2>${esc(name)}</h2><p class="muted">@${esc(p.username||"")} • 🏪 UMKM / Usaha</p></div>
-    <div class="driverInfo"><div class="driverItem"><b>${esc(p.b?.business_type||"-")}</b><span>Jenis usaha</span></div><div class="driverItem"><b>${esc(p.b?.address||"-")}</b><span>Alamat</span></div></div>
-    <div class="actions">${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}<button class="action" onclick="closeProfile()">Tutup</button></div>`;
-}
+  $("profileBox").innerHTML=`<div class="loading">Memuat profil usaha...</div>`;
 
+  const r=await sb.from("business_posts")
+    .select("id,user_id,caption,image_url,location,category,created_at")
+    .eq("user_id",p.id)
+    .order("created_at",{ascending:false})
+    .limit(30);
+
+  const posts=r.data||[];
+  $("profileBox").innerHTML=`<div class="profileHead">
+      ${avatar({name,photo:p.avatar_url})}
+      <div class="accountLabel">🏪 UMKM / Usaha</div>
+      <h2>${esc(name)}</h2>
+      <p class="muted">@${esc(p.username||"")}</p>
+    </div>
+    <div class="driverInfo">
+      <div class="driverItem"><b>${esc(p.b?.business_type||"-")}</b><span>Jenis usaha</span></div>
+      <div class="driverItem"><b>${esc(p.b?.address||"-")}</b><span>Alamat</span></div>
+    </div>
+    <div class="actions">
+      ${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}
+      <button class="action" onclick="closeProfile()">Tutup</button>
+    </div>
+    <h3 style="padding:0 4px">📸 Postingan Usaha</h3>
+    <div class="card">${r.error?`<div class="empty">${esc(r.error.message)}</div>`:posts.length?posts.map(x=>`<div class="profilePost">${x.image_url?`<img src="${esc(x.image_url)}" style="width:100%;max-height:300px;object-fit:cover;border-radius:12px">`:""}<div class="postCategory">🏷️ ${esc(x.category)}</div><p>${esc(x.caption)}</p><div class="muted">📍 ${esc(x.location||"Bali")}</div></div>`).join(""):`<div class="empty">Belum ada postingan usaha.</div>`}</div>`;
+}
 async function openDriverProfile(driverId){
   if(!driverId)return alert("Profil Driver tidak ditemukan.");
   $("profileModal").classList.remove("hidden");
@@ -575,7 +654,33 @@ function addComment(){let t=val("commentInput");if(!t)return;activePost.comments
 function sharePost(){if(navigator.share)navigator.share({title:"NOW BALI",text:`${activePost.t} — NOW BALI`}).catch(()=>{});else alert("Posting siap dibagikan.")}
 function openPost(place="Canggu Beach"){$("postModal").classList.remove("hidden");$("postPlace").value=place;$("postCategory").value=""}function closePost(){$("postModal").classList.add("hidden")}
 $("postPhoto").onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{$("photoPreview").src=r.result;$("photoPreview").classList.remove("hidden")};r.readAsDataURL(f)}
-function publishPost(){let t=val("postText"),category=val("postCategory"),place=val("postPlace")||"Canggu Beach",f=$("postPhoto").files[0];if(!t)return alert("Tulis dulu apa yang sedang terjadi.");if(!category)return alert("Pilih kategori postingan terlebih dahulu.");let done=photo=>{posts.unshift({id:"p"+Date.now(),t,u:user.name,place,category,time:Date.now(),photo,likes:0,comments:[]});localStorage.setItem("now_posts_v2",JSON.stringify(posts));$("postText").value="";$("postCategory").value="";$("postPhoto").value="";$("photoPreview").classList.add("hidden");closePost();show("now")};if(f){let r=new FileReader();r.onload=()=>done(r.result);r.readAsDataURL(f)}else done("")}
+async function publishPost(){
+  let t=val("postText"),category=val("postCategory"),place=val("postPlace")||"Canggu Beach",f=$("postPhoto").files[0];
+  if(!t)return alert("Tulis dulu apa yang sedang terjadi.");
+  if(!category)return alert("Pilih kategori postingan terlebih dahulu.");
+
+  let done=async photo=>{
+    // Keep the existing Live Feed behavior.
+    posts.unshift({id:"p"+Date.now(),t,u:user.name,place,category,time:Date.now(),photo,likes:0,comments:[]});
+    localStorage.setItem("now_posts_v2",JSON.stringify(posts));
+
+    // UMKM posts are also persisted to Supabase so every Customer can discover them in PEOPLE.
+    if(user?.accountType==="usaha"){
+      const r=await sb.from("business_posts").insert({
+        user_id:user.id,caption:t,image_url:photo||"",location:place,category
+      });
+      if(r.error)return alert("Postingan tersimpan di Feed lokal, tetapi gagal masuk PEOPLE: "+r.error.message);
+    }
+
+    $("postText").value="";$("postCategory").value="";$("postPhoto").value="";
+    $("photoPreview").classList.add("hidden");closePost();show("now");
+  };
+
+  if(f){
+    if(f.size>8*1024*1024)return alert("Foto maksimal 8 MB.");
+    let r=new FileReader();r.onload=()=>done(r.result);r.readAsDataURL(f);
+  }else done("");
+}
 function openAuth(){ $("authModal").classList.remove("hidden")}function closeAuth(){$("authModal").classList.add("hidden")}
 function renderAuth(mode="login",type="personal"){if(mode==="login"){authBox.innerHTML=`<h2>Login ke NOW</h2><div class="notice">Gunakan email yang sudah diverifikasi.</div><input id="loginEmail" type="email" placeholder="Email"><input id="loginPassword" type="password" placeholder="Password"><button class="btn" onclick="doLogin()">LOGIN</button><p class="muted" style="text-align:center">Belum punya akun? <button class="guestLogin" onclick="renderAuth('register','personal')">Register</button></p>`;return}let extra=type==="driver"?`<input id="car" placeholder="Jenis Mobil"><input id="plate" placeholder="Nomor Kendaraan"><input id="phone" type="tel" placeholder="Nomor WhatsApp">`:type==="usaha"?`<input id="bn" placeholder="Nama Usaha"><input id="bt" placeholder="Jenis Usaha"><input id="ba" placeholder="Alamat Usaha"><input id="phone" type="tel" placeholder="Nomor WhatsApp">`:`<input id="phone" type="tel" placeholder="Nomor WhatsApp">`;authBox.innerHTML=`<h2>Buat akun NOW</h2><div class="notice">Semua akun gratis.</div><div class="accountChoices"><button class="accountChoice ${type==="personal"?"active":""}" onclick="renderAuth('register','personal')"><span>👤</span>Personal</button><button class="accountChoice ${type==="driver"?"active":""}" onclick="renderAuth('register','driver')"><span>🚗</span>Driver</button><button class="accountChoice ${type==="usaha"?"active":""}" onclick="renderAuth('register','usaha')"><span>🏪</span>UMKM</button></div><input id="regName" placeholder="Nama"><input id="regUsername" placeholder="Username (unik)"><input id="regEmail" type="email" placeholder="Email">${extra}<input id="regPassword" type="password" placeholder="Password (min. 6 karakter)"><button class="btn" onclick="doRegister('${type}')">REGISTER</button><p class="muted" style="text-align:center">Sudah punya akun? <button class="guestLogin" onclick="renderAuth('login')">Login</button></p>`}
 async function doLogin(){let email=val("loginEmail").toLowerCase(),password=$("loginPassword").value;if(!emailOK(email))return alert("Email salah atau tidak valid.");let r=await sb.auth.signInWithPassword({email,password});if(r.error)return alert(r.error.message);user=await sync(r.data.session);if(!user)return alert("Profil belum tersedia.");closeAuth();show("now")}
