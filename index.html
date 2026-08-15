@@ -9,7 +9,7 @@
 *{box-sizing:border-box}body{margin:0;background:#05060a;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea{font:inherit}button{cursor:pointer}
 #app{max-width:430px;min-height:100vh;margin:auto;background:#090b12;padding-bottom:82px}
 header{height:64px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #282d39;position:sticky;top:0;background:#090b12ee;backdrop-filter:blur(15px);z-index:5}.logo{font-size:27px;font-weight:900}.logo span{color:#ff7438}.live{font-size:10px;color:#55e39a;border:1px solid #28704e;border-radius:20px;padding:6px 9px}
-.page{padding:15px}.title{display:flex;justify-content:space-between;align-items:center}.title h2,h2{font-size:16px;margin:10px 0}.muted{color:#8d95a8;font-size:11px}.card{background:#12151e;border:1px solid #282d39;border-radius:18px;margin:12px 0;overflow:hidden}
+.page{padding:15px}.title{display:flex;justify-content:space-between;align-items:center}.title h2,h2{font-size:16px;margin:10px 0}.muted{color:#8d95a8;font-size:11px}.card{background:#12151e;border:1px solid #282d39;border-radius:18px;margin:12px 0;overflow:hidden}.feedTabs{display:flex;gap:7px;margin:8px 0 12px;padding:4px;background:#11151e;border:1px solid #282d39;border-radius:14px}.feedTab{flex:1;border:0;background:transparent;color:#8991a4;border-radius:10px;padding:10px 8px;font-size:11px;font-weight:900}.feedTab.active{background:#222733;color:#fff;border:1px solid #ff5a9f}.followingHint{padding:12px 14px;background:#171c27;border:1px solid #2a3040;border-radius:14px;color:#aeb5c4;font-size:11px;line-height:1.45;margin:10px 0}
 .hero{height:190px;background:linear-gradient(#0000,#000d),url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80") center/cover;position:relative}.heroText{position:absolute;left:14px;bottom:14px}.badge{background:linear-gradient(90deg,#ff3fa4,#ff7438);padding:6px 10px;border-radius:99px;font-size:10px;font-weight:800}.hero h1{margin:8px 0 3px}
 .row{display:flex;gap:12px;padding:14px;border-bottom:1px solid #242935;align-items:center;cursor:pointer}.row:last-child{border:0}.row h3{margin:0 0 4px;font-size:14px}.row p{margin:0}.score{font-size:21px;font-weight:900;color:#ff7846;min-width:42px;text-align:center}.thumb{width:54px;height:54px;border-radius:12px;object-fit:cover;background:#202531}
 .btn{width:100%;border:0;border-radius:14px;padding:14px;background:linear-gradient(90deg,#ff3fa4,#ff7438);color:#fff;font-weight:800}.btn.secondary{background:#222733}.btn.danger{background:#5a2028}.btn.small{width:auto;padding:9px 12px;font-size:11px}
@@ -110,7 +110,42 @@ async function markPersonalActivityRead(){
 }
 function show(tab="now"){if(!user)return guest();const palm=$("topPalmBtn");if(palm)palm.style.display=user.accountType==="personal"?"flex":"none";document.querySelector("nav").style.display="flex";document.querySelectorAll("nav [data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));({now:renderNow,near:renderNear,explore:renderExplore,people:renderPeople,me:renderMe}[tab]||renderNow)();refreshPeopleBadge();if(user.accountType==="usaha")syncLegacyBusinessPosts();refreshPersonalActivityBadge()}
 function postRow(p){const loc=p.place||"Canggu Beach";return `<div class="row" onclick='openDetail(${JSON.stringify(p).replace(/'/g,"&#39;")})'>${p.photo?`<img class="thumb" src="${esc(p.photo)}">`:``}<div style="flex:1"><h3>${esc(p.t)}</h3><p class="muted">${esc(p.u)} • ${ago(p.time)} • <button class="locationBtn" onclick='event.stopPropagation();openMaps(${JSON.stringify(loc).replace(/'/g,"&#39;")},${Number(p.latitude)||''},${Number(p.longitude)||''})'>📍 ${esc(loc)}</button></p>${p.category?`<div class="postCategory">🏷️ ${esc(p.category)}</div>`:""}<span class="tag">🔥 ${p.likes||0}</span><span class="tag">💬 ${(p.comments||[]).length}</span></div></div>`}
-function renderNow(){let p=places[0],demo=[{id:"demo1",t:"Sunset gila hari ini! 🌅",u:"Made Dharma",time:Date.now()-120000,likes:12,comments:[{u:"Sari",t:"Bagus banget!"}],photo:""},{id:"demo2",t:"Ramai banget malam ini 🔥",u:"Sara Kim",time:Date.now()-300000,likes:8,comments:[],photo:""}];main.innerHTML=`<div class="page"><div id="storyStripWrap"></div><div class="title"><h2>🔥 Happening Now</h2><span class="muted">LIVE</span></div><div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.emoji} ${p.name}</h1><span class="muted">${p.people} people • ${p.posts} posts • sangat ramai sekarang</span></div></div></div><div class="title"><h2>⚡ Live Feed</h2></div><div class="card">${[...demo,...posts].slice(0,12).map(postRow).join("")||`<div class="empty">Belum ada postingan.</div>`}</div><div id="liveNowWrap"></div><div class="title"><h2>🔥 Top Places</h2></div><div class="card">${places.map(x=>`<div class="row" onclick="placeDetail('${x.name}')"><span class="score">${x.score}</span><div><h3>${x.emoji} ${x.name}</h3><p class="muted">${x.people} people active • ${x.posts} posts • ${x.distance}</p></div></div>`).join("")}</div></div>`;loadStoriesStrip();loadLiveNow()}
+let nowFeedMode="forYou";
+async function renderNow(mode=nowFeedMode){
+  nowFeedMode=mode||"forYou";
+  let p=places[0],demo=[{id:"demo1",t:"Sunset gila hari ini! 🌅",u:"Made Dharma",time:Date.now()-120000,likes:12,comments:[{u:"Sari",t:"Bagus banget!"}],photo:""},{id:"demo2",t:"Ramai banget malam ini 🔥",u:"Sara Kim",time:Date.now()-300000,likes:8,comments:[],photo:""}];
+  main.innerHTML=`<div class="page"><div id="storyStripWrap"></div><div class="title"><h2>🔥 Happening Now</h2><span class="muted">LIVE</span></div><div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.emoji} ${p.name}</h1><span class="muted">${p.people} people • ${p.posts} posts • sangat ramai sekarang</span></div></div></div><div class="feedTabs"><button class="feedTab ${nowFeedMode==='forYou'?'active':''}" onclick="renderNow('forYou')">🔥 UNTUK KAMU</button><button class="feedTab ${nowFeedMode==='following'?'active':''}" onclick="renderNow('following')">👥 FOLLOWING</button></div><div id="nowFeedBox" class="card"><div class="loading">Memuat feed...</div></div><div id="liveNowWrap"></div>${nowFeedMode==='forYou'?`<div class="title"><h2>🔥 Top Places</h2></div><div class="card">${places.map(x=>`<div class="row" onclick="placeDetail('${x.name}')"><span class="score">${x.score}</span><div><h3>${x.emoji} ${x.name}</h3><p class="muted">${x.people} people active • ${x.posts} posts • ${x.distance}</p></div></div>`).join("")}</div>`:''}</div>`;
+  loadStoriesStrip(nowFeedMode);
+  loadNowFeed(nowFeedMode,demo);
+  loadLiveNow();
+}
+async function loadNowFeed(mode="forYou",demo=[]){
+  const box=$("nowFeedBox");if(!box||!user?.id)return;
+  if(mode==="forYou"){
+    const r=await sb.from("posts").select("id,user_id,caption,image_url,location,latitude,longitude,category,created_at").order("created_at",{ascending:false}).limit(20);
+    if(r.error){box.innerHTML=[...demo,...posts].slice(0,12).map(postRow).join("")||`<div class="empty">Belum ada postingan.</div>`;return;}
+    const rows=r.data||[];
+    const ids=[...new Set(rows.map(x=>x.user_id).filter(Boolean))];
+    const pr=ids.length?await sb.from("profiles").select("id,name,username,avatar_url,account_type").in("id",ids):{data:[]};
+    const pm=new Map((pr.data||[]).map(x=>[x.id,x]));
+    const remote=rows.map(x=>{const u=pm.get(x.user_id)||{};return {id:x.id,t:x.caption||"",u:u.name||"NOW BALI",place:x.location||"Bali",latitude:x.latitude,longitude:x.longitude,category:x.category||"",time:new Date(x.created_at).getTime(),photo:x.image_url||"",likes:0,comments:[]}});
+    const merged=[...remote,...demo,...posts].sort((a,b)=>(b.time||0)-(a.time||0));
+    box.innerHTML=merged.slice(0,12).map(postRow).join("")||`<div class="empty">Belum ada postingan.</div>`;
+    return;
+  }
+  const f=await sb.from("user_follows").select("following_id,created_at").eq("follower_id",user.id).order("created_at",{ascending:false});
+  if(f.error){box.innerHTML=`<div class="empty">${esc(f.error.message)}</div>`;return}
+  const ids=[...new Set((f.data||[]).map(x=>x.following_id).filter(Boolean))];
+  if(!ids.length){box.innerHTML=`<div class="followingHint">👥 <b>Belum mengikuti siapa pun.</b><br><br>Follow akun Personal, Driver, atau UMKM dari menu PEOPLE. Setelah itu postingan mereka akan muncul otomatis di sini.</div><div class="row"><button class="btn" onclick="show('people')">CARI ORANG UNTUK DI-FOLLOW</button></div>`;return}
+  const r=await sb.from("posts").select("id,user_id,caption,image_url,location,latitude,longitude,category,created_at").in("user_id",ids).order("created_at",{ascending:false}).limit(30);
+  if(r.error){box.innerHTML=`<div class="empty">${esc(r.error.message)}</div>`;return}
+  const rows=r.data||[];
+  const pr=await sb.from("profiles").select("id,name,username,avatar_url,account_type").in("id",ids);
+  const pm=new Map((pr.data||[]).map(x=>[x.id,x]));
+  if(!rows.length){box.innerHTML=`<div class="followingHint">👥 Kamu sudah Follow ${ids.length} akun, tetapi mereka belum punya postingan.</div>`;return}
+  box.innerHTML=rows.map(x=>{const u=pm.get(x.user_id)||{};return postRow({id:x.id,t:x.caption||"",u:u.name||"NOW BALI",place:x.location||"Bali",latitude:x.latitude,longitude:x.longitude,category:x.category||"",time:new Date(x.created_at).getTime(),photo:x.image_url||"",likes:0,comments:[]})}).join("");
+}
+
 async function renderNear(){main.innerHTML=`<div class="nearPage"><div class="nearVideoStage"><div class="nearTopBar"><h2>📍 Near You</h2><div id="nearTrend" class="nearTrend">🔥 Trending sekarang</div></div><div id="nearVideosWrap" class="nearVideosHost"><div class="nearVideoEmpty"><div class="empty">Memuat video sekitar...</div></div></div></div></div>`;await loadNearVideos()}
 function startNearTrendTicker(rows=[]){
   const el=$("nearTrend");if(!el)return;
@@ -637,6 +672,9 @@ async function toggleFollow(targetId,btn){
   if(current)r=await sb.from("user_follows").delete().eq("follower_id",user.id).eq("following_id",targetId);
   else r=await sb.from("user_follows").insert({follower_id:user.id,following_id:targetId});
   if(r.error){btn.disabled=false;return alert(r.error.message);}
+  if(!current && targetId!==user.id){
+    await sb.from("notifications").insert({recipient_id:targetId,actor_id:user.id,type:"follow",title:"Kamu punya follower baru",body:`${user.name||"Seseorang"} mulai mengikuti kamu di NOW BALI.`,target_type:"profile",target_id:user.id});
+  }
   btn.classList.toggle("following",!current);
   btn.textContent=!current?"✓ Following":"＋ Follow";
   btn.disabled=false;
@@ -1326,9 +1364,19 @@ async function publishStory(){
   await saveContentTags('story',r.data.id,'story');
   $("storyMedia").value='';$("storyCameraPhoto").value='';$("storyCameraVideo").value='';storySelectedFile=null;setStoryFile(null);$("storyCaption").value='';friendTags.story=[];renderComposerTags('story');closePost();show('now');
 }
-async function loadStoriesStrip(){
+async function loadStoriesStrip(mode="forYou"){
   const wrap=$("storyStripWrap"); if(!wrap||!user?.id)return;
-  const r=await sb.from('stories').select('id,user_id,media_url,media_type,caption,location,created_at,expires_at').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(20);
+  let followedIds=[];
+  if(mode==="following"){
+    const fr=await sb.from("user_follows").select("following_id").eq("follower_id",user.id);
+    followedIds=(fr.data||[]).map(x=>x.following_id).filter(Boolean);
+  }
+  let storyQuery=sb.from('stories').select('id,user_id,media_url,media_type,caption,location,created_at,expires_at').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(30);
+  if(mode==="following"){
+    if(!followedIds.length){wrap.innerHTML=`<div class="title"><h2>📸 NOW Story</h2><span class="muted">Following</span></div>`;return;}
+    storyQuery=storyQuery.in('user_id',followedIds);
+  }
+  const r=await storyQuery;
   if(r.error){wrap.innerHTML='';return}
   const rows=r.data||[]; storyItems=rows;
   const ids=[...new Set(rows.map(x=>x.user_id))]; const pr=ids.length?await sb.from('profiles').select('id,name,avatar_url').in('id',ids):{data:[]}; const pm=new Map((pr.data||[]).map(x=>[x.id,x]));
