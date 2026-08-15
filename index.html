@@ -20,6 +20,9 @@ input,textarea{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 .filterRow{display:flex;gap:8px;overflow:auto;margin:8px 0}.filter{border:1px solid #303543;background:#1a1f2a;color:#fff;border-radius:99px;padding:8px 12px;font-size:11px;white-space:nowrap}.filter.active{border-color:#ff5a9f;color:#ff7ab5}.personCard{padding:14px;border-bottom:1px solid #252b36}.personTop{display:flex;gap:12px;align-items:center}.personMeta{flex:1}.personMeta h3{margin:0 0 3px;font-size:14px}.personActions{display:flex;gap:8px;margin-top:10px}.packageMini{margin-top:10px;padding-top:10px;border-top:1px solid #2a3040}.packageMini h4{margin:0 0 6px;font-size:12px}.miniPackage{padding:9px 0;border-bottom:1px solid #252b36}.miniPackage:last-child{border:0}.miniPackage b{font-size:11px}.miniPackage .miniPrice{color:#ff7a45;font-weight:900;font-size:12px}.loading{text-align:center;padding:22px;color:#8d95a8;font-size:11px}
 .packageCard{padding:14px;border-bottom:1px solid #252b36;cursor:pointer}.discoverPackage{padding:15px;border-bottom:1px solid #252b36;cursor:pointer}.discoverPackage:last-child{border:0}.discoverPackage h3{margin:0 0 5px;font-size:15px}.discoverPackage .pkgDriver{color:#9da5b7;font-size:10px;margin-bottom:8px}.discoverPackage .pkgPrice{color:#ff7a45;font-size:18px;font-weight:900}.discoverPackage .pkgLine{font-size:10px;color:#aeb5c4;margin-top:7px;white-space:pre-line}.loading{text-align:center;padding:22px;color:#8d95a8;font-size:11px}.packageCard h3{margin:0 0 6px;font-size:15px}.packagePrice{font-size:18px;font-weight:900;color:#ff7a45}.packageMeta{display:flex;gap:8px;flex-wrap:wrap;margin:7px 0}.packageMeta span{font-size:10px;background:#202632;padding:5px 8px;border-radius:99px;color:#cdd2dd}.packageText{font-size:11px;color:#aeb5c4;line-height:1.5;white-space:pre-line;margin-top:8px}.packagePhoto{width:100%;max-height:220px;object-fit:cover;border-radius:13px;margin:8px 0}
 .guestPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:30px 20px}.guestCard{width:100%;background:#12151e;border:1px solid #282d39;border-radius:26px;padding:34px 22px;text-align:center}.guestLogo{font-size:46px;font-weight:950}.guestLogo span{color:#ff7438}.guestTitle{font-size:23px;font-weight:900;margin:20px 0 8px}.guestText{color:#8d95a8;font-size:12px;line-height:1.5;margin-bottom:22px}.guestLogin{border:0;background:none;color:#ff6a9e;font-weight:800;padding:12px}.accountChoices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.accountChoice{border:1px solid #303543;background:#1a1f2a;color:#fff;border-radius:14px;padding:14px 8px;text-align:center;font-weight:800}.accountChoice.active{border-color:#ff5a9f;background:#2b1b2a}.accountChoice span{display:block;font-size:24px;margin-bottom:5px}
+
+.pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}
+.pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}
 </style>
 </head>
 <body>
@@ -50,6 +53,10 @@ function renderNow(){let p=places[0],demo=[{id:"demo1",t:"Sunset gila hari ini! 
 function renderNear(){main.innerHTML=`<div class="page"><h2>📍 Near You</h2><div class="notice">GPS akan kita sambungkan pada tahap berikutnya.</div><div class="card">${places.map(x=>`<div class="row" onclick="placeDetail('${x.name}')"><span class="score">${x.score}</span><div><h3>${x.emoji} ${x.name}</h3><p class="muted">${x.distance} • ${x.people} people active</p></div></div>`).join("")}</div></div>`}
 function placeDetail(n){let p=places.find(x=>x.name===n)||places[0];main.innerHTML=`<div class="page"><button class="guestLogin" onclick="show('near')">← Kembali</button><h2>${p.emoji} ${p.name}</h2><div class="card">${posts.filter(x=>(x.place||"Canggu Beach")===p.name).map(postRow).join("")||`<div class="empty">Belum ada postingan di sini.</div>`}<div class="row"><button class="btn" onclick="openPost('${p.name}')">➕ Post di sini</button></div></div></div>`}
 let discoverMode="packages";
+let discoverPage=0;
+let discoverHasMore=true;
+let discoverLoading=false;
+let discoverDuration="all";
 
 function renderPeople(){
   if(user.accountType!=="personal"){
@@ -57,16 +64,34 @@ function renderPeople(){
     return;
   }
   main.innerHTML=`<div class="page">
-    <h2>👥 Discover Bali</h2>
-    <div class="notice">Cari Paket Liburan dari Driver atau temukan UMKM / Usaha di Bali.</div>
-    <input id="peopleSearch" placeholder="Cari paket, tempat, nama usaha..." oninput="searchPeople()">
+    <h2>🌴 Temukan Liburan Bali</h2>
+    <div class="notice">Cari Paket Liburan dari Driver atau temukan UMKM / Usaha.</div>
+    <input id="peopleSearch" placeholder="🔍 Cari paket, tempat, hotel..." oninput="resetDiscovery()">
     <div class="filterRow">
       <button id="f-packages" class="filter active" onclick="setType('packages')">🎒 Paket Liburan</button>
       <button id="f-usaha" class="filter" onclick="setType('usaha')">🏪 UMKM / Usaha</button>
     </div>
-    <div id="peopleResults" class="card"><div class="loading">Memuat...</div></div>
+    <div id="packageFilters" class="filterRow">
+      <button class="filter active" onclick="setDuration('all',this)">Semua</button>
+      <button class="filter" onclick="setDuration('8',this)">8 Jam</button>
+      <button class="filter" onclick="setDuration('24',this)">1 Hari</button>
+      <button class="filter" onclick="setDuration('48',this)">2 Hari+</button>
+    </div>
+    <div id="peopleResults" class="card"><div class="loading">Memuat Paket Liburan...</div></div>
+    <div id="loadMoreWrap" style="text-align:center;margin:14px 0"></div>
   </div>`;
-  searchPeople();
+  resetDiscovery();
+}
+
+function resetDiscovery(){
+  if(discoverMode!=="packages"){searchPeople();return;}
+  discoverPage=0;
+  discoverHasMore=true;
+  const box=$("peopleResults");
+  const wrap=$("loadMoreWrap");
+  if(box)box.innerHTML="";
+  if(wrap)wrap.innerHTML="";
+  loadMorePackages(true);
 }
 
 function setType(t){
@@ -74,53 +99,106 @@ function setType(t){
   document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
   const b=$("f-"+t);
   if(b)b.classList.add("active");
-  searchPeople();
+  const pf=$("packageFilters");
+  if(pf)pf.style.display=t==="packages"?"flex":"none";
+  if(t==="packages")resetDiscovery();
+  else searchPeople();
+}
+
+function setDuration(v,el){
+  discoverDuration=v;
+  document.querySelectorAll("#packageFilters .filter").forEach(x=>x.classList.remove("active"));
+  if(el)el.classList.add("active");
+  resetDiscovery();
+}
+
+async function loadMorePackages(first=false){
+  if(discoverLoading||!discoverHasMore)return;
+  discoverLoading=true;
+  const box=$("peopleResults");
+  const wrap=$("loadMoreWrap");
+  if(!box){discoverLoading=false;return;}
+
+  if(first)box.innerHTML=`<div class="loading">Memuat Paket Liburan...</div>`;
+  else if(wrap)wrap.innerHTML=`<div class="loading">Memuat paket berikutnya...</div>`;
+
+  const pageSize=12;
+  const from=discoverPage*pageSize;
+  const to=from+pageSize-1;
+
+  let query=sb.from("travel_packages")
+    .select("id,owner_id,title,price,duration_hours,description,itinerary,hotel,restaurant,photo_url,is_published,created_at,view_count,like_count,comment_count")
+    .eq("is_published",true)
+    .order("like_count",{ascending:false})
+    .order("comment_count",{ascending:false})
+    .order("created_at",{ascending:false})
+    .range(from,to);
+
+  const raw=(val("peopleSearch")||"").trim().replace(/[(),]/g," ");
+  if(raw){
+    const s=raw.replace(/\s+/g," ");
+    query=query.or(`title.ilike.%${s}%,description.ilike.%${s}%,itinerary.ilike.%${s}%,hotel.ilike.%${s}%,restaurant.ilike.%${s}%`);
+  }
+
+  if(discoverDuration==="8")query=query.gte("duration_hours",7).lte("duration_hours",12);
+  if(discoverDuration==="24")query=query.gt("duration_hours",12).lte("duration_hours",24);
+  if(discoverDuration==="48")query=query.gt("duration_hours",24);
+
+  const pkg=await query;
+  if(pkg.error){
+    box.innerHTML=`<div class="empty">${esc(pkg.error.message)}</div>`;
+    discoverLoading=false;
+    return;
+  }
+
+  const rows=pkg.data||[];
+  discoverHasMore=rows.length===pageSize;
+  discoverPage++;
+
+  const ids=[...new Set(rows.map(x=>x.owner_id).filter(Boolean))];
+  const pr=ids.length
+    ? await sb.from("profiles").select("id,name,username,phone,account_type,avatar_url").in("id",ids)
+    : {data:[]};
+  const owners=new Map((pr.data||[]).map(x=>[x.id,x]));
+
+  if(first)box.innerHTML="";
+  if(!rows.length&&first)box.innerHTML=`<div class="empty">Belum ada Paket Liburan yang cocok.</div>`;
+
+  rows.forEach(p=>{
+    const d=owners.get(p.owner_id)||{};
+    box.insertAdjacentHTML("beforeend",discoverPackageCard(p,d));
+  });
+
+  if(wrap){
+    wrap.innerHTML=discoverHasMore
+      ? `<button class="btn secondary" onclick="loadMorePackages()">Lihat paket berikutnya</button>`
+      : (rows.length?`<div class="muted" style="padding:10px">Semua paket yang cocok sudah ditampilkan.</div>`:"");
+  }
+  discoverLoading=false;
+}
+
+function discoverPackageCard(p,d){
+  const pack=JSON.stringify(p).replace(/'/g,"&#39;");
+  const drv=JSON.stringify(d).replace(/'/g,"&#39;");
+  return `<div class="discoverPackage" onclick='openPublicPackage(${pack},${drv})'>
+    ${p.photo_url?`<img class="packagePhoto" src="${esc(p.photo_url)}">`:""}
+    <div class="pkgBadge">🎒 PAKET LIBURAN</div>
+    <h3>${esc(p.title)}</h3>
+    <div class="pkgPrice">Rp ${Number(p.price||0).toLocaleString("id-ID")} <span class="muted">• ${esc(p.duration_hours)} jam</span></div>
+    <div class="pkgDriver">🚗 ${esc(d.name||"Driver")} • @${esc(d.username||"")}</div>
+    ${p.itinerary?`<div class="pkgLine">📍 ${esc(p.itinerary)}</div>`:""}
+    ${p.hotel?`<div class="pkgLine">🏨 ${esc(p.hotel)}</div>`:""}
+    ${p.restaurant?`<div class="pkgLine">🍽️ ${esc(p.restaurant)}</div>`:""}
+    <div class="pkgEngage">🔥 ${Number(p.like_count||0)} &nbsp; 💬 ${Number(p.comment_count||0)} &nbsp; 👁️ ${Number(p.view_count||0)}</div>
+  </div>`;
 }
 
 async function searchPeople(){
+  if(discoverMode==="packages"){resetDiscovery();return;}
   const box=$("peopleResults");
   if(!box)return;
   const q=val("peopleSearch").toLowerCase();
-  box.innerHTML=`<div class="loading">Memuat...</div>`;
-
-  if(discoverMode==="packages"){
-    const pkg=await sb.from("travel_packages")
-      .select("id,owner_id,title,price,duration_hours,description,itinerary,hotel,restaurant,photo_url,is_published,created_at")
-      .eq("is_published",true)
-      .order("created_at",{ascending:false})
-      .limit(50);
-
-    if(pkg.error){box.innerHTML=`<div class="empty">${esc(pkg.error.message)}</div>`;return;}
-
-    const rows=pkg.data||[];
-    const ids=[...new Set(rows.map(x=>x.owner_id).filter(Boolean))];
-    const pr=ids.length
-      ? await sb.from("profiles").select("id,name,username,phone,account_type,avatar_url").in("id",ids)
-      : {data:[]};
-    const owners=new Map((pr.data||[]).map(x=>[x.id,x]));
-
-    const filtered=rows.filter(p=>{
-      const d=owners.get(p.owner_id)||{};
-      const hay=`${p.title} ${p.description||""} ${p.itinerary||""} ${p.hotel||""} ${p.restaurant||""} ${d.name||""} ${d.username||""}`.toLowerCase();
-      return !q||hay.includes(q);
-    });
-
-    box.innerHTML=filtered.length
-      ? filtered.map(p=>{
-          const d=owners.get(p.owner_id)||{};
-          return `<div class="discoverPackage" onclick='openPublicPackage(${JSON.stringify(p).replace(/'/g,"&#39;")},${JSON.stringify(d).replace(/'/g,"&#39;")})'>
-            ${p.photo_url?`<img class="packagePhoto" src="${esc(p.photo_url)}">`:""}
-            <h3>🎒 ${esc(p.title)}</h3>
-            <div class="pkgDriver">🚗 ${esc(d.name||"Driver")} • @${esc(d.username||"")}</div>
-            <div class="pkgPrice">Rp ${Number(p.price||0).toLocaleString("id-ID")} <span class="muted">• ${esc(p.duration_hours)} jam</span></div>
-            ${p.itinerary?`<div class="pkgLine">📍 ${esc(p.itinerary)}</div>`:""}
-            ${p.hotel?`<div class="pkgLine">🏨 ${esc(p.hotel)}</div>`:""}
-            ${p.restaurant?`<div class="pkgLine">🍽️ ${esc(p.restaurant)}</div>`:""}
-          </div>`;
-        }).join("")
-      : `<div class="empty">Belum ada Paket Liburan yang tersedia.</div>`;
-    return;
-  }
+  box.innerHTML=`<div class="loading">Memuat UMKM / Usaha...</div>`;
 
   const r=await sb.from("profiles")
     .select("id,name,username,phone,account_type,avatar_url")
@@ -133,16 +211,17 @@ async function searchPeople(){
   const biz=ids.length
     ? await sb.from("business_profiles").select("profile_id,business_name,business_type,address").in("profile_id",ids)
     : {data:[]};
-  const businesses=new Map((biz.data||[]).map(x=>[x.profile_id,x]));
 
+  const businesses=new Map((biz.data||[]).map(x=>[x.profile_id,x]));
   const filtered=(r.data||[]).map(p=>({...p,b:businesses.get(p.id)||null})).filter(p=>{
     const hay=`${p.name} ${p.username} ${p.b?.business_name||""} ${p.b?.business_type||""} ${p.b?.address||""}`.toLowerCase();
     return !q||hay.includes(q);
   });
 
-  box.innerHTML=filtered.length?filtered.map(personCard).join(""):`<div class="empty">Belum ada UMKM / Usaha yang ditemukan.</div>`;
+  box.innerHTML=filtered.length
+    ? filtered.map(personCard).join("")
+    : `<div class="empty">Belum ada UMKM / Usaha yang ditemukan.</div>`;
 }
-
 function personCard(p){
   const name=p.b?.business_name||p.name,phone=p.phone||"";
   return `<div class="personCard">
@@ -162,7 +241,7 @@ function viewPerson(p){
     <div class="actions">${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}<button class="action" onclick="closeProfile()">Tutup</button></div>`;
 }
 
-function openPublicPackage(p,driver){window.__activePackage=p;window.__chatDriver=driver||{};
+function openPublicPackage(p,driver){window.__activePackage=p;window.__chatDriver=driver||{}; sb.rpc("increment_travel_package_view",{p_package_id:p.id});
   $("profileModal").classList.remove("hidden");
   const name=driver?.name||"Driver",phone=driver?.phone||"";
   $("profileBox").innerHTML=`<button class="guestLogin" onclick="closeProfile();show('people')">← Kembali ke Paket</button>
