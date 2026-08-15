@@ -36,7 +36,7 @@ input,textarea{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 <div id="app">
 <header><div class="logo">NOW <span>BALI</span></div></header>
 <main id="main"></main>
-<nav><button data-tab="now">🔥<small>NOW</small></button><button data-tab="near">📍<small>NEAR</small></button><button id="plus">+</button><button data-tab="people" id="peopleNavBtn" style="position:relative">👥<span id="peopleNotifBadge" class="notifBadge">0</span><small>PEOPLE</small></button><button data-tab="me">◉<small>ME</small></button></nav>
+<nav><button data-tab="now">🔥<small>NOW</small></button><button data-tab="near">📍<small>NEAR</small></button><button data-tab="explore">🧭<small>EXPLORE</small></button><button data-tab="people">👥<small>PEOPLE</small></button><button data-tab="me" id="meNavBtn" style="position:relative">◉<span id="meNotifBadge" class="notifBadge">0</span><small>ME</small></button></nav>
 <div id="authModal" class="overlay hidden"><div class="sheet"><button class="close" onclick="closeAuth()">×</button><div id="authBox"></div></div></div>
 <div id="personalActivityModal" class="overlay hidden"><div class="sheet">
 <button class="close" onclick="closePersonalActivity()">×</button>
@@ -108,7 +108,7 @@ async function markPersonalActivityRead(){
     .eq("recipient_id",user.id).eq("is_read",false);
   if(r.error)alert(r.error.message);else loadPersonalActivity();
 }
-function show(tab="now"){if(!user)return guest();const palm=$("topPalmBtn");if(palm)palm.style.display=user.accountType==="personal"?"flex":"none";document.querySelector("nav").style.display="flex";document.querySelectorAll("nav [data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));({now:renderNow,near:renderNear,people:renderPeople,me:renderMe}[tab]||renderNow)();refreshPeopleBadge();if(user.accountType==="usaha")syncLegacyBusinessPosts();refreshPersonalActivityBadge()}
+function show(tab="now"){if(!user)return guest();const palm=$("topPalmBtn");if(palm)palm.style.display=user.accountType==="personal"?"flex":"none";document.querySelector("nav").style.display="flex";document.querySelectorAll("nav [data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));({now:renderNow,near:renderNear,explore:renderExplore,people:renderPeople,me:renderMe}[tab]||renderNow)();refreshPeopleBadge();if(user.accountType==="usaha")syncLegacyBusinessPosts();refreshPersonalActivityBadge()}
 function postRow(p){const loc=p.place||"Canggu Beach";return `<div class="row" onclick='openDetail(${JSON.stringify(p).replace(/'/g,"&#39;")})'>${p.photo?`<img class="thumb" src="${esc(p.photo)}">`:``}<div style="flex:1"><h3>${esc(p.t)}</h3><p class="muted">${esc(p.u)} • ${ago(p.time)} • <button class="locationBtn" onclick='event.stopPropagation();openMaps(${JSON.stringify(loc).replace(/'/g,"&#39;")},${Number(p.latitude)||''},${Number(p.longitude)||''})'>📍 ${esc(loc)}</button></p>${p.category?`<div class="postCategory">🏷️ ${esc(p.category)}</div>`:""}<span class="tag">🔥 ${p.likes||0}</span><span class="tag">💬 ${(p.comments||[]).length}</span></div></div>`}
 function renderNow(){let p=places[0],demo=[{id:"demo1",t:"Sunset gila hari ini! 🌅",u:"Made Dharma",time:Date.now()-120000,likes:12,comments:[{u:"Sari",t:"Bagus banget!"}],photo:""},{id:"demo2",t:"Ramai banget malam ini 🔥",u:"Sara Kim",time:Date.now()-300000,likes:8,comments:[],photo:""}];main.innerHTML=`<div class="page"><div id="storyStripWrap"></div><div class="title"><h2>🔥 Happening Now</h2><span class="muted">LIVE</span></div><div class="card"><div class="hero"><div class="heroText"><span class="badge">NOW SCORE ${p.score}</span><h1>${p.emoji} ${p.name}</h1><span class="muted">${p.people} people • ${p.posts} posts • sangat ramai sekarang</span></div></div></div><div class="title"><h2>⚡ Live Feed</h2></div><div class="card">${[...demo,...posts].slice(0,12).map(postRow).join("")||`<div class="empty">Belum ada postingan.</div>`}</div><div id="liveNowWrap"></div><div class="title"><h2>🔥 Top Places</h2></div><div class="card">${places.map(x=>`<div class="row" onclick="placeDetail('${x.name}')"><span class="score">${x.score}</span><div><h3>${x.emoji} ${x.name}</h3><p class="muted">${x.people} people active • ${x.posts} posts • ${x.distance}</p></div></div>`).join("")}</div></div>`;loadStoriesStrip();loadLiveNow()}
 async function renderNear(){main.innerHTML=`<div class="nearPage"><div class="nearVideoStage"><div class="nearTopBar"><h2>📍 Near You</h2><div id="nearTrend" class="nearTrend">🔥 Trending sekarang</div></div><div id="nearVideosWrap" class="nearVideosHost"><div class="nearVideoEmpty"><div class="empty">Memuat video sekitar...</div></div></div></div></div>`;await loadNearVideos()}
@@ -167,28 +167,14 @@ let discoverHasMore=true;
 let discoverLoading=false;
 let discoverDuration="all"; window.__packageCache={};
 
-function renderPeople(){
+function renderExplore(){
   if(!user)return guest();
-  if(user.accountType!=="personal"){
-    main.innerHTML=`<div class="page">
-      <h2>👥 PEOPLE</h2>
-      <div class="notice">🔔 Aktivitas akun Anda tampil di sini.</div>
-      <div id="peopleNotifications" class="card"><div class="loading">Memuat notifikasi...</div></div>
-      ${user.accountType==="driver"
-        ? `<button class="btn secondary" style="width:100%;margin:8px 0" onclick="renderDriverInbox()">💬 PESAN MASUK DRIVER</button>`
-        : `<button class="btn secondary" style="width:100%;margin:8px 0" onclick="renderDriverInbox()">💬 PESAN MASUK UMKM</button><div class="card"><div class="title" style="padding:12px"><h3>🏪 Aktivitas UMKM</h3></div><div class="muted" style="padding:12px">Like, komentar, dan pesan customer akan masuk ke sini.</div></div>`}
-    </div>`;
-    syncLegacyBusinessPosts().finally(()=>loadPeopleNotifications());
-    return;
-  }
   main.innerHTML=`<div class="page">
-    <h2>👥 PEOPLE</h2>
-    <div class="notice">Temukan orang, Driver, dan UMKM di NOW BALI. Buka profil lalu Follow untuk terhubung.</div>
-    <input id="peopleSearch" placeholder="🔍 Cari nama atau @username..." oninput="searchPeople()">
+    <h2>🧭 EXPLORE</h2>
+    <div class="notice">Temukan Paket Liburan, UMKM, dan berbagai pilihan menarik di Bali.</div>
     <div class="filterRow">
       <button id="f-packages" class="filter active" onclick="setType('packages')">🎒 Paket Liburan</button>
       <button id="f-usaha" class="filter" onclick="setType('usaha')">🏪 UMKM / Usaha</button>
-      <button id="f-personal" class="filter" onclick="setType('personal')">👤 Personal</button>
     </div>
     <div id="businessPostFilters" class="filterRow" style="display:none">
       <button class="filter active" onclick="setBusinessPostCategory('all',this)">Semua</button>
@@ -197,11 +183,64 @@ function renderPeople(){
     <div id="packageFilters" class="filterRow">
       <button class="filter active" onclick="setDuration('all',this)">Semua</button><button class="filter" onclick="setDuration('8',this)">8 Jam</button><button class="filter" onclick="setDuration('24',this)">1 Hari</button><button class="filter" onclick="setDuration('48',this)">2 Hari+</button>
     </div>
+    <input id="peopleSearch" placeholder="🔍 Cari paket, tempat, hotel..." oninput="searchExplore()">
     <div id="peopleResults" class="card"><div class="loading">Memuat Paket Liburan...</div></div>
     <div id="loadMoreWrap" style="text-align:center;margin:14px 0"></div>
   </div>`;
   resetDiscovery();
 }
+
+function renderPeople(){
+  if(!user)return guest();
+  main.innerHTML=`<div class="page">
+    <h2>👥 PEOPLE</h2>
+    <div class="notice">Cari akun lain di NOW BALI. Follow akun yang kamu ingin ikuti dan buka profilnya untuk melihat konten mereka.</div>
+    <input id="peopleSearch" placeholder="🔍 Cari nama atau @username..." oninput="searchPeopleAccounts()">
+    <div id="peopleResults" class="card"><div class="loading">Memuat akun...</div></div>
+  </div>`;
+  searchPeopleAccounts();
+}
+
+async function searchPeopleAccounts(){
+  const box=$("peopleResults"); if(!box||!user?.id)return;
+  const q=(val("peopleSearch")||"").toLowerCase().replace(/^@/,'').trim();
+  box.innerHTML=`<div class="loading">Mencari akun...</div>`;
+  let query=sb.from("profiles").select("id,name,username,phone,avatar_url,account_type").neq("id",user.id).order("name",{ascending:true}).limit(60);
+  if(q)query=query.or(`name.ilike.%${q}%,username.ilike.%${q}%`);
+  const r=await query;
+  if(r.error){box.innerHTML=`<div class="empty">${esc(r.error.message)}</div>`;return;}
+  const rows=r.data||[];
+  if(!rows.length){box.innerHTML=`<div class="empty">Akun tidak ditemukan.</div>`;return;}
+  const ids=rows.map(x=>x.id);
+  const [dr,br]=await Promise.all([
+    sb.from("driver_profiles").select("profile_id,vehicle_type,vehicle_plate").in("profile_id",ids),
+    sb.from("business_profiles").select("profile_id,business_name,business_type,address").in("profile_id",ids)
+  ]);
+  const drivers=new Map((dr.data||[]).map(x=>[x.profile_id,x]));
+  const businesses=new Map((br.data||[]).map(x=>[x.profile_id,x]));
+  box.innerHTML=rows.map(p=>accountPersonCard(p,drivers.get(p.id),businesses.get(p.id))).join("");
+  await refreshFollowButtons();
+}
+
+function accountPersonCard(p,d,b){
+  const type=p.account_type==="driver"?"🚗 Driver":p.account_type==="usaha"?"🏪 UMKM / Usaha":"👤 Personal";
+  const display=p.account_type==="usaha"?(b?.business_name||p.name):p.name;
+  const safe=JSON.stringify({...p,b:b||{},driver:d||{}}).replace(/'/g,"&#39;");
+  return `<div class="personCard"><div class="personTop">${avatar({name:display,photo:p.avatar_url},true)}<div class="personMeta"><h3>${esc(display||"User")}</h3><p class="muted">@${esc(p.username||"")} • ${type}</p>${p.account_type==="driver"&&d?.vehicle_type?`<p class="muted">${esc(d.vehicle_type)}${d.vehicle_plate?` • ${esc(d.vehicle_plate)}`:""}</p>`:""}${p.account_type==="usaha"&&b?.business_type?`<p class="muted">${esc(b.business_type)}</p>`:""}</div></div><div class="personActions">${followButton(p.id)}<button class="btn secondary small" onclick='openAccountProfile(${safe})'>LIHAT PROFIL</button></div></div>`;
+}
+
+function openAccountProfile(p){
+  if(!p?.id)return;
+  if(p.account_type==="driver")return openDriverProfile(p.id);
+  if(p.account_type==="usaha")return viewPerson(p);
+  return viewPersonalProfile(p);
+}
+
+async function searchExplore(){
+  if(discoverMode==="packages")return resetDiscovery();
+  return searchPeople();
+}
+
 async function syncLegacyBusinessPosts(){
   if(user?.accountType!=="usaha"||!user?.id)return;
   let legacy=[];
@@ -242,7 +281,7 @@ async function loadPeopleNotifications(){
   const ar=ids.length?await sb.from("profiles").select("id,name,username,avatar_url").in("id",ids):{data:[]};
   const actors=new Map((ar.data||[]).map(x=>[x.id,x]));
   const unread=rows.filter(x=>!x.is_read).length;
-  const badge=$("peopleNotifBadge"); if(badge){badge.textContent=unread>99?"99+":unread;badge.style.display=unread?"inline-flex":"none";}
+  const badge=$("meNotifBadge"); if(badge){badge.textContent=unread>99?"99+":unread;badge.style.display=unread?"inline-flex":"none";}
   if(!rows.length){box.innerHTML=`<div class="title" style="padding:12px"><h3>🔔 NOTIFIKASI</h3></div><div class="empty">Belum ada aktivitas.</div>`;return;}
   box.innerHTML=`<div class="title" style="padding:12px;display:flex;justify-content:space-between;align-items:center"><h3>🔔 NOTIFIKASI ${unread?`<span class="notifCount">${unread}</span>`:""}</h3>${unread?`<button class="btn small" onclick="markPeopleNotificationsRead()">Tandai dibaca</button>`:""}</div>`+
     rows.map(n=>{const u=actors.get(n.actor_id)||{},icon=n.type==="like"?"🔥":n.type==="comment"?"💬":"✉️";return `<button class="notificationRow ${n.is_read?"":"unread"}" onclick="openNotificationTarget('${n.target_type||""}','${n.target_id||""}','${n.id}')"><div class="notificationIcon">${icon}</div><div><b>${esc(u.name||"Customer")}</b><div>${esc(n.title||"Aktivitas baru")}</div><div class="muted">${esc(n.body||"")} · ${ago(new Date(n.created_at).getTime())}</div></div></button>`}).join("");
@@ -255,7 +294,7 @@ async function markPeopleNotificationsRead(){
 async function refreshPeopleBadge(){
   if(!user?.id)return;
   const r=await sb.from("notifications").select("id",{count:"exact",head:true}).eq("recipient_id",user.id).eq("is_read",false);
-  const b=$("peopleNotifBadge"); if(b){const n=r.count||0;b.textContent=n>99?"99+":n;b.style.display=n?"inline-flex":"none";}
+  const b=$("meNotifBadge"); if(b){const n=r.count||0;b.textContent=n>99?"99+":n;b.style.display=n?"inline-flex":"none";}
 }
 async function openNotificationTarget(type,id,nid){
   if(nid)await sb.from("notifications").update({is_read:true}).eq("id",nid).eq("recipient_id",user.id);
@@ -678,7 +717,7 @@ async function openDriverProfile(driverId){
       <div class="title" style="padding:12px"><h3>🎒 Paket Liburan ${packages.length}</h3></div>
       ${packages.length?packages.map(p=>packageCard(p,false,d)).join(""):`<div class="empty">Driver ini belum membuat paket.</div>`}
     </div>`;
-  $("driverProfileBack").onclick=()=>{closeProfile();show("people");};
+  $("driverProfileBack").onclick=()=>{closeProfile();show("explore");};
 }
 
 function openPublicPackageById(id){
@@ -720,7 +759,7 @@ async function openPublicPackage(p,driver){
     </div>
     <div class="notice">Tanggal, jam, rute dan kesepakatan diselesaikan langsung antara customer dan Driver. Tidak ada transaksi pembayaran di NOW BALI.</div>`;
 
-  $("packageBackBtn").onclick=()=>{closeProfile();show("people");};
+  $("packageBackBtn").onclick=()=>{closeProfile();show("explore");};
   $("viewDriverProfileBtn").onclick=()=>openDriverProfile(driver?.id);
   $("chatDriverBtn").onclick=()=>startDriverChat(window.__chatDriver||{});
   $("packageLikeBtn").onclick=()=>togglePackageLike(p.id);
