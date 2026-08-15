@@ -23,7 +23,7 @@ input,textarea{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 
 .pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}
 .pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}
-</style>
+.pkgBadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.4px;color:#ff6b9f;background:#242937;padding:5px 8px;border-radius:8px;margin-bottom:8px}.pkgEngage{margin-top:10px;color:#9da5b7;font-size:11px;font-weight:700}.commentsBox{margin-top:10px}.comment{padding:9px 10px;border-bottom:1px solid #252b36;font-size:12px}.comment b{display:block;margin-bottom:3px}</style>
 </head>
 <body>
 <div id="app">
@@ -56,7 +56,7 @@ let discoverMode="packages";
 let discoverPage=0;
 let discoverHasMore=true;
 let discoverLoading=false;
-let discoverDuration="all";
+let discoverDuration="all"; window.__packageCache={};
 
 function renderPeople(){
   if(user.accountType!=="personal"){
@@ -178,9 +178,8 @@ async function loadMorePackages(first=false){
 }
 
 function discoverPackageCard(p,d){
-  const pack=JSON.stringify(p).replace(/'/g,"&#39;");
-  const drv=JSON.stringify(d).replace(/'/g,"&#39;");
-  return `<div class="discoverPackage" onclick='openPublicPackage(${pack},${drv})'>
+  window.__packageCache[p.id]={p,d};
+  return `<div class="discoverPackage" onclick="openPublicPackageById('${p.id}')">
     ${p.photo_url?`<img class="packagePhoto" src="${esc(p.photo_url)}">`:""}
     <div class="pkgBadge">🎒 PAKET LIBURAN</div>
     <h3>${esc(p.title)}</h3>
@@ -241,24 +240,46 @@ function viewPerson(p){
     <div class="actions">${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 WhatsApp</a>`:""}<button class="action" onclick="closeProfile()">Tutup</button></div>`;
 }
 
-function openPublicPackage(p,driver){window.__activePackage=p;window.__chatDriver=driver||{}; sb.rpc("increment_travel_package_view",{p_package_id:p.id});
+function openPublicPackageById(id){
+  const item=window.__packageCache?.[id];
+  if(!item)return alert("Paket tidak ditemukan. Silakan muat ulang halaman.");
+  openPublicPackage(item.p,item.d);
+}
+
+function openPublicPackage(p,driver){
+  window.__activePackage=p;
+  window.__chatDriver=driver||{};
+  sb.rpc("increment_travel_package_view",{p_package_id:p.id});
+
   $("profileModal").classList.remove("hidden");
   const name=driver?.name||"Driver",phone=driver?.phone||"";
-  $("profileBox").innerHTML=`<button class="guestLogin" onclick="closeProfile();show('people')">← Kembali ke Paket</button>
+
+  $("profileBox").innerHTML=`<button class="guestLogin" id="packageBackBtn">← Kembali ke Paket</button>
     <div style="text-align:center">${avatar({name})}<h2>${esc(name)}</h2><p class="muted">@${esc(driver?.username||"")} • 🚗 Driver</p></div>
-    <div class="card" style="margin-top:14px">
-      ${packageCard(p,false,driver)}
+    <div class="card" style="margin-top:14px">${packageCard(p,false,driver)}</div>
+    <div class="pkgEngage" style="margin-top:14px">
+      🔥 <span id="packageLikeCount">${Number(p.like_count||0)}</span>
+      &nbsp; 💬 <span id="packageCommentCount">${Number(p.comment_count||0)}</span>
+      &nbsp; 👁️ <span id="packageViewCount">${Number(p.view_count||0)+1}</span>
     </div>
+    <div class="actions" style="margin-top:10px">
+      <button class="action" id="packageLikeBtn" type="button">🔥 Suka</button>
+      <button class="action" id="packageCommentBtn" type="button">💬 Komentar</button>
+    </div>
+    <div id="packageComments" class="commentsBox"><div class="loading">Memuat komentar...</div></div>
     <div class="actions">
       ${phone?`<a class="waBtn" style="flex:1;text-align:center" href="https://wa.me/${phone.replace(/\D/g,"")}" target="_blank">📱 Hubungi Driver</a>`:""}
       <button id="chatDriverBtn" class="action" type="button">💬 Chat Driver</button>
       ${phone?`<a class="action" style="text-align:center;text-decoration:none;color:#fff" href="tel:${esc(phone)}">☎️ Telepon</a>`:""}
     </div>
     <div class="notice">Tanggal, jam, rute dan kesepakatan diselesaikan langsung antara customer dan Driver. Tidak ada transaksi pembayaran di NOW BALI.</div>`;
-  const chatBtn=$("chatDriverBtn");
-  if(chatBtn) chatBtn.onclick=()=>startDriverChat(window.__chatDriver||{});
-}
 
+  $("packageBackBtn").onclick=()=>{closeProfile();show("people");};
+  $("chatDriverBtn").onclick=()=>startDriverChat(window.__chatDriver||{});
+  $("packageLikeBtn").onclick=()=>togglePackageLike(p.id);
+  $("packageCommentBtn").onclick=()=>showPackageCommentBox(p.id);
+  loadPackageComments(p.id);
+}
 async function startDriverChat(driver){
   driver=driver||window.__chatDriver||{};
   window.__chatDriver=driver;
@@ -442,6 +463,58 @@ async function openExistingChat(conversation,customer,pack){
       payload=>{const box=$("chatMessages");if(box&&!box.querySelector(`[data-id="${payload.new.id}"]`))appendChatMessage(payload.new);})
     .subscribe();
   setTimeout(()=>input?.focus(),50);
+}
+
+async function togglePackageLike(packageId){
+  if(!user?.id){alert("Silakan login untuk memberi like.");return;}
+  const existing=await sb.from("travel_package_likes").select("id")
+    .eq("package_id",packageId).eq("user_id",user.id).maybeSingle();
+  if(existing.error){alert(existing.error.message);return;}
+  const result=existing.data
+    ? await sb.from("travel_package_likes").delete().eq("id",existing.data.id)
+    : await sb.from("travel_package_likes").insert({package_id:packageId,user_id:user.id});
+  if(result.error){alert(result.error.message);return;}
+  const c=await sb.from("travel_packages").select("like_count,comment_count,view_count").eq("id",packageId).single();
+  if(c.data){
+    if($("packageLikeCount"))$("packageLikeCount").textContent=c.data.like_count||0;
+    if($("packageCommentCount"))$("packageCommentCount").textContent=c.data.comment_count||0;
+    if($("packageViewCount"))$("packageViewCount").textContent=c.data.view_count||0;
+  }
+}
+
+async function loadPackageComments(packageId){
+  const box=$("packageComments"); if(!box)return;
+  const r=await sb.from("travel_package_comments").select("id,user_id,body,created_at")
+    .eq("package_id",packageId).order("created_at",{ascending:true}).limit(50);
+  if(r.error){box.innerHTML=`<div class="empty">${esc(r.error.message)}</div>`;return;}
+  if(!r.data?.length){box.innerHTML=`<div class="empty">Belum ada komentar.</div>`;return;}
+  const ids=[...new Set(r.data.map(x=>x.user_id))];
+  const pr=ids.length?await sb.from("profiles").select("id,name,username").in("id",ids):{data:[]};
+  const map=new Map((pr.data||[]).map(x=>[x.id,x]));
+  box.innerHTML=r.data.map(c=>{
+    const u=map.get(c.user_id)||{};
+    return `<div class="comment"><b>${esc(u.name||"User")}</b><div>${esc(c.body)}</div></div>`;
+  }).join("");
+}
+
+function showPackageCommentBox(packageId){
+  if(!user?.id){alert("Silakan login untuk berkomentar.");return;}
+  const box=$("packageComments"); if(!box)return;
+  if($("packageCommentComposer"))return;
+  box.insertAdjacentHTML("afterbegin",`<div id="packageCommentComposer" style="display:flex;gap:8px;margin-bottom:10px">
+    <input id="packageCommentInput" placeholder="Tulis komentar..." style="margin:0;flex:1">
+    <button class="btn small" id="packageCommentSend" type="button">Kirim</button>
+  </div>`);
+  $("packageCommentSend").onclick=async()=>{
+    const body=$("packageCommentInput")?.value.trim();
+    if(!body)return;
+    const r=await sb.from("travel_package_comments").insert({package_id:packageId,user_id:user.id,body});
+    if(r.error){alert(r.error.message);return;}
+    await loadPackageComments(packageId);
+    const c=await sb.from("travel_packages").select("comment_count").eq("id",packageId).single();
+    if(c.data&&$("packageCommentCount"))$("packageCommentCount").textContent=c.data.comment_count||0;
+  };
+  $("packageCommentInput")?.focus();
 }
 
 function renderMe(tab="posts"){let mine=posts.filter(p=>p.u===user.name).sort((a,b)=>b.time-a.time),type=user.accountType||"personal",icon=type==="driver"?"🚗":type==="usaha"?"🏪":"👤",label=type==="driver"?"Driver":type==="usaha"?"UMKM / Usaha":"Personal / Customer",extra=type==="driver"&&user.driver?`<div class="driverInfo"><b>🚗 Informasi Driver</b><div class="driverItem"><b>${esc(user.driver.carType)}</b><span>Jenis mobil</span></div><div class="driverItem"><b>${esc(user.driver.vehicleNumber)}</b><span>Nomor kendaraan</span></div><div class="driverItem"><b>${esc(user.phone)}</b><span>WhatsApp untuk order</span></div></div>`:type==="usaha"&&user.business?`<div class="driverInfo"><b>🏪 Informasi UMKM / Usaha</b><div class="driverItem"><b>${esc(user.business.name)}</b><span>Nama usaha</span></div><div class="driverItem"><b>${esc(user.business.type)}</b><span>Jenis usaha</span></div><div class="driverItem"><b>${esc(user.business.address)}</b><span>Alamat</span></div></div>`:"";main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead"><div class="avatarWrap">${avatar(user)}<div class="accountBadge">${icon}</div></div><div class="accountLabel">${icon} Akun ${label}</div><h2>${esc(user.displayName||user.name)}</h2><p class="muted">@${esc(user.username)}</p>${extra}<div class="stats"><div><b>${mine.length}</b><span>POSTS</span></div><div><b>0</b><span>FOLLOWERS</span></div><div><b>0</b><span>FOLLOWING</span></div></div><button class="btn" onclick="editProfile()">EDIT PROFILE</button>${type==="driver"?`<button class="btn secondary" style="margin-top:8px" onclick="openPackage()">➕ ADD PAKET LIBURAN</button><button class="btn secondary" style="margin-top:8px" onclick="renderDriverInbox()">💬 PESAN MASUK</button>`:""}</div>${type==="driver"?`<div class="card"><div class="title" style="padding:12px"><h3>🎒 PAKET LIBURAN SAYA</h3><button class="btn small" onclick="openPackage()">+ Paket</button></div><div id="myPackages"><div class="empty">Memuat...</div></div></div>`:""}<div class="card"><div class="profileTabs"><button class="profileTab ${tab==="posts"?"active":""}" onclick="renderMe('posts')">📝 POSTS</button><button class="profileTab ${tab==="photos"?"active":""}" onclick="renderMe('photos')">📷 PHOTOS</button></div>${tab==="posts"?(mine.length?mine.map(postRow).join(""):`<div class="empty">Belum ada postingan.</div>`):(mine.filter(p=>p.photo).length?`<div class="profileGrid">${mine.filter(p=>p.photo).map(p=>`<div class="photoTile" onclick='openDetail(${JSON.stringify(p).replace(/'/g,"&#39;")})'><img src="${esc(p.photo)}"><div class="photoMeta">🔥 ${p.likes||0} • 💬 ${(p.comments||[]).length}</div></div>`).join("")}</div>`:`<div class="empty">Belum ada foto.</div>`)}</div><button class="btn danger" onclick="logout()">LOG OUT</button></div>`;if(type==="driver")loadPackages()}
