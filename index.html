@@ -119,17 +119,50 @@ async function renderNow(mode=nowFeedMode){
   loadNowFeed(nowFeedMode,demo);
   loadLiveNow();
 }
+function nowScore(post, now=Date.now()){
+  const likes=Number(post.likes||0);
+  const comments=Array.isArray(post.comments)?post.comments.length:Number(post.commentCount||0);
+  const ageHours=Math.max(0,(now-(post.time||now))/3600000);
+  // Feed UNTUK KAMU: API + komentar adalah sinyal utama, kebaruan menjadi bonus.
+  const freshness=Math.max(0,40-(ageHours*2.5));
+  return (likes*5)+(comments*8)+freshness;
+}
+
+async function hydrateNowEngagement(items=[]){
+  const valid=items.filter(x=>x?.id && !String(x.id).startsWith('demo'));
+  if(!valid.length)return items;
+  const results=await Promise.all(valid.map(async x=>{
+    try{
+      const r=await sb.from('post_likes').select('post_id',{count:'exact',head:true}).eq('post_id',String(x.id));
+      return {id:String(x.id),likes:r.count||0};
+    }catch(e){return {id:String(x.id),likes:Number(x.likes||0)}}
+  }));
+  const map=new Map(results.map(x=>[x.id,x.likes]));
+  return items.map(x=>({...x,likes:map.has(String(x.id))?map.get(String(x.id)):Number(x.likes||0)}));
+}
+
 async function loadNowFeed(mode="forYou",demo=[]){
   const box=$("nowFeedBox");if(!box||!user?.id)return;
   if(mode==="forYou"){
-    const r=await sb.from("posts").select("id,user_id,caption,image_url,location,latitude,longitude,category,created_at").order("created_at",{ascending:false}).limit(20);
-    if(r.error){box.innerHTML=[...demo,...posts].slice(0,12).map(postRow).join("")||`<div class="empty">Belum ada postingan.</div>`;return;}
+    const r=await sb.from("posts").select("id,user_id,caption,image_url,location,latitude,longitude,category,created_at").order("created_at",{ascending:false}).limit(50);
+    if(r.error){
+      const fallback=await hydrateNowEngagement([...demo,...posts]);
+      fallback.sort((a,b)=>nowScore(b)-nowScore(a));
+      box.innerHTML=fallback.slice(0,12).map(postRow).join("")||`<div class="empty">Belum ada postingan.</div>`;
+      return;
+    }
     const rows=r.data||[];
     const ids=[...new Set(rows.map(x=>x.user_id).filter(Boolean))];
     const pr=ids.length?await sb.from("profiles").select("id,name,username,avatar_url,account_type").in("id",ids):{data:[]};
     const pm=new Map((pr.data||[]).map(x=>[x.id,x]));
-    const remote=rows.map(x=>{const u=pm.get(x.user_id)||{};return {id:x.id,t:x.caption||"",u:u.name||"NOW BALI",place:x.location||"Bali",latitude:x.latitude,longitude:x.longitude,category:x.category||"",time:new Date(x.created_at).getTime(),photo:x.image_url||"",likes:0,comments:[]}});
-    const merged=[...remote,...demo,...posts].sort((a,b)=>(b.time||0)-(a.time||0));
+    const remote=rows.map(x=>{
+      const u=pm.get(x.user_id)||{};
+      return {id:x.id,t:x.caption||"",u:u.name||"NOW BALI",place:x.location||"Bali",latitude:x.latitude,longitude:x.longitude,category:x.category||"",time:new Date(x.created_at).getTime(),photo:x.image_url||"",likes:0,comments:[]};
+    });
+    const byId=new Map();
+    [...remote,...demo,...posts].forEach(x=>{if(x?.id)byId.set(String(x.id),x)});
+    let merged=await hydrateNowEngagement([...byId.values()]);
+    merged.sort((a,b)=>nowScore(b)-nowScore(a)||(b.time||0)-(a.time||0));
     box.innerHTML=merged.slice(0,12).map(postRow).join("")||`<div class="empty">Belum ada postingan.</div>`;
     return;
   }
@@ -143,9 +176,10 @@ async function loadNowFeed(mode="forYou",demo=[]){
   const pr=await sb.from("profiles").select("id,name,username,avatar_url,account_type").in("id",ids);
   const pm=new Map((pr.data||[]).map(x=>[x.id,x]));
   if(!rows.length){box.innerHTML=`<div class="followingHint">👥 Kamu sudah Follow ${ids.length} akun, tetapi mereka belum punya postingan.</div>`;return}
-  box.innerHTML=rows.map(x=>{const u=pm.get(x.user_id)||{};return postRow({id:x.id,t:x.caption||"",u:u.name||"NOW BALI",place:x.location||"Bali",latitude:x.latitude,longitude:x.longitude,category:x.category||"",time:new Date(x.created_at).getTime(),photo:x.image_url||"",likes:0,comments:[]})}).join("");
+  const items=await hydrateNowEngagement(rows.map(x=>{const u=pm.get(x.user_id)||{};return {id:x.id,t:x.caption||"",u:u.name||"NOW BALI",place:x.location||"Bali",latitude:x.latitude,longitude:x.longitude,category:x.category||"",time:new Date(x.created_at).getTime(),photo:x.image_url||"",likes:0,comments:[]}}));
+  items.sort((a,b)=>(b.time||0)-(a.time||0));
+  box.innerHTML=items.map(postRow).join("");
 }
-
 async function renderNear(){main.innerHTML=`<div class="nearPage"><div class="nearVideoStage"><div class="nearTopBar"><h2>📍 Near You</h2><div id="nearTrend" class="nearTrend">🔥 Trending sekarang</div></div><div id="nearVideosWrap" class="nearVideosHost"><div class="nearVideoEmpty"><div class="empty">Memuat video sekitar...</div></div></div></div></div>`;await loadNearVideos()}
 function startNearTrendTicker(rows=[]){
   const el=$("nearTrend");if(!el)return;
