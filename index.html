@@ -54,6 +54,25 @@ input,textarea{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 .brandTagline{font-size:7px;font-weight:800;letter-spacing:1.25px;color:#aeb5c4;margin-top:3px}
 .guestLogo{color:#f2f2f2!important}
 </style>
+<style id="sambasara-pwa-layout-fix">
+:root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+#app{min-height:100dvh;padding-bottom:calc(82px + var(--safe-bottom))}
+header{height:calc(64px + var(--safe-top));padding:var(--safe-top) 16px 0;align-items:center}
+.brandLockup{margin-top:1px}
+.logo{font-size:25px!important;line-height:1!important;letter-spacing:-.8px!important}
+.brandTagline{margin-top:4px}
+.topPalmBtn{top:calc(12px + var(--safe-top))!important}
+nav{height:calc(74px + var(--safe-bottom));padding-bottom:var(--safe-bottom)}
+#plus{bottom:calc(92px + var(--safe-bottom))!important}
+.guestPage{min-height:calc(100dvh - var(--safe-top) - var(--safe-bottom));padding:28px 20px 40px;align-items:center}
+.guestCard{padding:38px 22px 34px;transform:translateY(-22px)}
+.guestLogo{font-size:40px!important;line-height:1.05!important;letter-spacing:-1.2px!important}
+.guestTitle{margin:16px 0 8px}
+.guestText{margin-bottom:18px}
+.guestCard .btn{margin-top:2px}
+.guestLogin{padding:10px 12px}
+@media (max-height:760px){.guestCard{transform:translateY(-8px);padding-top:30px;padding-bottom:28px}.guestLogo{font-size:36px!important}.guestTitle{margin-top:12px}}
+</style>
 </head>
 <body>
 <button id="topPalmBtn" class="topPalmBtn" onclick="openPersonalActivity()" aria-label="Aktivitas">🌴<span id="topPalmBadge" class="topPalmBadge">0</span></button>
