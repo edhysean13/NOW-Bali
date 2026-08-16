@@ -307,14 +307,15 @@ async function searchPeopleAccounts(){
   const drivers=new Map((dr.data||[]).map(x=>[x.profile_id,x]));
   const businesses=new Map((br.data||[]).map(x=>[x.profile_id,x]));
   box.innerHTML=rows.map(p=>accountPersonCard(p,drivers.get(p.id),businesses.get(p.id))).join("");
-  await refreshFollowButtons();
+  await Promise.all([refreshFollowButtons(),refreshPeopleSocialState(rows)]);
 }
 
 function accountPersonCard(p,d,b){
   const type=p.account_type==="driver"?"🚗 Driver":p.account_type==="usaha"?"🏪 UMKM / Usaha":"👤 Personal";
   const display=p.account_type==="usaha"?(b?.business_name||p.name):p.name;
   const safe=JSON.stringify({...p,b:b||{},driver:d||{}}).replace(/'/g,"&#39;");
-  return `<div class="personCard"><div class="personTop">${avatar({name:display,photo:p.avatar_url},true)}<div class="personMeta"><h3>${esc(display||"User")}</h3><p class="muted">@${esc(p.username||"")} • ${type}</p>${p.account_type==="driver"&&d?.vehicle_type?`<p class="muted">${esc(d.vehicle_type)}${d.vehicle_plate?` • ${esc(d.vehicle_plate)}`:""}</p>`:""}${p.account_type==="usaha"&&b?.business_type?`<p class="muted">${esc(b.business_type)}</p>`:""}</div></div><div class="personActions">${followButton(p.id)}<button class="btn secondary small" onclick='openAccountProfile(${safe})'>LIHAT PROFIL</button></div></div>`;
+  const id=esc(p.id);
+  return `<div class="personCard" data-person-card="${id}"><div class="personTop">${avatar({name:display,photo:p.avatar_url},true)}<div class="personMeta"><h3>${esc(display||"User")}</h3><p class="muted">@${esc(p.username||"")} <span id="personOnline-${id}" class="personOnlineDot" style="color:#7b8190">●</span> • ${type}</p><span id="personScore-${id}" class="nowUserScore">🔥 NOW SCORE —</span>${p.account_type==="driver"&&d?.vehicle_type?`<p class="muted">${esc(d.vehicle_type)}${d.vehicle_plate?` • ${esc(d.vehicle_plate)}`:""}</p>`:""}${p.account_type==="usaha"&&b?.business_type?`<p class="muted">${esc(b.business_type)}</p>`:""}</div></div><div class="personActions">${followButton(p.id)}<button id="personChat-${id}" class="btn secondary small chatPersonBtn chatDisabled" type="button" disabled onclick="startDirectChat('${id}')">💬 Chat</button><button class="btn secondary small" onclick='openAccountProfile(${safe})'>LIHAT PROFIL</button></div></div>`;
 }
 
 async function openAccountProfile(p){
@@ -323,7 +324,7 @@ async function openAccountProfile(p){
   window.__publicProfileTab='posts';
   $("profileModal").classList.remove("hidden");
   $("profileBox").innerHTML=`<div class="loading">Memuat profil...</div>`;
-  const [pr,dr,br,postsR,videoR,counts,following,pkR]=await Promise.all([
+  const [pr,dr,br,postsR,videoR,counts,following,userScore,pkR]=await Promise.all([
     sb.from("profiles").select("id,name,username,phone,avatar_url,account_type,profile_background_url").eq("id",p.id).maybeSingle(),
     sb.from("driver_profiles").select("vehicle_type,vehicle_plate").eq("profile_id",p.id).maybeSingle(),
     sb.from("business_profiles").select("business_name,business_type,address").eq("profile_id",p.id).maybeSingle(),
@@ -331,6 +332,7 @@ async function openAccountProfile(p){
     sb.from("near_videos").select("id,user_id,video_url,caption,location,latitude,longitude,created_at").eq("user_id",p.id).order("created_at",{ascending:false}).limit(100),
     getFollowCounts(p.id),
     getFollowState(p.id),
+    getUserNowScore(p.id),
     sb.from("travel_packages").select("*").eq("owner_id",p.id).eq("is_published",true).order("created_at",{ascending:false})
   ]);
   if(pr.error||!pr.data){$("profileBox").innerHTML=`<div class="empty">Profil tidak ditemukan.</div>`;return;}
@@ -803,7 +805,8 @@ async function toggleFollow(targetId,btn){
 
 function personalPersonCard(p){
   const safe=JSON.stringify(p).replace(/'/g,"&#39;");
-  return `<div class="personCard"><div class="personTop">${avatar({name:p.name,photo:p.avatar_url},true)}<div class="personMeta"><h3>${esc(p.name||"User")}</h3><p class="muted">@${esc(p.username||"")} • 👤 Personal</p></div></div><div class="personActions">${followButton(p.id)}<button class="btn secondary small" onclick='viewPersonalProfile(${safe})'>LIHAT PROFIL</button></div></div>`;
+  const id=esc(p.id);
+  return `<div class="personCard" data-person-card="${id}"><div class="personTop">${avatar({name:p.name,photo:p.avatar_url},true)}<div class="personMeta"><h3>${esc(p.name||"User")}</h3><p class="muted">@${esc(p.username||"")} <span id="personOnline-${id}" class="personOnlineDot" style="color:#7b8190">●</span> • 👤 Personal</p><span id="personScore-${id}" class="nowUserScore">🔥 NOW SCORE —</span></div></div><div class="personActions">${followButton(p.id)}<button id="personChat-${id}" class="btn secondary small chatPersonBtn chatDisabled" type="button" disabled onclick="startDirectChat('${id}')">💬 Chat</button><button class="btn secondary small" onclick='viewPersonalProfile(${safe})'>LIHAT PROFIL</button></div></div>`;
 }
 
 async function viewPersonalProfile(p){
@@ -844,7 +847,7 @@ async function startDirectChat(targetId){
   }
   if(!conv?.id)return;
   if(window.__chatChannel){try{await sb.removeChannel(window.__chatChannel)}catch(e){}}
-  $("profileBox").innerHTML=`<div class="chatHead"><button class="guestLogin" id="directChatBack">← Kembali</button><div><h2>💬 Chat ${esc(window.__activeDirectChat?.targetProfile?.name||"Akun")}</h2><p class="muted">Percakapan pribadi</p></div></div><div id="chatMessages" class="chatMessages"><div class="loading">Memuat...</div></div><div class="chatComposer"><input id="chatInput" placeholder="Tulis pesan..." autocomplete="off"><button id="chatSendBtn" class="action" type="button">Kirim</button></div>`;
+  $("profileBox").innerHTML=`<div class="chatHead"><button class="guestLogin" id="directChatBack">← Kembali</button><div><h2>💬 Chat ${esc(p?.name||"Akun")}</h2><p class="muted">Percakapan pribadi</p></div></div><div id="chatMessages" class="chatMessages"><div class="loading">Memuat...</div></div><div class="chatComposer"><input id="chatInput" placeholder="Tulis pesan..." autocomplete="off"><button id="chatSendBtn" class="action" type="button">Kirim</button></div>`;
   window.__activeDirectChat={conversationId:conv.id,targetId,targetProfile:window.__activeFollowProfile};
   const loaded=await sb.from("direct_chat_messages").select("id,sender_id,body,created_at").eq("conversation_id",conv.id).order("created_at",{ascending:true});
   if(loaded.error){$("chatMessages").innerHTML=`<div class="empty">${esc(loaded.error.message)}</div>`;return;}
