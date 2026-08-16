@@ -1,0 +1,19 @@
+{
+  "name": "SAMBASARA",
+  "short_name": "SAMBASARA",
+  "description": "Bali’s Social World",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#05060a",
+  "theme_color": "#090b12",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
