@@ -30,6 +30,30 @@ input,textarea{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 .nearPage{padding:0!important}.nearTopBar{position:absolute;top:0;left:0;right:0;height:58px;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;z-index:20;background:linear-gradient(#05060ae8,transparent);pointer-events:none}.nearTopBar>*{pointer-events:auto}.nearTopBar h2{margin:0;font-size:18px;text-shadow:0 1px 8px #000}.nearTrend{font-size:11px;color:#fff;background:#0b0e15b8;border:1px solid #ffffff18;border-radius:999px;padding:7px 11px;backdrop-filter:blur(8px);transition:opacity .45s ease,transform .45s ease}.nearTrend.fade{opacity:0;transform:translateY(5px)}.nearVideoStage{position:relative;height:calc(100vh - 64px - 74px);min-height:560px;overflow:hidden;background:#05060a}.nearVideosHost{height:100%;width:100%}.nearVideoFeed{height:100%;display:flex;flex-direction:column;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none}.nearVideoFeed::-webkit-scrollbar{display:none}.nearVideoCard{position:relative;min-height:100%;height:100%;scroll-snap-align:start;background:#05060a;overflow:hidden;border:0;border-radius:0}.nearVideoCard>video{display:block;width:100%;height:100%;min-height:100%;object-fit:cover;background:#05060a;transform:translateZ(0);backface-visibility:hidden;will-change:transform}.nearVideoCard{contain:layout paint style}.nearVideoOverlay{position:absolute;left:0;right:0;bottom:0;padding:90px 16px 28px;background:linear-gradient(transparent,#000d 72%);pointer-events:none}.nearVideoBody{padding:0;position:relative;z-index:2}.nearVideoBody p{font-size:13px;line-height:1.45;color:#fff;margin:7px 0}.nearVideoMeta{display:block;color:#d5d9e2;font-size:11px}.nearVideoActions{display:flex;gap:8px;pointer-events:auto;margin-top:10px}.nearVideoActions .action{padding:8px 12px;font-size:11px;background:#101521cc;border-color:#ffffff22;backdrop-filter:blur(8px)}.nearVideoEmpty{height:100%;display:grid;place-items:center;padding:24px;text-align:center;background:radial-gradient(circle at 50% 35%,#1a1f2b,#05060a 65%)}.nearVideoEmpty .empty{background:#101521aa;border:1px solid #ffffff14;border-radius:18px;padding:28px}.nearVideoCommentsFloat{pointer-events:auto;background:#090c13ee;border-radius:14px;padding:8px;margin-top:8px;max-height:150px;overflow:auto}.nearVideoFeed .nearVideoCard:not(:first-child){border-top:1px solid #151a24}.nearVideoHint{position:absolute;right:14px;bottom:18px;z-index:5;color:#fff9;font-size:10px;background:#0008;border-radius:999px;padding:6px 9px;pointer-events:none}.nearSoundBtn{position:absolute;right:14px;top:72px;z-index:9;width:38px;height:38px;border:1px solid #ffffff2a;border-radius:50%;background:#090c13b8;color:#fff;backdrop-filter:blur(8px);display:grid;place-items:center;font-size:16px}.nearSoundBtn:active{transform:scale(.96)}
 .profileVideoFullscreen{position:relative;width:100%;height:78vh;min-height:420px;background:#000;border-radius:18px;overflow:hidden;display:grid;place-items:center}.profileVideoFullscreen video{width:100%;height:100%;object-fit:contain;background:#000}.profileVideoFullscreen .profileVideoCloseHint{position:absolute;left:12px;bottom:12px;color:#fff9;background:#0008;border-radius:99px;padding:7px 10px;font-size:10px;pointer-events:none}
 .locationBtn{border:0;background:none;color:#aeb8cc;padding:0;font:inherit;cursor:pointer;text-decoration:none}.locationBtn:hover{color:#b04a56;text-decoration:underline}.locationBtnLarge{font-weight:700;color:#b04a56}.locationBtn:active{opacity:.7}.locationPickerActions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.locationPickerActions .btn{flex:1;min-width:140px}.locationPicked{margin-top:8px;padding:10px 12px;border:1px solid #303545;border-radius:12px;background:#171a24;color:#fff}.locationPickerMapHint{font-size:11px;color:#8d95a8;margin-top:6px}.locationPin{color:#b04a56;font-weight:900}</style>
+
+<style id="now-comments-reply-photo">
+.comment-item{padding:12px 0;border-bottom:1px solid #242935}
+.comment-item:last-child{border-bottom:0}
+.comment-head{display:flex;align-items:center;gap:8px}
+.comment-avatar{width:30px;height:30px;border-radius:50%;object-fit:cover;background:#202531}
+.comment-body{margin-left:38px;font-size:12px;line-height:1.45}
+.comment-actions{margin-left:38px;margin-top:6px;display:flex;gap:12px}
+.comment-action{border:0;background:none;color:#8d95a8;padding:0;font-size:10px;font-weight:800}
+.comment-action:hover{color:#fff}
+.comment-reply{margin:9px 0 0 38px;padding-left:12px;border-left:2px solid #343b4b}
+.comment-photo{display:block;max-width:260px;max-height:320px;width:auto;height:auto;border-radius:12px;margin-top:8px;object-fit:contain;cursor:pointer;background:#171c27}
+.comment-compose{display:flex;gap:8px;align-items:center}
+.comment-compose textarea{flex:1;min-height:42px;resize:none;background:#171c27;border:1px solid #2a3040;color:#fff;border-radius:12px;padding:10px}
+.comment-photo-btn{border:1px solid #2a3040;background:#171c27;color:#fff;border-radius:12px;width:42px;height:42px}
+.comment-preview{position:relative;display:inline-block;margin-top:8px}
+.comment-preview img{max-width:110px;max-height:110px;border-radius:10px;object-fit:cover}
+.comment-preview button{position:absolute;right:-7px;top:-7px;border:0;border-radius:50%;width:22px;height:22px;background:#5a2028;color:#fff}
+.replying-to{display:flex;justify-content:space-between;align-items:center;background:#171c27;border:1px solid #2a3040;border-radius:10px;padding:8px 10px;margin-bottom:8px;font-size:10px;color:#aeb5c4}
+.replying-to button{border:0;background:none;color:#fff}
+.comment-lightbox{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:30;padding:18px}
+.comment-lightbox img{max-width:95vw;max-height:90vh;border-radius:14px;object-fit:contain}
+</style>
+
 </head>
 <body>
 <button id="topPalmBtn" class="topPalmBtn" onclick="openPersonalActivity()" aria-label="Aktivitas">🌴<span id="topPalmBadge" class="topPalmBadge">0</span></button>
@@ -1657,5 +1681,139 @@ function closeLiveModal(){if(liveViewerTimer){clearInterval(liveViewerTimer);liv
 document.querySelectorAll("nav [data-tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));$("plus").onclick=()=>user?openPost():guest();
 (async()=>{let r=await sb.auth.getSession();if(r.data.session){user=await sync(r.data.session);startPlacePresence();startHappeningRefresh();startOnlinePresence();show("now")}else guest()})();
 </script>
+
+<script id="now-comments-reply-photo-js">
+(() => {
+  const state = { replyTo: null, photoData: null };
+
+  function escapeHtml(value='') {
+    return value.replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+    }[c]));
+  }
+
+  function renderCommentComposer(target, user='') {
+    const root = typeof target === 'string' ? document.querySelector(target) : target;
+    if (!root) return;
+    root.innerHTML = `
+      <div class="comment-compose">
+        <textarea class="comment-text" placeholder="${state.replyTo ? `Membalas @${escapeHtml(state.replyTo.name)}...` : 'Tulis komentar...'}"></textarea>
+        <button class="comment-photo-btn" type="button" title="Tambahkan foto">📷</button>
+        <input class="comment-photo-input" type="file" accept="image/*" hidden>
+        <button class="btn small comment-send" type="button">Kirim</button>
+      </div>
+      ${state.replyTo ? `<div class="replying-to">↩ Membalas <b>@${escapeHtml(state.replyTo.name)}</b><button type="button" class="cancel-reply">Batal</button></div>` : ''}
+      <div class="comment-preview-wrap"></div>
+    `;
+
+    const photoInput = root.querySelector('.comment-photo-input');
+    root.querySelector('.comment-photo-btn').onclick = () => photoInput.click();
+    photoInput.onchange = e => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        state.photoData = reader.result;
+        root.querySelector('.comment-preview-wrap').innerHTML =
+          `<div class="comment-preview"><img src="${state.photoData}" alt="Foto komentar"><button type="button" class="remove-comment-photo">×</button></div>`;
+        root.querySelector('.remove-comment-photo').onclick = () => {
+          state.photoData = null;
+          photoInput.value = '';
+          root.querySelector('.comment-preview-wrap').innerHTML = '';
+        };
+      };
+      reader.readAsDataURL(file);
+    };
+
+    root.querySelector('.comment-send').onclick = () => {
+      const text = root.querySelector('.comment-text').value.trim();
+      if (!text && !state.photoData) return;
+      if (typeof window.nowSubmitComment === 'function') {
+        window.nowSubmitComment({
+          text,
+          photoData: state.photoData,
+          parentId: state.replyTo?.id || null
+        });
+      } else {
+        window.dispatchEvent(new CustomEvent('now:comment-submit', {
+          detail: { text, photoData: state.photoData, parentId: state.replyTo?.id || null }
+        }));
+      }
+      state.replyTo = null;
+      state.photoData = null;
+      renderCommentComposer(root, user);
+    };
+
+    const cancel = root.querySelector('.cancel-reply');
+    if (cancel) cancel.onclick = () => {
+      state.replyTo = null;
+      state.photoData = null;
+      renderCommentComposer(root, user);
+    };
+  }
+
+  window.nowReplyToComment = (id, name, composerSelector='.comment-composer') => {
+    state.replyTo = { id, name };
+    renderCommentComposer(composerSelector);
+    document.querySelector(composerSelector)?.scrollIntoView({behavior:'smooth', block:'center'});
+  };
+
+  window.nowRenderComments = (comments, containerSelector, composerSelector='.comment-composer') => {
+    const container = document.querySelector(containerSelector);
+    if (!container) return;
+    const render = (items, nested=false) => items.map(c => `
+      <div class="comment-item ${nested ? 'comment-reply' : ''}">
+        <div class="comment-head">
+          ${c.avatar ? `<img class="comment-avatar" src="${escapeHtml(c.avatar)}" alt="">` : '<div class="comment-avatar"></div>'}
+          <b>${escapeHtml(c.userName || 'User')}</b>
+          ${c.online ? '<span style="color:#55e39a;font-size:9px">● online</span>' : ''}
+        </div>
+        <div class="comment-body">${escapeHtml(c.text || '')}
+          ${c.photoUrl ? `<img class="comment-photo" src="${escapeHtml(c.photoUrl)}" alt="Foto komentar" data-comment-photo>` : ''}
+        </div>
+        <div class="comment-actions">
+          <button class="comment-action" type="button" data-reply="${escapeHtml(c.id)}" data-name="${escapeHtml(c.userName || 'User')}">↩ Balas</button>
+        </div>
+        ${(c.replies?.length ? render(c.replies, true) : '')}
+      </div>
+    `).join('');
+    container.innerHTML = render(comments);
+    container.querySelectorAll('[data-reply]').forEach(btn => {
+      btn.onclick = () => window.nowReplyToComment(btn.dataset.reply, btn.dataset.name, composerSelector);
+    });
+    container.querySelectorAll('[data-comment-photo]').forEach(img => {
+      img.onclick = () => {
+        const box = document.createElement('div');
+        box.className = 'comment-lightbox';
+        box.innerHTML = `<img src="${img.src}" alt="Foto komentar">`;
+        box.onclick = () => box.remove();
+        document.body.appendChild(box);
+      };
+    });
+    renderCommentComposer(composerSelector);
+  };
+
+  window.nowCommentsPhotoResize = (file, maxDimension=1600, quality=.82) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      image.onerror = reject;
+      image.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+})();
+</script>
+
 </body>
 </html>
