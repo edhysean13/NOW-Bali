@@ -29,8 +29,16 @@ input,textarea{width:100%;background:#090c13;color:#fff;border:1px solid #303543
 .storyCaptureGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}.storyCaptureBtn{border:1px solid #303545;background:#171a24;color:#fff;border-radius:16px;padding:14px 8px;font-size:26px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}.storyCaptureBtn span{font-size:13px;font-weight:700}.storyCaptureBtn:active{transform:scale(.98)}.storyMediaPreview{margin:12px 0;border-radius:16px;overflow:hidden;background:#080a10;border:1px solid #303545}.storyMediaPreview img,.storyMediaPreview video{display:block;width:100%;max-height:280px;object-fit:cover}.mediaHint{margin:8px 0 14px;color:#9aa2b5;font-size:14px}
 .nearPage{padding:0!important}.nearTopBar{position:absolute;top:0;left:0;right:0;height:58px;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;z-index:20;background:linear-gradient(#05060ae8,transparent);pointer-events:none}.nearTopBar>*{pointer-events:auto}.nearTopBar h2{margin:0;font-size:18px;text-shadow:0 1px 8px #000}.nearTrend{font-size:11px;color:#fff;background:#0b0e15b8;border:1px solid #ffffff18;border-radius:999px;padding:7px 11px;backdrop-filter:blur(8px);transition:opacity .45s ease,transform .45s ease}.nearTrend.fade{opacity:0;transform:translateY(5px)}.nearVideoStage{position:relative;height:calc(100vh - 64px - 74px);min-height:560px;overflow:hidden;background:#05060a}.nearVideosHost{height:100%;width:100%}.nearVideoFeed{height:100%;display:flex;flex-direction:column;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none}.nearVideoFeed::-webkit-scrollbar{display:none}.nearVideoCard{position:relative;min-height:100%;height:100%;scroll-snap-align:start;background:#05060a;overflow:hidden;border:0;border-radius:0}.nearVideoCard>video{display:block;width:100%;height:100%;min-height:100%;object-fit:cover;background:#05060a;transform:translateZ(0);backface-visibility:hidden;will-change:transform}.nearVideoCard{contain:layout paint style}.nearVideoOverlay{position:absolute;left:0;right:0;bottom:0;padding:90px 16px 28px;background:linear-gradient(transparent,#000d 72%);pointer-events:none}.nearVideoBody{padding:0;position:relative;z-index:2}.nearVideoBody p{font-size:13px;line-height:1.45;color:#fff;margin:7px 0}.nearVideoMeta{display:block;color:#d5d9e2;font-size:11px}.nearVideoActions{display:flex;gap:8px;pointer-events:auto;margin-top:10px}.nearVideoActions .action{padding:8px 12px;font-size:11px;background:#101521cc;border-color:#ffffff22;backdrop-filter:blur(8px)}.nearVideoEmpty{height:100%;display:grid;place-items:center;padding:24px;text-align:center;background:radial-gradient(circle at 50% 35%,#1a1f2b,#05060a 65%)}.nearVideoEmpty .empty{background:#101521aa;border:1px solid #ffffff14;border-radius:18px;padding:28px}.nearVideoCommentsFloat{pointer-events:auto;background:#090c13ee;border-radius:14px;padding:8px;margin-top:8px;max-height:150px;overflow:auto}.nearVideoFeed .nearVideoCard:not(:first-child){border-top:1px solid #151a24}.nearVideoHint{position:absolute;right:14px;bottom:18px;z-index:5;color:#fff9;font-size:10px;background:#0008;border-radius:999px;padding:6px 9px;pointer-events:none}.nearSoundBtn{position:absolute;right:14px;top:72px;z-index:9;width:38px;height:38px;border:1px solid #ffffff2a;border-radius:50%;background:#090c13b8;color:#fff;backdrop-filter:blur(8px);display:grid;place-items:center;font-size:16px}.nearSoundBtn:active{transform:scale(.96)}
 .profileVideoFullscreen{position:relative;width:100%;height:78vh;min-height:420px;background:#000;border-radius:18px;overflow:hidden;display:grid;place-items:center}.profileVideoFullscreen video{width:100%;height:100%;object-fit:contain;background:#000}.profileVideoFullscreen .profileVideoCloseHint{position:absolute;left:12px;bottom:12px;color:#fff9;background:#0008;border-radius:99px;padding:7px 10px;font-size:10px;pointer-events:none}
-.locationBtn{border:0;background:none;color:#aeb8cc;padding:0;font:inherit;cursor:pointer;text-decoration:none}.locationBtn:hover{color:#b04a56;text-decoration:underline}.locationBtnLarge{font-weight:700;color:#b04a56}.locationBtn:active{opacity:.7}.locationPickerActions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.locationPickerActions .btn{flex:1;min-width:140px}.locationPicked{margin-top:8px;padding:10px 12px;border:1px solid #303545;border-radius:12px;background:#171a24;color:#fff}.locationPickerMapHint{font-size:11px;color:#8d95a8;margin-top:6px}.locationPin{color:#b04a56;font-weight:900}.directOnlineStatus{font-size:12px;margin-left:6px}.directOnlineStatus.isOnline{color:#35d07f}.directOnlineStatus.isOffline{color:#7f8798}.chatDisabled{opacity:.45;cursor:not-allowed}
+.locationBtn{border:0;background:none;color:#aeb8cc;padding:0;font:inherit;cursor:pointer;text-decoration:none}.locationBtn:hover{color:#b04a56;text-decoration:underline}.locationBtnLarge{font-weight:700;color:#b04a56}.locationBtn:active{opacity:.7}.locationPickerActions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.locationPickerActions .btn{flex:1;min-width:140px}.locationPicked{margin-top:8px;padding:10px 12px;border:1px solid #303545;border-radius:12px;background:#171a24;color:#fff}.locationPickerMapHint{font-size:11px;color:#8d95a8;margin-top:6px}.locationPin{color:#b04a56;font-weight:900}</style>
+<style id="phase12-social-polish">
+.nowScoreBadge{display:inline-flex;align-items:center;gap:6px;margin:7px 0 3px;padding:5px 9px;border-radius:999px;background:#202632;border:1px solid #343b4b;color:#fff;font-size:10px;font-weight:800}.nowScoreBadge b{color:#d45a55}.nowScoreMini{display:inline-flex;margin-top:5px;padding:4px 7px;border-radius:999px;background:#202632;border:1px solid #303746;color:#bfc6d3;font-size:9px;font-weight:800}.commentToolbar{display:flex;gap:7px;align-items:center;margin:8px 0}.commentPhotoBtn{width:40px;height:40px;border:1px solid #303543;background:#1a1f2a;color:#fff;border-radius:11px;display:grid;place-items:center;font-size:16px}.commentPhotoName{font-size:9px;color:#8d95a8;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.commentTree{margin-top:4px}.commentRow{padding:8px 0;border-bottom:1px solid #252b36}.commentRow.reply{margin-left:28px;padding-left:10px;border-left:2px solid #303746}.commentMain{display:flex;gap:8px;align-items:flex-start}.commentAvatarMini{width:28px;height:28px;border-radius:50%;object-fit:cover;background:#222733;flex:none}.commentContent{min-width:0;flex:1}.commentAuthor{font-size:11px;font-weight:800}.commentBody{font-size:11px;line-height:1.4;color:#d5d9e2;margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere}.commentImage{display:block;max-width:190px;max-height:190px;border-radius:10px;margin-top:6px;object-fit:cover}.commentMeta{display:flex;align-items:center;gap:9px;margin-top:4px;color:#7f8798;font-size:9px}.commentMeta button{border:0;background:none;color:#8d95a8;padding:0;font-size:9px}.commentMeta button.liked{color:#b64a45;font-weight:800}.replyComposer{display:none;margin:6px 0 0 36px;gap:6px}.replyComposer input{margin:0;flex:1;min-width:0}.commentReplyPreview{font-size:9px;color:#8d95a8;margin:4px 0 0 36px}.notificationRow{cursor:pointer}.notificationRow:hover{background:#1d2230}
 </style>
+
+<style id="comment-performance-tuning">
+.commentRow{contain:layout style;}
+.commentImage{content-visibility:auto;contain-intrinsic-size:190px 190px;}
+</style>
+<style id="nowbali-chat-merge-css">.chatDisabled{opacity:.45!important;filter:saturate(.35);cursor:not-allowed!important}.personOnlineDot{font-size:11px;color:#7b8190}.directOnlineStatus{font-size:11px;margin-left:5px}.directOnlineStatus.isOnline{color:#62d79a}.directOnlineStatus.isOffline{color:#7b8190}.chatHead{display:flex;align-items:center;gap:10px;margin-bottom:12px}.chatMessages{min-height:240px;max-height:55vh;overflow:auto;display:flex;flex-direction:column;gap:7px;padding:8px}.chatBubble{max-width:78%;padding:9px 11px;border-radius:14px;font-size:12px;line-height:1.35}.chatBubble.me{align-self:flex-end;background:#a83b4a;color:#fff}.chatBubble.them{align-self:flex-start;background:#202632;color:#fff}.chatComposer{display:flex;gap:8px;margin-top:10px}.chatComposer input{flex:1;margin:0}.chatComposer .action{flex:0 0 auto}</style>
 </head>
 <body>
 <button id="topPalmBtn" class="topPalmBtn" onclick="openPersonalActivity()" aria-label="Aktivitas">🌴<span id="topPalmBadge" class="topPalmBadge">0</span></button>
@@ -101,26 +109,30 @@ async function loadPersonalActivity(){
   const box=$("personalActivityBox");if(!box)return;
   box.innerHTML=`<h2>🌴 AKTIVITAS KAMU</h2><div class="loading">Memuat...</div>`;
   const r=await sb.from("notifications")
-    .select("id,actor_id,type,title,body,is_read,created_at")
+    .select("id,actor_id,type,title,body,target_type,target_id,is_read,created_at")
     .eq("recipient_id",user.id).order("created_at",{ascending:false}).limit(50);
   if(r.error){box.innerHTML=`<h2>🌴 AKTIVITAS KAMU</h2><div class="empty">${esc(r.error.message)}</div>`;return}
   const rows=r.data||[],ids=[...new Set(rows.map(x=>x.actor_id).filter(Boolean))];
-  const ar=ids.length?await sb.from("profiles").select("id,name").in("id",ids):{data:[]};
+  const ar=ids.length?await sb.from("profiles").select("id,name,username,avatar_url").in("id",ids):{data:[]};
   const actors=new Map((ar.data||[]).map(x=>[x.id,x])),unread=rows.filter(x=>!x.is_read).length;
   updatePersonalActivityBadge(unread);
   if(!rows.length){box.innerHTML=`<h2>🌴 AKTIVITAS KAMU</h2><div class="empty">Belum ada aktivitas.</div>`;return}
-  box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center">
-    <h2>🌴 AKTIVITAS KAMU</h2>
-    ${unread?`<button class="btn small" onclick="markPersonalActivityRead()">Tandai dibaca</button>`:""}
-  </div>`+
+  box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><h2>🌴 AKTIVITAS KAMU</h2>${unread?`<button class="btn small" onclick="markPersonalActivityRead()">Tandai dibaca</button>`:""}</div>`+
   rows.map(n=>{
     const a=actors.get(n.actor_id)||{};
-    const icon=n.type==="like"?"🔥":n.type==="comment"?"💬":n.type==="chat"?"✉️":"🌴";
-    return `<div class="personalActivityRow ${n.is_read?"":"unread"}">
-      <span class="personalActivityIcon">${icon}</span>
-      <div><b>${esc(a.name||"NOW BALI")}</b><br>${esc(n.title||"Aktivitas baru")}<br><small>${esc(n.body||"")}</small></div>
-    </div>`;
+    const icon=n.type==="like"?"🔥":n.type==="comment"?"💬":n.type==="reply"?"↩️":n.type==="follow"?"👥":n.type==="chat"?"✉️":n.type==="tag"?"🏷️":n.type==="comment_like"?"🔥":"🌴";
+    return `<button class="notificationRow ${n.is_read?"":"unread"}" onclick='openNotificationTarget(${JSON.stringify(n).replace(/'/g,"&#39;")})'><span class="notificationIcon">${icon}</span><div style="flex:1;text-align:left"><b>${esc(a.name||"NOW BALI")}</b><br>${esc(n.title||"Aktivitas baru")}<br><small>${esc(n.body||"")}</small></div></button>`;
   }).join("");
+}
+async function openNotificationTarget(n){
+  if(!n)return;
+  try{if(!n.is_read)await sb.from("notifications").update({is_read:true}).eq("id",n.id).eq("recipient_id",user.id);}catch(e){}
+  refreshPersonalActivityBadge();
+  if(n.target_type==="post"&&n.target_id){
+    const r=await sb.from("posts").select("id,user_id,caption,image_url,location,latitude,longitude,category,created_at").eq("id",n.target_id).maybeSingle();
+    if(r.data){const pr=await sb.from("profiles").select("id,name").eq("id",r.data.user_id).maybeSingle();openDetail({id:r.data.id,t:r.data.caption||"",u:pr.data?.name||"User",place:r.data.location||"Bali",latitude:r.data.latitude,longitude:r.data.longitude,category:r.data.category||"",time:new Date(r.data.created_at).getTime(),photo:r.data.image_url||"",likes:0,comments:[]});return;}
+  }
+  if(n.target_type==="profile"&&n.target_id){const r=await sb.from("profiles").select("id,name,username,phone,avatar_url,account_type,profile_background_url").eq("id",n.target_id).maybeSingle();if(r.data)openAccountProfile(r.data);}
 }
 async function markPersonalActivityRead(){
   const r=await sb.from("notifications").update({is_read:true})
@@ -278,6 +290,17 @@ function renderExplore(){
   resetDiscovery();
 }
 
+async function getUserNowScore(id){
+  if(!id)return 0;
+  const r=await sb.rpc('get_user_now_score',{target_user_id:id});
+  return r.error?0:Number(r.data||0);
+}
+async function refreshPeopleScores(ids){
+  const uniq=[...new Set((ids||[]).filter(Boolean))];
+  const scores=await Promise.all(uniq.map(async id=>[id,await getUserNowScore(id)]));
+  for(const [id,score] of scores){const el=$("userScore-"+id);if(el)el.textContent=`🔥 NOW SCORE ${score}`;}
+}
+
 function renderPeople(){
   if(!user)return guest();
   main.innerHTML=`<div class="page">
@@ -307,24 +330,108 @@ async function searchPeopleAccounts(){
   const drivers=new Map((dr.data||[]).map(x=>[x.profile_id,x]));
   const businesses=new Map((br.data||[]).map(x=>[x.profile_id,x]));
   box.innerHTML=rows.map(p=>accountPersonCard(p,drivers.get(p.id),businesses.get(p.id))).join("");
-  await Promise.all([refreshFollowButtons(),refreshPeopleSocialState(rows)]);
+  await refreshFollowButtons();
+  refreshPeopleScores(ids);
+  refreshPeopleSocialState(rows);
 }
+
+async function isMutualFollow(targetId){
+  if(!user?.id||!targetId||targetId===user.id)return false;
+  const [a,b]=await Promise.all([
+    sb.from("user_follows").select("id",{count:"exact",head:true}).eq("follower_id",user.id).eq("following_id",targetId),
+    sb.from("user_follows").select("id",{count:"exact",head:true}).eq("follower_id",targetId).eq("following_id",user.id)
+  ]);
+  return (a.count||0)>0 && (b.count||0)>0;
+}
+
+async function isUserOnline(targetId){
+  if(!targetId)return false;
+  const cutoff=new Date(Date.now()-90000).toISOString();
+  const r=await sb.from("user_online_presence").select("user_id,last_seen").eq("user_id",targetId).gte("last_seen",cutoff).maybeSingle();
+  return !!r.data;
+}
+
+async function getChatEligibility(targetId){
+  const [mutual,online]=await Promise.all([isMutualFollow(targetId),isUserOnline(targetId)]);
+  return {mutual,online,enabled:mutual&&online};
+}
+
+function renderChatEligibility(targetId,online,mutual){
+  const btn=$("directChatBtn");
+  const status=$("directChatStatus");
+  if(!btn)return;
+  btn.disabled=!(mutual&&online);
+  btn.classList.toggle("chatDisabled",!(mutual&&online));
+  btn.textContent=(mutual&&online)?"💬 Chat":"💬 Chat";
+  if(status){
+    status.textContent=online?"● Online":"● Offline";
+    status.className="directOnlineStatus "+(online?"isOnline":"isOffline");
+  }
+  btn.title=mutual&&online?"Chat tersedia — kalian saling mengikuti dan sama-sama online":(!mutual?"Chat aktif jika kalian saling mengikuti":"Chat aktif saat akun ini online");
+}
+
+async function refreshDirectChatEligibility(targetId){
+  const e=await getChatEligibility(targetId);
+  renderChatEligibility(targetId,e.online,e.mutual);
+  return e;
+}
+
+async function startOnlinePresence(){
+  if(!user?.id)return;
+  const touch=async()=>{
+    if(document.visibilityState!=="visible")return;
+    await sb.from("user_online_presence").upsert({user_id:user.id,last_seen:new Date().toISOString()},{onConflict:"user_id"});
+  };
+  await touch();
+  if(window._onlinePresenceTimer)clearInterval(window._onlinePresenceTimer);
+  window._onlinePresenceTimer=setInterval(touch,30000);
+  if(!window._onlinePresenceBound){
+    window._onlinePresenceBound=true;
+    document.addEventListener("visibilitychange",async()=>{
+      if(!user?.id)return;
+      if(document.visibilityState==="visible")await touch();
+      else await sb.from("user_online_presence").delete().eq("user_id",user.id);
+    });
+    window.addEventListener("beforeunload",()=>{sb.from("user_online_presence").delete().eq("user_id",user.id);});
+  }
+}
+
+
+
+
+async function refreshPeopleSocialState(rows){
+  const ids=[...new Set((rows||[]).map(x=>x.id).filter(Boolean))];
+  if(!ids.length)return;
+  const onlinePromise=sb.from("user_online_presence").select("user_id,last_seen").in("user_id",ids).gte("last_seen",new Date(Date.now()-90000).toISOString());
+  const followingPromise=user?.id?sb.from("user_follows").select("follower_id,following_id").eq("follower_id",user.id).in("following_id",ids):Promise.resolve({data:[]});
+  const followersPromise=user?.id?sb.from("user_follows").select("follower_id,following_id").eq("following_id",user.id).in("follower_id",ids):Promise.resolve({data:[]});
+  const [online,following,followers]=await Promise.all([onlinePromise,followingPromise,followersPromise]);
+  const onlineSet=new Set((online.data||[]).map(x=>String(x.user_id)));
+  const followingSet=new Set((following.data||[]).map(x=>String(x.following_id)));
+  const followersSet=new Set((followers.data||[]).map(x=>String(x.follower_id)));
+  ids.forEach(rawId=>{
+    const id=String(rawId), onlineEl=$("personOnline-"+id), chatEl=$("personChat-"+id);
+    const isOnline=onlineSet.has(id), mutual=followingSet.has(id)&&followersSet.has(id), enabled=!!user?.id&&mutual&&isOnline;
+    if(onlineEl){onlineEl.textContent="●";onlineEl.style.color=isOnline?"#35d07f":"#7b8190";onlineEl.title=isOnline?"Online":"Offline";}
+    if(chatEl){chatEl.disabled=!enabled;chatEl.classList.toggle("chatDisabled",!enabled);chatEl.title=enabled?"Kalian saling mengikuti dan sama-sama online":"Chat aktif jika saling mengikuti dan sama-sama online";}
+  });
+}
+
 
 function accountPersonCard(p,d,b){
   const type=p.account_type==="driver"?"🚗 Driver":p.account_type==="usaha"?"🏪 UMKM / Usaha":"👤 Personal";
   const display=p.account_type==="usaha"?(b?.business_name||p.name):p.name;
   const safe=JSON.stringify({...p,b:b||{},driver:d||{}}).replace(/'/g,"&#39;");
   const id=esc(p.id);
-  return `<div class="personCard" data-person-card="${id}"><div class="personTop">${avatar({name:display,photo:p.avatar_url},true)}<div class="personMeta"><h3>${esc(display||"User")}</h3><p class="muted">@${esc(p.username||"")} <span id="personOnline-${id}" class="personOnlineDot" style="color:#7b8190">●</span> • ${type}</p><span id="personScore-${id}" class="nowUserScore">🔥 NOW SCORE —</span>${p.account_type==="driver"&&d?.vehicle_type?`<p class="muted">${esc(d.vehicle_type)}${d.vehicle_plate?` • ${esc(d.vehicle_plate)}`:""}</p>`:""}${p.account_type==="usaha"&&b?.business_type?`<p class="muted">${esc(b.business_type)}</p>`:""}</div></div><div class="personActions">${followButton(p.id)}<button id="personChat-${id}" class="btn secondary small chatPersonBtn chatDisabled" type="button" disabled onclick="startDirectChat('${id}')">💬 Chat</button><button class="btn secondary small" onclick='openAccountProfile(${safe})'>LIHAT PROFIL</button></div></div>`;
+  return `<div class="personCard" data-person-card="${id}"><div class="personTop">${avatar({name:display,photo:p.avatar_url},true)}<div class="personMeta"><h3>${esc(display||"User")}</h3><p class="muted">@${esc(p.username||"")} <span id="personOnline-${id}" class="personOnlineDot">●</span> • ${type}</p><span class="nowScoreMini" id="userScore-${id}">🔥 NOW SCORE —</span>${p.account_type==="driver"&&d?.vehicle_type?`<p class="muted">${esc(d.vehicle_type)}${d.vehicle_plate?` • ${esc(d.vehicle_plate)}`:""}</p>`:""}${p.account_type==="usaha"&&b?.business_type?`<p class="muted">${esc(b.business_type)}</p>`:""}</div></div><div class="personActions">${followButton(p.id)}<button id="personChat-${id}" class="btn secondary small chatPersonBtn chatDisabled" type="button" disabled onclick="startDirectChat('${id}')">💬 Chat</button><button class="btn secondary small" onclick='openAccountProfile(${safe})'>LIHAT PROFIL</button></div></div>`;
 }
-
 async function openAccountProfile(p){
   if(!p?.id)return;
   window.__activeFollowProfile=p;
   window.__publicProfileTab='posts';
   $("profileModal").classList.remove("hidden");
   $("profileBox").innerHTML=`<div class="loading">Memuat profil...</div>`;
-  const [pr,dr,br,postsR,videoR,counts,following,userScore,pkR]=await Promise.all([
+  const [pr,dr,br,postsR,videoR,counts,following,score,pkR]=await Promise.all([
     sb.from("profiles").select("id,name,username,phone,avatar_url,account_type,profile_background_url").eq("id",p.id).maybeSingle(),
     sb.from("driver_profiles").select("vehicle_type,vehicle_plate").eq("profile_id",p.id).maybeSingle(),
     sb.from("business_profiles").select("business_name,business_type,address").eq("profile_id",p.id).maybeSingle(),
@@ -366,10 +473,11 @@ async function openAccountProfile(p){
       <div class="avatarWrap">${avatar({name:display,photo:profile.avatar_url})}</div>
       <div class="accountLabel">${icon} ${label}</div>
       <h2>${esc(display||"User")}</h2>
-      <p class="muted">@${esc(profile.username||"")}</p>
+      <p class="muted">@${esc(profile.username||"")} <span id="directChatStatus" class="directOnlineStatus isOffline">● Offline</span></p>
+      <div class="nowScoreBadge">🔥 NOW SCORE <b>${score}</b></div>
       <div class="profileFollowStats"><button onclick="showFollowList('${safeId}','followers')"><b id="followFollowers-${safeId}">${counts.followers}</b><span>FOLLOWERS</span></button><button onclick="showFollowList('${safeId}','following')"><b id="followFollowing-${safeId}">${counts.following}</b><span>FOLLOWING</span></button></div>
       ${driverInfo}${businessInfo}
-      <div class="actions" style="justify-content:center;flex-wrap:wrap">${followButton(profile.id,following)}${maps}${contact}<button class="action" onclick="closeProfile()">Tutup</button></div>
+      <div class="actions" style="justify-content:center;flex-wrap:wrap">${followButton(profile.id,following)}<button id="directChatBtn" class="action chatDisabled" type="button" disabled onclick="startDirectChat('${safeId}')">💬 Chat</button>${maps}${contact}<button class="action" onclick="closeProfile()">Tutup</button></div><div class="muted" style="text-align:center;margin-top:6px;font-size:12px">Chat aktif jika saling mengikuti dan sama-sama online.</div>
     </div>
     <div class="card">
       <div id="publicProfileTabs" class="profileTabs">
@@ -381,7 +489,43 @@ async function openAccountProfile(p){
     </div>
     ${packageSection}`;
   $("publicProfileTabs").querySelectorAll(".profileTab").forEach(b=>b.onclick=()=>renderPublicTab(b.dataset.tab));
+  await refreshDirectChatEligibility(profile.id);
+  if(window._directChatStatusTimer)clearInterval(window._directChatStatusTimer);
+  window._directChatStatusTimer=setInterval(()=>refreshDirectChatEligibility(profile.id),15000);
 }
+
+async function startDirectChat(targetId){
+  const e=await getChatEligibility(targetId);
+  if(!e.enabled){await refreshDirectChatEligibility(targetId);return;}
+  const pairA=user.id, pairB=targetId;
+  let {data:conv,error}=await sb.from("direct_chat_conversations").select("id").or(`and(user_a.eq.${pairA},user_b.eq.${pairB}),and(user_a.eq.${pairB},user_b.eq.${pairA})`).maybeSingle();
+  if(error){alert("Chat gagal dibuka: "+error.message);return;}
+  if(!conv){
+    const ins=await sb.from("direct_chat_conversations").insert({user_a:pairA,user_b:pairB}).select("id").single();
+    if(ins.error){
+      if(ins.error.code==="23505") {
+        const retry=await sb.from("direct_chat_conversations").select("id").or(`and(user_a.eq.${pairA},user_b.eq.${pairB}),and(user_a.eq.${pairB},user_b.eq.${pairA})`).maybeSingle();
+        conv=retry.data;
+      } else {alert("Chat gagal dibuat: "+ins.error.message);return;}
+    } else conv=ins.data;
+  }
+  if(!conv?.id)return;
+  if(window.__chatChannel){try{await sb.removeChannel(window.__chatChannel)}catch(e){}}
+  const targetProfile=window.__activeFollowProfile||{id:targetId,name:"Akun"};
+  $("profileBox").innerHTML=`<div class="chatHead"><button class="guestLogin" id="directChatBack">← Kembali</button><div><h2>💬 Chat ${esc(targetProfile.name||"Akun")}</h2><p class="muted">Percakapan pribadi</p></div></div><div id="chatMessages" class="chatMessages"><div class="loading">Memuat...</div></div><div class="chatComposer"><input id="chatInput" placeholder="Tulis pesan..." autocomplete="off"><button id="chatSendBtn" class="action" type="button">Kirim</button></div>`;
+  window.__activeDirectChat={conversationId:conv.id,targetId,targetProfile:window.__activeFollowProfile};
+  const loaded=await sb.from("direct_chat_messages").select("id,sender_id,body,created_at").eq("conversation_id",conv.id).order("created_at",{ascending:true});
+  if(loaded.error){$("chatMessages").innerHTML=`<div class="empty">${esc(loaded.error.message)}</div>`;return;}
+  $("chatMessages").innerHTML=(loaded.data||[]).map(m=>`<div class="chatBubble ${m.sender_id===user.id?"me":"them"}" data-id="${esc(m.id)}">${esc(m.body)}</div>`).join("")||`<div class="empty">Belum ada pesan.</div>`;
+  $("chatMessages").scrollTop=$("chatMessages").scrollHeight;
+  $("directChatBack").onclick=()=>openAccountProfile(window.__activeDirectChat.targetProfile||{id:targetId});
+  const send=async()=>{const input=$("chatInput"),text=input?.value.trim();if(!text)return;const btn=$("chatSendBtn");if(btn){btn.disabled=true;btn.textContent="Mengirim...";}const r=await sb.from("direct_chat_messages").insert({conversation_id:conv.id,sender_id:user.id,body:text}).select("id,sender_id,body,created_at").single();if(r.error)alert("Pesan belum terkirim: "+r.error.message);else{input.value="";const box=$("chatMessages");if(!box.querySelector(`[data-id="${r.data.id}"]`)){box.insertAdjacentHTML("beforeend",`<div class="chatBubble me" data-id="${esc(r.data.id)}">${esc(r.data.body)}</div>`);box.scrollTop=box.scrollHeight;}}if(btn){btn.disabled=false;btn.textContent="Kirim";}};
+  $("chatSendBtn").onclick=send;$("chatInput").onkeydown=e=>{if(e.key==="Enter")send();};
+  window.__chatChannel=sb.channel(`direct-chat-${conv.id}`).on("postgres_changes",{event:"INSERT",schema:"public",table:"direct_chat_messages",filter:`conversation_id=eq.${conv.id}`},payload=>{const box=$("chatMessages");if(!box||box.querySelector(`[data-id="${payload.new.id}"]`))return;box.insertAdjacentHTML("beforeend",`<div class="chatBubble ${payload.new.sender_id===user.id?"me":"them"}" data-id="${esc(payload.new.id)}">${esc(payload.new.body)}</div>`);box.scrollTop=box.scrollHeight;}).subscribe();
+  setTimeout(()=>$("chatInput")?.focus(),50);
+}
+
+
 
 async function searchExplore(){
   if(discoverMode==="packages")return resetDiscovery();
@@ -710,67 +854,6 @@ async function getFollowCounts(targetId){
   return {followers:a.count||0,following:b.count||0};
 }
 
-async function isMutualFollow(targetId){
-  if(!user?.id||!targetId||targetId===user.id)return false;
-  const [a,b]=await Promise.all([
-    sb.from("user_follows").select("id",{count:"exact",head:true}).eq("follower_id",user.id).eq("following_id",targetId),
-    sb.from("user_follows").select("id",{count:"exact",head:true}).eq("follower_id",targetId).eq("following_id",user.id)
-  ]);
-  return (a.count||0)>0 && (b.count||0)>0;
-}
-
-async function isUserOnline(targetId){
-  if(!targetId)return false;
-  const cutoff=new Date(Date.now()-90000).toISOString();
-  const r=await sb.from("user_online_presence").select("user_id,last_seen").eq("user_id",targetId).gte("last_seen",cutoff).maybeSingle();
-  return !!r.data;
-}
-
-async function getChatEligibility(targetId){
-  const [mutual,online]=await Promise.all([isMutualFollow(targetId),isUserOnline(targetId)]);
-  return {mutual,online,enabled:mutual&&online};
-}
-
-function renderChatEligibility(targetId,online,mutual){
-  const btn=$("directChatBtn");
-  const status=$("directChatStatus");
-  if(!btn)return;
-  btn.disabled=!(mutual&&online);
-  btn.classList.toggle("chatDisabled",!(mutual&&online));
-  btn.textContent=(mutual&&online)?"💬 Chat":"💬 Chat";
-  if(status){
-    status.textContent=online?"● Online":"● Offline";
-    status.className="directOnlineStatus "+(online?"isOnline":"isOffline");
-  }
-  btn.title=mutual&&online?"Chat tersedia — kalian saling mengikuti dan sama-sama online":(!mutual?"Chat aktif jika kalian saling mengikuti":"Chat aktif saat akun ini online");
-}
-
-async function refreshDirectChatEligibility(targetId){
-  const e=await getChatEligibility(targetId);
-  renderChatEligibility(targetId,e.online,e.mutual);
-  return e;
-}
-
-async function startOnlinePresence(){
-  if(!user?.id)return;
-  const touch=async()=>{
-    if(document.visibilityState!=="visible")return;
-    await sb.from("user_online_presence").upsert({user_id:user.id,last_seen:new Date().toISOString()},{onConflict:"user_id"});
-  };
-  await touch();
-  if(window._onlinePresenceTimer)clearInterval(window._onlinePresenceTimer);
-  window._onlinePresenceTimer=setInterval(touch,30000);
-  if(!window._onlinePresenceBound){
-    window._onlinePresenceBound=true;
-    document.addEventListener("visibilitychange",async()=>{
-      if(!user?.id)return;
-      if(document.visibilityState==="visible")await touch();
-      else await sb.from("user_online_presence").delete().eq("user_id",user.id);
-    });
-    window.addEventListener("beforeunload",()=>{sb.from("user_online_presence").delete().eq("user_id",user.id);});
-  }
-}
-
 function followButton(targetId,following=false){
   if(!user?.id||targetId===user.id)return "";
   return `<button class="btn small followBtn ${following?"following":""}" data-follow-target="${esc(targetId)}" onclick="toggleFollow('${esc(targetId)}',this)">${following?"✓ Following":"＋ Follow"}</button>`;
@@ -805,8 +888,7 @@ async function toggleFollow(targetId,btn){
 
 function personalPersonCard(p){
   const safe=JSON.stringify(p).replace(/'/g,"&#39;");
-  const id=esc(p.id);
-  return `<div class="personCard" data-person-card="${id}"><div class="personTop">${avatar({name:p.name,photo:p.avatar_url},true)}<div class="personMeta"><h3>${esc(p.name||"User")}</h3><p class="muted">@${esc(p.username||"")} <span id="personOnline-${id}" class="personOnlineDot" style="color:#7b8190">●</span> • 👤 Personal</p><span id="personScore-${id}" class="nowUserScore">🔥 NOW SCORE —</span></div></div><div class="personActions">${followButton(p.id)}<button id="personChat-${id}" class="btn secondary small chatPersonBtn chatDisabled" type="button" disabled onclick="startDirectChat('${id}')">💬 Chat</button><button class="btn secondary small" onclick='viewPersonalProfile(${safe})'>LIHAT PROFIL</button></div></div>`;
+  return `<div class="personCard"><div class="personTop">${avatar({name:p.name,photo:p.avatar_url},true)}<div class="personMeta"><h3>${esc(p.name||"User")}</h3><p class="muted">@${esc(p.username||"")} • 👤 Personal</p><span class="nowScoreMini" id="userScore-${esc(p.id)}">🔥 NOW SCORE —</span></div></div><div class="personActions">${followButton(p.id)}<button class="btn secondary small" onclick='viewPersonalProfile(${safe})'>LIHAT PROFIL</button></div></div>`;
 }
 
 async function viewPersonalProfile(p){
@@ -814,50 +896,18 @@ async function viewPersonalProfile(p){
   window.__activeFollowProfile=p;
   $("profileModal").classList.remove("hidden");
   $("profileBox").innerHTML=`<div class="loading">Memuat profil...</div>`;
-  const [postsR,videoR,counts,following]=await Promise.all([
+  const [postsR,videoR,counts,following,score]=await Promise.all([
     sb.from("posts").select("id,user_id,caption,image_url,location,created_at").eq("user_id",p.id).order("created_at",{ascending:false}).limit(30),
     sb.from("near_videos").select("id,user_id,video_url,caption,location,created_at").eq("user_id",p.id).order("created_at",{ascending:false}).limit(30),
     getFollowCounts(p.id),
-    getFollowState(p.id)
+    getFollowState(p.id),
+    getUserNowScore(p.id)
   ]);
   const posts=postsR.data||[],videos=videoR.data||[];
   const safeId=esc(p.id);
   const postHtml=posts.length?posts.map(x=>`<div class="profilePost">${x.image_url?`<img src="${esc(x.image_url)}" style="width:100%;max-height:300px;object-fit:cover;border-radius:12px">`:""}<p>${esc(x.caption||"")}</p>${x.location?`<div class="muted">📍 ${esc(x.location)}</div>`:""}</div>`).join(""):`<div class="empty">Belum ada postingan.</div>`;
   const videoHtml=videos.length?`<div class="profileVideoGrid">${videos.map(x=>`<div class="profileVideoTile"><video src="${esc(x.video_url)}" muted playsinline preload="metadata" onclick="openProfileVideo('${safeId}','${esc(x.video_url)}');return false"></video></div>`).join("")}</div>`:`<div class="empty">Belum ada video.</div>`;
-  $("profileBox").innerHTML=`<div class="profileHead"><div class="avatarWrap">${avatar({name:p.name,photo:p.avatar_url})}</div><div class="accountLabel">👤 Akun Personal</div><h2>${esc(p.name||"User")}</h2><p class="muted">@${esc(p.username||"")} <span id="directChatStatus" class="directOnlineStatus isOffline">● Offline</span></p><div class="profileFollowStats"><button onclick="showFollowList('${safeId}','followers')"><b id="followFollowers-${safeId}">${counts.followers}</b><span>FOLLOWERS</span></button><button onclick="showFollowList('${safeId}','following')"><b id="followFollowing-${safeId}">${counts.following}</b><span>FOLLOWING</span></button></div><div class="actions" style="justify-content:center">${followButton(p.id,following)}<button id="directChatBtn" class="action chatDisabled" type="button" disabled onclick="startDirectChat('${safeId}')">💬 Chat</button><button class="action" onclick="closeProfile()">Tutup</button></div><div class="muted" style="text-align:center;margin-top:6px;font-size:12px">Chat hanya aktif jika saling mengikuti dan sama-sama online.</div></div><div class="card"><h3 style="padding:12px;margin:0">📝 POSTS</h3>${postHtml}</div><div class="card"><h3 style="padding:12px;margin:0">🎥 VIDEOS</h3>${videoHtml}</div>`;
-  await refreshDirectChatEligibility(p.id);
-  if(window._directChatStatusTimer)clearInterval(window._directChatStatusTimer);
-  window._directChatStatusTimer=setInterval(()=>refreshDirectChatEligibility(p.id),15000);
-}
-
-async function startDirectChat(targetId){
-  const e=await getChatEligibility(targetId);
-  if(!e.enabled){await refreshDirectChatEligibility(targetId);return;}
-  const pairA=user.id, pairB=targetId;
-  let {data:conv,error}=await sb.from("direct_chat_conversations").select("id").or(`and(user_a.eq.${pairA},user_b.eq.${pairB}),and(user_a.eq.${pairB},user_b.eq.${pairA})`).maybeSingle();
-  if(error){alert("Chat gagal dibuka: "+error.message);return;}
-  if(!conv){
-    const ins=await sb.from("direct_chat_conversations").insert({user_a:pairA,user_b:pairB}).select("id").single();
-    if(ins.error){
-      if(ins.error.code==="23505") {
-        const retry=await sb.from("direct_chat_conversations").select("id").or(`and(user_a.eq.${pairA},user_b.eq.${pairB}),and(user_a.eq.${pairB},user_b.eq.${pairA})`).maybeSingle();
-        conv=retry.data;
-      } else {alert("Chat gagal dibuat: "+ins.error.message);return;}
-    } else conv=ins.data;
-  }
-  if(!conv?.id)return;
-  if(window.__chatChannel){try{await sb.removeChannel(window.__chatChannel)}catch(e){}}
-  $("profileBox").innerHTML=`<div class="chatHead"><button class="guestLogin" id="directChatBack">← Kembali</button><div><h2>💬 Chat ${esc(p?.name||"Akun")}</h2><p class="muted">Percakapan pribadi</p></div></div><div id="chatMessages" class="chatMessages"><div class="loading">Memuat...</div></div><div class="chatComposer"><input id="chatInput" placeholder="Tulis pesan..." autocomplete="off"><button id="chatSendBtn" class="action" type="button">Kirim</button></div>`;
-  window.__activeDirectChat={conversationId:conv.id,targetId,targetProfile:window.__activeFollowProfile};
-  const loaded=await sb.from("direct_chat_messages").select("id,sender_id,body,created_at").eq("conversation_id",conv.id).order("created_at",{ascending:true});
-  if(loaded.error){$("chatMessages").innerHTML=`<div class="empty">${esc(loaded.error.message)}</div>`;return;}
-  $("chatMessages").innerHTML=(loaded.data||[]).map(m=>`<div class="chatBubble ${m.sender_id===user.id?"me":"them"}" data-id="${esc(m.id)}">${esc(m.body)}</div>`).join("")||`<div class="empty">Belum ada pesan.</div>`;
-  $("chatMessages").scrollTop=$("chatMessages").scrollHeight;
-  $("directChatBack").onclick=()=>viewPersonalProfile(window.__activeDirectChat.targetProfile||{id:targetId});
-  const send=async()=>{const input=$("chatInput"),text=input?.value.trim();if(!text)return;const btn=$("chatSendBtn");if(btn){btn.disabled=true;btn.textContent="Mengirim...";}const r=await sb.from("direct_chat_messages").insert({conversation_id:conv.id,sender_id:user.id,body:text}).select("id,sender_id,body,created_at").single();if(r.error)alert("Pesan belum terkirim: "+r.error.message);else{input.value="";const box=$("chatMessages");if(!box.querySelector(`[data-id="${r.data.id}"]`)){box.insertAdjacentHTML("beforeend",`<div class="chatBubble me" data-id="${esc(r.data.id)}">${esc(r.data.body)}</div>`);box.scrollTop=box.scrollHeight;}}if(btn){btn.disabled=false;btn.textContent="Kirim";}};
-  $("chatSendBtn").onclick=send;$("chatInput").onkeydown=e=>{if(e.key==="Enter")send();};
-  window.__chatChannel=sb.channel(`direct-chat-${conv.id}`).on("postgres_changes",{event:"INSERT",schema:"public",table:"direct_chat_messages",filter:`conversation_id=eq.${conv.id}`},payload=>{const box=$("chatMessages");if(!box||box.querySelector(`[data-id="${payload.new.id}"]`))return;box.insertAdjacentHTML("beforeend",`<div class="chatBubble ${payload.new.sender_id===user.id?"me":"them"}" data-id="${esc(payload.new.id)}">${esc(payload.new.body)}</div>`);box.scrollTop=box.scrollHeight;}).subscribe();
-  setTimeout(()=>$("chatInput")?.focus(),50);
+  $("profileBox").innerHTML=`<div class="profileHead"><div class="avatarWrap">${avatar({name:p.name,photo:p.avatar_url})}</div><div class="accountLabel">👤 Akun Personal</div><h2>${esc(p.name||"User")}</h2><p class="muted">@${esc(p.username||"")}</p><div class="nowScoreBadge">🔥 NOW SCORE <b>${score}</b></div><div class="profileFollowStats"><button onclick="showFollowList('${safeId}','followers')"><b id="followFollowers-${safeId}">${counts.followers}</b><span>FOLLOWERS</span></button><button onclick="showFollowList('${safeId}','following')"><b id="followFollowing-${safeId}">${counts.following}</b><span>FOLLOWING</span></button></div><div class="actions" style="justify-content:center">${followButton(p.id,following)}<button class="action" onclick="closeProfile()">Tutup</button></div></div><div class="card"><h3 style="padding:12px;margin:0">📝 POSTS</h3>${postHtml}</div><div class="card"><h3 style="padding:12px;margin:0">🎥 VIDEOS</h3>${videoHtml}</div>`;
 }
 
 async function showFollowList(targetId,mode){
@@ -1286,7 +1336,7 @@ async function renderMe(tab="posts"){
     user.profileBackground=fresh.data.profile_background_url||"";
     user.accountType=fresh.data.account_type||user.accountType;
   }
-  let mine=posts.filter(p=>p.u===user.name).sort((a,b)=>b.time-a.time),type=user.accountType||"personal",icon=type==="driver"?"🚗":type==="usaha"?"🏪":"👤",label=type==="driver"?"Driver":type==="usaha"?"UMKM / Usaha":"Personal / Customer",extra=type==="driver"&&user.driver?`<div class="driverInfo"><b>🚗 Informasi Driver</b><div class="driverItem"><b>${esc(user.driver.carType)}</b><span>Jenis mobil</span></div><div class="driverItem"><b>${esc(user.driver.vehicleNumber)}</b><span>Nomor kendaraan</span></div><div class="driverItem"><b>${esc(user.phone)}</b><span>WhatsApp untuk order</span></div></div>`:type==="usaha"&&user.business?`<div class="driverInfo"><b>🏪 Informasi UMKM / Usaha</b><div class="driverItem"><b>${esc(user.business.name)}</b><span>Nama usaha</span></div><div class="driverItem"><b>${esc(user.business.type)}</b><span>Jenis usaha</span></div><div class="driverItem"><b>${esc(user.business.address)}</b><span>Alamat</span></div></div>`:"";
+  let mine=posts.filter(p=>p.u===user.name).sort((a,b)=>b.time-a.time),type=user.accountType||"personal",nowScore=await getUserNowScore(user.id),icon=type==="driver"?"🚗":type==="usaha"?"🏪":"👤",label=type==="driver"?"Driver":type==="usaha"?"UMKM / Usaha":"Personal / Customer",extra=type==="driver"&&user.driver?`<div class="driverInfo"><b>🚗 Informasi Driver</b><div class="driverItem"><b>${esc(user.driver.carType)}</b><span>Jenis mobil</span></div><div class="driverItem"><b>${esc(user.driver.vehicleNumber)}</b><span>Nomor kendaraan</span></div><div class="driverItem"><b>${esc(user.phone)}</b><span>WhatsApp untuk order</span></div></div>`:type==="usaha"&&user.business?`<div class="driverInfo"><b>🏪 Informasi UMKM / Usaha</b><div class="driverItem"><b>${esc(user.business.name)}</b><span>Nama usaha</span></div><div class="driverItem"><b>${esc(user.business.type)}</b><span>Jenis usaha</span></div><div class="driverItem"><b>${esc(user.business.address)}</b><span>Alamat</span></div></div>`:"";
   let myVideos=[];
   if(tab==="videos"){
     const vr=await sb.from("near_videos").select("id,video_url,caption,location,created_at").eq("user_id",user.id).order("created_at",{ascending:false});
@@ -1306,7 +1356,7 @@ async function renderMe(tab="posts"){
   } else if(tab==="videos") videoTiles=`<div class="empty">Belum ada video.</div>`;
   const ownBgData=profileBgData(user.profileBackground||"");
   const ownBg=ownBgData.url?`<img class="profileBgMedia" src="${esc(ownBgData.url)}" alt="" style="object-position:${ownBgData.x}% ${ownBgData.y}%;transform:scale(${ownBgData.z});"><div class="profileBgShade"></div>`:"";
-  main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead">${ownBg}<div class="avatarWrap">${avatar(user)}<div class="accountBadge">${icon}</div></div><div class="accountLabel">${icon} Akun ${label}</div><h2>${esc(user.displayName||user.name)}</h2><p class="muted">@${esc(user.username)}</p>${extra}<div class="stats"><div><b>${mine.length}</b><span>POSTS</span></div><div><b>${myVideos.length}</b><span>VIDEOS</span></div><div><b>0</b><span>FOLLOWERS</span></div></div><button class="btn" onclick="editProfile()">EDIT PROFILE</button>${type==="driver"?`<button class="btn secondary" style="margin-top:8px" onclick="openPackage()">➕ ADD PAKET LIBURAN</button><button class="btn secondary" style="margin-top:8px" onclick="renderDriverInbox()">💬 PESAN MASUK</button>`:""}</div>${type==="driver"?`<div class="card"><div class="title" style="padding:12px"><h3>🎒 PAKET LIBURAN SAYA</h3><button class="btn small" onclick="openPackage()">+ Paket</button></div><div id="myPackages"><div class="empty">Memuat...</div></div></div>`:""}<div class="card"><div class="profileTabs"><button class="profileTab ${tab==="posts"?"active":""}" onclick="renderMe('posts')">📝 POSTS</button><button class="profileTab ${tab==="photos"?"active":""}" onclick="renderMe('photos')">📷 PHOTOS</button><button class="profileTab ${tab==="videos"?"active":""}" onclick="renderMe('videos')">🎥 VIDEOS</button></div>${tab==="posts"?(mine.length?mine.map(postRow).join(""):`<div class="empty">Belum ada postingan.</div>`):tab==="photos"?(mine.filter(p=>p.photo).length?`<div class="profileGrid">${mine.filter(p=>p.photo).map(p=>`<div class="photoTile" onclick='openDetail(${JSON.stringify(p).replace(/'/g,"&#39;")})'><img src="${esc(p.photo)}"><div class="photoMeta">🔥 ${p.likes||0} • 💬 ${(p.comments||[]).length}</div></div>`).join("")}</div>`:`<div class="empty">Belum ada foto.</div>`):videoTiles}</div><button class="btn danger" onclick="logout()">LOG OUT</button></div>`;
+  main.innerHTML=`<div class="page"><h2>👤 ME</h2><div class="card profileHead">${ownBg}<div class="avatarWrap">${avatar(user)}<div class="accountBadge">${icon}</div></div><div class="accountLabel">${icon} Akun ${label}</div><h2>${esc(user.displayName||user.name)}</h2><p class="muted">@${esc(user.username)}</p><div class="nowScoreBadge">🔥 NOW SCORE <b>${nowScore}</b></div>${extra}<div class="stats"><div><b>${mine.length}</b><span>POSTS</span></div><div><b>${myVideos.length}</b><span>VIDEOS</span></div><div><b>0</b><span>FOLLOWERS</span></div></div><button class="btn" onclick="editProfile()">EDIT PROFILE</button>${type==="driver"?`<button class="btn secondary" style="margin-top:8px" onclick="openPackage()">➕ ADD PAKET LIBURAN</button><button class="btn secondary" style="margin-top:8px" onclick="renderDriverInbox()">💬 PESAN MASUK</button>`:""}</div>${type==="driver"?`<div class="card"><div class="title" style="padding:12px"><h3>🎒 PAKET LIBURAN SAYA</h3><button class="btn small" onclick="openPackage()">+ Paket</button></div><div id="myPackages"><div class="empty">Memuat...</div></div></div>`:""}<div class="card"><div class="profileTabs"><button class="profileTab ${tab==="posts"?"active":""}" onclick="renderMe('posts')">📝 POSTS</button><button class="profileTab ${tab==="photos"?"active":""}" onclick="renderMe('photos')">📷 PHOTOS</button><button class="profileTab ${tab==="videos"?"active":""}" onclick="renderMe('videos')">🎥 VIDEOS</button></div>${tab==="posts"?(mine.length?mine.map(postRow).join(""):`<div class="empty">Belum ada postingan.</div>`):tab==="photos"?(mine.filter(p=>p.photo).length?`<div class="profileGrid">${mine.filter(p=>p.photo).map(p=>`<div class="photoTile" onclick='openDetail(${JSON.stringify(p).replace(/'/g,"&#39;")})'><img src="${esc(p.photo)}"><div class="photoMeta">🔥 ${p.likes||0} • 💬 ${(p.comments||[]).length}</div></div>`).join("")}</div>`:`<div class="empty">Belum ada foto.</div>`):videoTiles}</div><button class="btn danger" onclick="logout()">LOG OUT</button></div>`;
   if(type==="driver")loadPackages()
 }
 async function loadPackages(){let box=$("myPackages");if(!box)return;let r=await sb.from("travel_packages").select("*").eq("owner_id",user.id).order("created_at",{ascending:false});if(r.error)return box.innerHTML=`<div class="empty">${esc(r.error.message)}</div>`;const rows=r.data||[];if(rows.length){const ids=rows.map(x=>x.id).filter(Boolean);const ph=ids.length?await sb.from("travel_package_photos").select("package_id,photo_url,sort_order").in("package_id",ids).order("sort_order",{ascending:true}):{data:[]};const pm=new Map();(ph.data||[]).forEach(x=>{if(!pm.has(x.package_id))pm.set(x.package_id,[]);pm.get(x.package_id).push(x.photo_url)});rows.forEach(x=>x.photos=pm.get(x.id)||[]);}box.innerHTML=rows.length?rows.map(p=>packageCard(p,true)).join(""):`<div class="empty">Belum ada paket.</div>`}
@@ -1346,7 +1396,72 @@ async function deleteNearVideo(id,url){
 }
 async function openDetail(p){activePost={...p,likes:p.likes||0,comments:p.comments||[],liked:false};$("detailModal").classList.remove("hidden");if(user?.id){const r=await sb.from("post_likes").select("post_id",{count:"exact",head:true}).eq("post_id",String(activePost.id));activePost.likes=r.count||0;const mine=await sb.from("post_likes").select("post_id").eq("post_id",String(activePost.id)).eq("user_id",user.id).maybeSingle();activePost.liked=!!mine.data;}renderDetail()}
 function closeDetail(){$("detailModal").classList.add("hidden");activePost=null}
-function renderDetail(){let p=activePost;const own=p&&p.u===user?.name;const loc=p?.place||"Canggu Beach";$('detailBox').innerHTML=`<p class="muted"><button class="locationBtn locationBtnLarge" onclick='openMaps(${JSON.stringify(loc).replace(/'/g,"&#39;")},${Number(p.latitude)||''},${Number(p.longitude)||''})'>📍 ${esc(loc)}</button> • ${ago(p.time)}</p><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">${esc(p.u||"You")}</h2>${own?`<button class="action danger" onclick="deleteCurrentPost()">🗑️ Hapus</button>`:""}</div><div style="font-size:17px;line-height:1.45;margin-top:10px">${esc(p.t||"")}</div>${p.photo?`<img class="postPhotoLarge" src="${esc(p.photo)}">`:""}<div class="actions"><button class="action ${p.liked?"liked":""}" onclick="likePost()">🔥 ${p.likes||0}</button><button class="action" onclick="$('commentInput').focus()">💬 ${(p.comments||[]).length}</button><button class="action" onclick="sharePost()">↗️ Bagikan</button></div><div style="display:flex;gap:8px"><input id="commentInput" placeholder="Tulis komentar..." style="margin:0"><button class="btn small" onclick="addComment()">KIRIM</button></div><h3>Komentar</h3>${p.comments?.length?p.comments.map(c=>`<div class="comment"><b>${esc(c.u)}</b><div class="muted">${esc(c.t)}</div></div>`).join(""):`<div class="empty">Belum ada komentar.</div>`}`}
+async function renderDetail(){
+  let p=activePost;
+  const own=p&&p.u===user?.name;
+  const loc=p?.place||"Canggu Beach";
+  $('detailBox').innerHTML=`<p class="muted"><button class="locationBtn locationBtnLarge" onclick='openMaps(${JSON.stringify(loc).replace(/'/g,"&#39;")},${Number(p.latitude)||''},${Number(p.longitude)||''})'>📍 ${esc(loc)}</button> • ${ago(p.time)}</p>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">${esc(p.u||"You")}</h2>${own?`<button class="action danger" onclick="deleteCurrentPost()">🗑️ Hapus</button>`:""}</div>
+  <div style="font-size:17px;line-height:1.45;margin-top:10px">${esc(p.t||"")}</div>${p.photo?`<img class="postPhotoLarge" src="${esc(p.photo)}">`:""}
+  <div class="actions"><button class="action ${p.liked?"liked":""}" onclick="likePost()">🔥 ${p.likes||0}</button><button class="action" onclick="document.getElementById('commentInput')?.focus()">💬 <span id="postCommentCount">0</span></button><button class="action" onclick="sharePost()">↗️ Bagikan</button></div>
+  <div style="display:flex;gap:7px;align-items:center"><input id="commentInput" placeholder="Tulis komentar..." style="margin:0;flex:1"><button class="commentPhotoBtn" type="button" onclick="document.getElementById('commentPhotoInput').click()">📷</button><button class="btn small" onclick="submitPostComment()">KIRIM</button></div>
+  <input id="commentPhotoInput" type="file" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="previewCommentPhoto()">
+  <div id="commentPhotoStatus" class="commentPhotoName"></div>
+  <div class="commentToolbar"><div id="commentReplyStatus" class="commentPhotoName"></div><button id="cancelReplyBtn" class="btn small secondary" style="display:none" onclick="cancelCommentReply()">Batal balas</button></div>
+  <h3>Komentar</h3><div id="postCommentsList"><div class="loading">Memuat komentar...</div></div>`;
+  await loadPostComments(p.id);
+}
+function cancelCommentReply(){window.__replyToComment=null;const s=$("commentReplyStatus");if(s)s.textContent="";const b=$("cancelReplyBtn");if(b)b.style.display="none";}
+function previewCommentPhoto(){const f=$("commentPhotoInput")?.files?.[0],s=$("commentPhotoStatus");if(!s)return;s.textContent=f?`📷 ${f.name}`:"";if(f&&f.size>8*1024*1024){alert("Foto komentar maksimal 8 MB.");$("commentPhotoInput").value="";s.textContent="";}}
+async function resizeCommentImage(file){
+  if(!file||!file.type.startsWith('image/'))return null;
+  const bitmap=await createImageBitmap(file);const max=900;const scale=Math.min(1,max/Math.max(bitmap.width,bitmap.height));const w=Math.max(1,Math.round(bitmap.width*scale)),h=Math.max(1,Math.round(bitmap.height*scale));
+  const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(bitmap,0,0,w,h);bitmap.close();
+  return await new Promise(resolve=>c.toBlob(resolve,'image/jpeg',0.72));
+}
+async function uploadCommentPhoto(file){
+  const blob=await resizeCommentImage(file);if(!blob)return "";const path=`${user.id}/${crypto.randomUUID()}.jpg`;const up=await sb.storage.from('comment-photos').upload(path,blob,{contentType:'image/jpeg',cacheControl:'31536000',upsert:false});if(up.error)throw up.error;return sb.storage.from('comment-photos').getPublicUrl(path).data.publicUrl;
+}
+async function loadPostComments(postId){
+  const box=$("postCommentsList");if(!box)return;
+  const r=await sb.from('post_comments').select('id,post_id,user_id,parent_id,body,image_url,created_at').eq('post_id',postId).order('created_at',{ascending:true}).limit(100);
+  if(r.error){box.innerHTML=`<div class="empty">${esc(r.error.message)}</div>`;return;}
+  const comments=r.data||[];const ids=[...new Set(comments.map(c=>c.user_id))];
+  const [pr,likes]=await Promise.all([
+    ids.length?sb.from('profiles').select('id,name,username,avatar_url').in('id',ids):Promise.resolve({data:[],error:null}),
+    comments.length?sb.from('post_comment_likes').select('comment_id,user_id').in('comment_id',comments.map(c=>c.id)):Promise.resolve({data:[],error:null})
+  ]);
+  const pm=new Map((pr.data||[]).map(x=>[x.id,x]));
+  const likeMap=new Map();const mine=new Set();(likes.data||[]).forEach(x=>{likeMap.set(x.comment_id,(likeMap.get(x.comment_id)||0)+1);if(x.user_id===user.id)mine.add(x.comment_id)});
+  const children=new Map();comments.forEach(c=>{const k=c.parent_id||'root';if(!children.has(k))children.set(k,[]);children.get(k).push(c)});
+  const render=(c,depth=0)=>{const u=pm.get(c.user_id)||{};const cnt=likeMap.get(c.id)||0;const liked=mine.has(c.id);const replies=(children.get(c.id)||[]).map(x=>render(x,depth+1)).join('');return `<div class="commentRow ${depth?'reply':''}"><div class="commentMain"><img class="commentAvatarMini" loading="lazy" decoding="async" src="${esc(u.avatar_url||'')}" onerror="this.style.display='none'"><div class="commentContent"><div class="commentAuthor">${esc(u.name||'User')}</div><div class="commentBody">${esc(c.body||'')}</div>${c.image_url?`<img class="commentImage" loading="lazy" decoding="async" src="${esc(c.image_url)}" alt="Foto komentar">`:''}<div class="commentMeta"><span>${ago(new Date(c.created_at).getTime())}</span><button class="${liked?'liked':''}" onclick="toggleCommentLike('${c.id}')">🔥 ${cnt}</button><button onclick="startCommentReply('${c.id}',${JSON.stringify(u.name||'User')})">↩ Balas</button>${c.user_id===user.id?`<button onclick="deletePostComment('${c.id}')">Hapus</button>`:''}</div></div></div>${replies?`<div class="commentTree">${replies}</div>`:''}</div>`};
+  const roots=children.get('root')||[];box.innerHTML=roots.length?roots.map(c=>render(c)).join(''):`<div class="empty">Belum ada komentar.</div>`;const count=$("postCommentCount");if(count)count.textContent=comments.length;
+}
+function startCommentReply(id,name){window.__replyToComment=id;const s=$("commentReplyStatus");if(s)s.textContent=`Membalas ${name}`;const b=$("cancelReplyBtn");if(b)b.style.display='inline-block';$("commentInput")?.focus();}
+async function submitPostComment(){
+  if(!user?.id)return alert('Silakan login untuk berkomentar.');
+  const input=$("commentInput"),body=input?.value.trim()||'',file=$("commentPhotoInput")?.files?.[0];if(!body&&!file)return;
+  if(body.length>1000)return alert('Komentar maksimal 1000 karakter.');
+  try{
+    let image_url=null;if(file){if(file.size>8*1024*1024)return alert('Foto komentar maksimal 8 MB.');image_url=await uploadCommentPhoto(file);}
+    const parent_id=window.__replyToComment||null;const r=await sb.from('post_comments').insert({post_id:String(activePost.id),user_id:user.id,parent_id,body,image_url}).select('id').single();if(r.error)throw r.error;
+    input.value='';if($("commentPhotoInput"))$("commentPhotoInput").value='';if($("commentPhotoStatus"))$("commentPhotoStatus").textContent='';cancelCommentReply();
+    loadPostComments(activePost.id);
+    (async()=>{try{
+      const owner=await sb.from('posts').select('user_id').eq('id',String(activePost.id)).maybeSingle();
+      const targetUser=parent_id?(await sb.from('post_comments').select('user_id').eq('id',parent_id).maybeSingle()).data?.user_id:owner.data?.user_id;
+      const type=parent_id?'reply':'comment';if(targetUser&&targetUser!==user.id)await sb.from('notifications').insert({recipient_id:targetUser,actor_id:user.id,type,title:parent_id?'Seseorang membalas komentar kamu':'Seseorang mengomentari postingan kamu',body:parent_id?`${user.name||'Seseorang'} membalas komentar kamu di NOW BALI.`:`${user.name||'Seseorang'} mengomentari postingan kamu di NOW BALI.`,target_type:'post',target_id:String(activePost.id)});
+    }catch(e){console.warn('Notification failed',e)}})();
+  }catch(e){alert('Komentar gagal disimpan: '+(e?.message||e));}
+}
+async function toggleCommentLike(commentId){
+  if(!user?.id)return alert('Silakan login untuk Like.');
+  const q=await sb.from('post_comment_likes').select('comment_id').eq('comment_id',commentId).eq('user_id',user.id).maybeSingle();if(q.error)return alert(q.error.message);
+  const r=q.data?await sb.from('post_comment_likes').delete().eq('comment_id',commentId).eq('user_id',user.id):await sb.from('post_comment_likes').insert({comment_id:commentId,user_id:user.id});if(r.error)return alert('Like komentar gagal: '+r.error.message);
+  loadPostComments(activePost.id);
+  if(!q.data){(async()=>{try{const c=await sb.from('post_comments').select('user_id').eq('id',commentId).maybeSingle();if(c.data?.user_id&&c.data.user_id!==user.id)await sb.from('notifications').insert({recipient_id:c.data.user_id,actor_id:user.id,type:'comment_like',title:'Komentar kamu mendapat Like',body:`${user.name||'Seseorang'} menyukai komentar kamu.`,target_type:'post',target_id:String(activePost.id)});}catch(e){console.warn('Comment-like notification failed',e)}})();}
+}
+async function deletePostComment(commentId){if(!user?.id)return;if(!confirm('Hapus komentar ini?'))return;const r=await sb.from('post_comments').delete().eq('id',commentId).eq('user_id',user.id);if(r.error)return alert('Komentar gagal dihapus: '+r.error.message);loadPostComments(activePost.id);}
 async function deleteCurrentPost(){
   if(!activePost||activePost.u!==user?.name)return;
   if(!confirm('Hapus postingan ini?'))return;
@@ -1357,8 +1472,15 @@ async function deleteCurrentPost(){
   closeDetail();show('now');
 }
 
-async function likePost(){if(!user?.id)return alert("Silakan login untuk Like.");const postId=String(activePost.id);if(activePost.liked){const r=await sb.from("post_likes").delete().eq("post_id",postId).eq("user_id",user.id);if(r.error)return alert("Like gagal dibatalkan: "+r.error.message);activePost.liked=false}else{const r=await sb.from("post_likes").insert({post_id:postId,user_id:user.id});if(r.error){if(r.code==="23505"){activePost.liked=true}else{return alert("Like gagal: "+r.error.message)} }else activePost.liked=true}const c=await sb.from("post_likes").select("post_id",{count:"exact",head:true}).eq("post_id",postId);activePost.likes=c.count||0;let i=posts.findIndex(x=>String(x.id)===postId);if(i>=0){posts[i].likes=activePost.likes;localStorage.setItem("now_posts_v2",JSON.stringify(posts))}renderDetail()}
-function addComment(){let t=val("commentInput");if(!t)return;activePost.comments.push({u:user.name,t});let i=posts.findIndex(x=>x.id===activePost.id);if(i>=0){posts[i].comments=activePost.comments;localStorage.setItem("now_posts_v2",JSON.stringify(posts))}renderDetail()}
+async function likePost(){
+  if(!user?.id)return alert("Silakan login untuk Like.");
+  const postId=String(activePost.id);let wasLiked=activePost.liked;
+  if(activePost.liked){const r=await sb.from("post_likes").delete().eq("post_id",postId).eq("user_id",user.id);if(r.error)return alert("Like gagal dibatalkan: "+r.error.message);activePost.liked=false}
+  else{const r=await sb.from("post_likes").insert({post_id:postId,user_id:user.id});if(r.error){if(r.code==="23505")activePost.liked=true;else return alert("Like gagal: "+r.error.message)}else activePost.liked=true}
+  const c=await sb.from("post_likes").select("post_id",{count:"exact",head:true}).eq("post_id",postId);activePost.likes=c.count||0;
+  if(!wasLiked&&activePost.liked){const owner=await sb.from('posts').select('user_id').eq('id',postId).maybeSingle();if(owner.data?.user_id&&owner.data.user_id!==user.id)await sb.from('notifications').insert({recipient_id:owner.data.user_id,actor_id:user.id,type:'like',title:'Postingan kamu mendapat Like',body:`${user.name||'Seseorang'} menyukai postingan kamu.`,target_type:'post',target_id:postId});}
+  let i=posts.findIndex(x=>String(x.id)===postId);if(i>=0){posts[i].likes=activePost.likes;localStorage.setItem("now_posts_v2",JSON.stringify(posts))}renderDetail();
+}
 function sharePost(){if(navigator.share)navigator.share({title:"NOW BALI",text:`${activePost.t} — NOW BALI`}).catch(()=>{});else alert("Posting siap dibagikan.")}
 let postSelectedVideo=null;
 function openPostMedia(mode){
@@ -1413,8 +1535,8 @@ async function publishPost(){
 function resetPostComposer(){$("postText").value="";$("postCategory").value="";$("postPlace").value="";$("postLat").value="";$("postLng").value="";$("postPhoto").value="";if($("postVideo"))$("postVideo").value="";if($("postVideoCamera"))$("postVideoCamera").value="";if($("postGallery"))$("postGallery").value="";postSelectedVideo=null;$("photoPreview").classList.add("hidden");$("postVideoPreview").classList.add("hidden");$("postMediaName").textContent="Foto masuk Live Feed. Video masuk Near You.";}
 function openAuth(){ $("authModal").classList.remove("hidden")}function closeAuth(){$("authModal").classList.add("hidden")}
 function renderAuth(mode="login",type="personal"){if(mode==="login"){authBox.innerHTML=`<h2>Login ke NOW</h2><div class="notice">Gunakan email yang sudah diverifikasi.</div><input id="loginEmail" type="email" placeholder="Email"><input id="loginPassword" type="password" placeholder="Password"><button class="btn" onclick="doLogin()">LOGIN</button><p class="muted" style="text-align:center">Belum punya akun? <button class="guestLogin" onclick="renderAuth('register','personal')">Register</button></p>`;return}let extra=type==="driver"?`<input id="car" placeholder="Jenis Mobil"><input id="plate" placeholder="Nomor Kendaraan"><input id="phone" type="tel" placeholder="Nomor WhatsApp">`:type==="usaha"?`<input id="bn" placeholder="Nama Usaha"><input id="bt" placeholder="Jenis Usaha"><input id="ba" placeholder="Alamat Usaha"><input id="phone" type="tel" placeholder="Nomor WhatsApp">`:`<input id="phone" type="tel" placeholder="Nomor WhatsApp">`;authBox.innerHTML=`<h2>Buat akun NOW</h2><div class="notice">Semua akun gratis.</div><div class="accountChoices"><button class="accountChoice ${type==="personal"?"active":""}" onclick="renderAuth('register','personal')"><span>👤</span>Personal</button><button class="accountChoice ${type==="driver"?"active":""}" onclick="renderAuth('register','driver')"><span>🚗</span>Driver</button><button class="accountChoice ${type==="usaha"?"active":""}" onclick="renderAuth('register','usaha')"><span>🏪</span>UMKM</button></div><input id="regName" placeholder="Nama"><input id="regUsername" placeholder="Username (unik)"><input id="regEmail" type="email" placeholder="Email">${extra}<input id="regPassword" type="password" placeholder="Password (min. 6 karakter)"><button class="btn" onclick="doRegister('${type}')">REGISTER</button><p class="muted" style="text-align:center">Sudah punya akun? <button class="guestLogin" onclick="renderAuth('login')">Login</button></p>`}
-async function doLogin(){let email=val("loginEmail").toLowerCase(),password=$("loginPassword").value;if(!emailOK(email))return alert("Email salah atau tidak valid.");let r=await sb.auth.signInWithPassword({email,password});if(r.error)return alert(r.error.message);user=await sync(r.data.session);if(!user)return alert("Profil belum tersedia.");await startOnlinePresence();closeAuth();show("now")}
-async function doRegister(type){let name=val("regName"),un=val("regUsername"),email=val("regEmail").toLowerCase(),pw=$("regPassword").value;if(!name)return alert("Isi Nama dulu.");if(!userOK(un))return alert("Username 3–30 karakter, hanya huruf, angka dan underscore.");if(!emailOK(email))return alert("Email salah atau tidak valid.");if(pw.length<6)return alert("Password minimal 6 karakter.");let phone=val("phone").replace(/[\s().-]/g,"");if(!phoneOK(phone))return alert("Nomor WhatsApp tidak valid.");let dup=await sb.from("profiles").select("id").ilike("username",un).limit(1);if(dup.data?.length)return alert("Username sudah digunakan.");let meta={name,username:un,account_type:type,phone};if(type==="driver"){if(!val("car")||!val("plate"))return alert("Lengkapi data Driver.");meta.vehicle_type=val("car");meta.vehicle_plate=val("plate")}if(type==="usaha"){if(!val("bn")||!val("bt")||!val("ba"))return alert("Lengkapi data UMKM / Usaha.");meta.business_name=val("bn");meta.business_type=val("bt");meta.business_address=val("ba")}let r=await sb.auth.signUp({email,password:pw,options:{data:meta,emailRedirectTo:location.origin}});if(r.error){if(/invalid.*email|email.*valid/i.test(r.error.message))return alert("Email salah atau tidak valid.");return alert(r.error.message)}if(!r.data.session){alert("Registrasi berhasil. Silakan konfirmasi email melalui link yang dikirim ke email kamu.");renderAuth("login")}else{user=await sync(r.data.session);await startOnlinePresence();closeAuth();show("now")}}
+async function doLogin(){let email=val("loginEmail").toLowerCase(),password=$("loginPassword").value;if(!emailOK(email))return alert("Email salah atau tidak valid.");let r=await sb.auth.signInWithPassword({email,password});if(r.error)return alert(r.error.message);user=await sync(r.data.session);if(!user)return alert("Profil belum tersedia.");closeAuth();show("now")}
+async function doRegister(type){let name=val("regName"),un=val("regUsername"),email=val("regEmail").toLowerCase(),pw=$("regPassword").value;if(!name)return alert("Isi Nama dulu.");if(!userOK(un))return alert("Username 3–30 karakter, hanya huruf, angka dan underscore.");if(!emailOK(email))return alert("Email salah atau tidak valid.");if(pw.length<6)return alert("Password minimal 6 karakter.");let phone=val("phone").replace(/[\s().-]/g,"");if(!phoneOK(phone))return alert("Nomor WhatsApp tidak valid.");let dup=await sb.from("profiles").select("id").ilike("username",un).limit(1);if(dup.data?.length)return alert("Username sudah digunakan.");let meta={name,username:un,account_type:type,phone};if(type==="driver"){if(!val("car")||!val("plate"))return alert("Lengkapi data Driver.");meta.vehicle_type=val("car");meta.vehicle_plate=val("plate")}if(type==="usaha"){if(!val("bn")||!val("bt")||!val("ba"))return alert("Lengkapi data UMKM / Usaha.");meta.business_name=val("bn");meta.business_type=val("bt");meta.business_address=val("ba")}let r=await sb.auth.signUp({email,password:pw,options:{data:meta,emailRedirectTo:location.origin}});if(r.error){if(/invalid.*email|email.*valid/i.test(r.error.message))return alert("Email salah atau tidak valid.");return alert(r.error.message)}if(!r.data.session){alert("Registrasi berhasil. Silakan konfirmasi email melalui link yang dikirim ke email kamu.");renderAuth("login")}else{user=await sync(r.data.session);closeAuth();show("now")}}
 function editProfile(){
   let bgState=profileBgData(user.profileBackground);
   window._profileBgState=bgState;
@@ -1704,7 +1826,7 @@ async function endNowLive(){if(!liveHost||liveHost.host_id!==user.id)return;awai
 function closeLiveModal(){if(liveViewerTimer){clearInterval(liveViewerTimer);liveViewerTimer=null}if(liveViewerChannel){sb.removeChannel(liveViewerChannel);liveViewerChannel=null}if(liveViewerPeer){liveViewerPeer.close();liveViewerPeer=null}$("liveModal").classList.add('hidden');}
 
 document.querySelectorAll("nav [data-tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));$("plus").onclick=()=>user?openPost():guest();
-(async()=>{let r=await sb.auth.getSession();if(r.data.session){user=await sync(r.data.session);await startOnlinePresence();show("now")}else guest()})();
+(async()=>{let r=await sb.auth.getSession();if(r.data.session){user=await sync(r.data.session);startOnlinePresence();show("now")}else guest()})();
 </script>
 </body>
 </html>
