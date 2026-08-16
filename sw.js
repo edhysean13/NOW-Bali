@@ -1,5 +1,5 @@
-const CACHE = "sambasara-shell-v1";
-const APP_SHELL = ["./", "./index.html", "./manifest.json", "./icon.svg"];
+const CACHE = "sambasara-shell-v2";
+const APP_SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon-180.png"];
 
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
